@@ -1,0 +1,170 @@
+# web-quality-reviewer
+
+AI agent + skill set for Claude Code — comprehensive web quality audit covering 5 areas in a single run.
+
+Claude Code용 AI 에이전트 + 스킬 세트 — 5개 영역 웹 품질 감사를 한 번의 실행으로 수행합니다.
+
+![Claude Code](https://img.shields.io/badge/Claude_Code-required-blue)
+![KWCAG 2.2](https://img.shields.io/badge/KWCAG-2.2-green)
+![Coverage](https://img.shields.io/badge/coverage-5_areas_79_items-orange)
+
+---
+
+## 개요
+
+`web-quality-reviewer`는 Claude Code용 AI 에이전트 및 스킬 세트로, 한 번의 실행으로 웹 품질 종합 감사를 수행합니다. 접근성, Best Practices, SEO, 성능, Core Web Vitals 등 5개 영역을 커버하며, 한국어로 작성된 통합 HTML 리포트와 CSV 파일을 생성합니다.
+
+프로젝트에 `playwright.config.ts`가 존재하면, 에이전트가 자동으로 Playwright 브라우저 검사를 실행하여 명도 대비, 키보드 내비게이션, 동적 ARIA 상태 변화 등 정적 코드 분석만으로는 신뢰할 수 없는 항목들을 자동 검증합니다.
+
+---
+
+## 검토 영역 (5개)
+
+| 영역                   | 항목 수     | 기준 / 범위                                                              |
+| ---------------------- | ----------- | ------------------------------------------------------------------------ |
+| **A. 접근성**          | 33 + 7 = 40 | KWCAG 2.2 (한국 웹 콘텐츠 접근성 지침 2.2, 33항목) + 시맨틱 HTML (7항목) |
+| **B. Best Practices**  | 14          | 보안 BP-01~05, 호환성 BP-06~10, 코드 품질 BP-11~14                       |
+| **C. SEO**             | 10          | Critical, High, Medium 우선순위 항목 (SEO-01~10)                         |
+| **D. Performance**     | 11          | CRP, 이미지, JavaScript, 폰트 최적화 (PERF-01~11)                        |
+| **E. Core Web Vitals** | 11          | LCP x3, INP x3, CLS x5 안티패턴 (CWV-01~11)                              |
+
+**접근성 상세:**
+
+- KWCAG 2.2: 인식의 용이성 (9항목), 운용의 용이성 (15항목), 이해의 용이성 (7항목), 견고성 (2항목)
+- 항목 8 (명도 대비), 10 (키보드 접근성), 33 (동적 ARIA): Playwright 설치 시 자동 검증
+
+---
+
+## 출력 결과
+
+검토 실행 후 프로젝트에 2개의 파일이 생성됩니다:
+
+```
+your-project/
+└── .claude/
+    └── reports/
+        ├── web-quality-YYYYMMDD.html   ← 색상 구분된 5개 섹션 시각적 리포트
+        └── web-quality-YYYYMMDD.csv    ← 스프레드시트용 데이터 (영역 컬럼 포함)
+```
+
+같은 날짜의 파일이 이미 존재하면 `-2`, `-3` 접미사가 자동으로 붙습니다.
+
+---
+
+## 요구사항
+
+- **Claude Code** — [claude.ai/code](https://claude.ai/code)
+- **Claude API 키** — 에이전트 실행에 필요
+- **선택사항: Playwright** — `playwright.config.ts`를 설치 및 구성하면 항목 8 (명도 대비), 10 (키보드 접근성), 33 (동적 ARIA) 자동 검사 활성화
+
+---
+
+## 설치 방법
+
+`agents/`와 `skills/` 폴더를 프로젝트의 `.claude/` 디렉토리에 복사합니다:
+
+```bash
+cp -r agents/ your-project/.claude/agents/
+cp -r skills/ your-project/.claude/skills/
+```
+
+설치 후 프로젝트 구조:
+
+```
+your-project/
+└── .claude/
+    ├── agents/
+    │   └── web-quality-reviewer.md
+    └── skills/
+        ├── web-quality-audit/
+        │   └── SKILL.md
+        ├── accessibility-review/
+        │   ├── SKILL.md
+        │   └── references/
+        │       └── kwcag22.md
+        ├── best-practices/
+        │   ├── SKILL.md
+        │   └── references/
+        │       └── guide.md
+        ├── seo/
+        │   ├── SKILL.md
+        │   └── references/
+        │       └── guide.md
+        ├── performance/
+        │   ├── SKILL.md
+        │   └── references/
+        │       └── guide.md
+        └── core-web-vitals/
+            ├── SKILL.md
+            └── references/
+                └── guide.md
+```
+
+---
+
+## 사용법
+
+프로젝트에서 Claude Code를 열고 아래의 트리거 문구 중 하나를 입력합니다:
+
+| 트리거              | 범위               |
+| ------------------- | ------------------ |
+| `웹 품질 검토해줘`  | 5개 영역 전체 감사 |
+| `web quality audit` | 5개 영역 전체 감사 |
+| `접근성 검토해줘`   | 접근성만           |
+| `a11y 체크해줘`     | 접근성만           |
+| `SEO 검토해줘`      | SEO만              |
+| `성능 검토해줘`     | 성능만             |
+
+에이전트는 `git diff --name-only HEAD`로 변경된 파일을 자동 감지하여 검토 범위로 사용합니다. 변경된 파일이 없으면 검토 대상을 지정해 달라고 요청합니다.
+
+---
+
+## 결과 예시
+
+`reports/` 폴더에는 2026-02-21 실제 프로젝트 실행으로 생성된 리포트 파일이 포함되어 있습니다:
+
+- `reports/web-quality-20260221.html` — 색상 구분된 5개 섹션 레이아웃의 전체 시각적 HTML 리포트
+- `reports/web-quality-20260221.csv` — 해당 CSV 데이터 파일
+
+HTML 리포트 구성:
+
+- 상단에 5개 영역별 종합 점수 카드
+- 영역별 합격/불합격/권고/해당없음 배지가 포함된 상세 결과 테이블
+- 실패 항목별 구체적인 수정 방법이 담긴 수정 가이드 섹션
+
+---
+
+## 파일 구조
+
+```
+web-quality-reviewer/
+├── README.md
+├── agents/
+│   └── web-quality-reviewer.md          ← 에이전트 정의 (트리거, 도구, 모델)
+├── skills/
+│   ├── web-quality-audit/
+│   │   └── SKILL.md                     ← 오케스트레이션 스킬 (5개 서브 스킬에 위임)
+│   ├── accessibility-review/
+│   │   ├── SKILL.md                     ← KWCAG2.2 33항목 + 시맨틱 HTML 검토
+│   │   └── references/
+│   │       └── kwcag22.md               ← KWCAG2.2 전체 기준 테이블
+│   ├── best-practices/
+│   │   ├── SKILL.md                     ← 보안, 호환성, 코드 품질 (BP-01~14)
+│   │   └── references/
+│   │       └── guide.md                 ← 코드 패턴 포함 Best Practices 체크리스트
+│   ├── seo/
+│   │   ├── SKILL.md                     ← 기술적 SEO, 온페이지 SEO (SEO-01~10)
+│   │   └── references/
+│   │       └── guide.md                 ← SEO 패턴, 구조화 데이터 템플릿
+│   ├── performance/
+│   │   ├── SKILL.md                     ← 로딩 성능, 이미지, JS, 폰트 (PERF-01~11)
+│   │   └── references/
+│   │       └── guide.md                 ← 성능 예산, CRP, 이미지, 폰트 패턴
+│   └── core-web-vitals/
+│       ├── SKILL.md                     ← LCP, INP, CLS 안티패턴 (CWV-01~11)
+│       └── references/
+│           └── guide.md                 ← LCP/INP/CLS 최적화 패턴
+└── reports/
+    ├── web-quality-20260221.html         ← 예시 HTML 리포트
+    └── web-quality-20260221.csv          ← 예시 CSV 리포트
+```

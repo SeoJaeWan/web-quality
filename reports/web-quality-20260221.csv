@@ -1,0 +1,53 @@
+영역,코드,항목명,판정,파일,라인,설명,수정가이드
+Accessibility,A-01,img alt 텍스트,O,src/app/homeClient.tsx,142,next/image에 alt="lazy but crazy" 명시. OG 이미지 alt 설정. 장식 SVG aria-hidden 적용.,해당 없음
+Accessibility,A-03,색상 독립적 정보 전달,△,src/components/study/generateProgress/index.tsx,67-71,스텝 상태를 색상+아이콘으로 표현. StatusBadge는 label 텍스트 포함하나 색상 강조 의존 있음.,StatusBadge에 텍스트 레이블 항상 노출 유지
+Accessibility,A-08,명도대비 4.5:1,O,src/app/globals.css,17-35,--text-muted #6e6e6e (5.10:1 on white). highlight 색상값 WCAG AA 충족 (주석 검토 기록 포함).,해당 없음
+Accessibility,A-10,키보드 접근성,△,src/components/study/resizeHandle/index.tsx,38-46,ResizeHandle이 div+onMouseDown으로만 구현. tabIndex 없어 키보드 리사이즈 불가. inlineHighlightOverlay overlay div도 키보드 포커스 불가.,resizeHandle: role=separator tabIndex=0 onKeyDown(ArrowLeft/Right) 추가. overlay: tabIndex=0 role=button aria-label 추가
+Accessibility,A-14,skip-to-content 없음,X,src/app/layout.tsx,64,전체 코드베이스에 skip-nav/skip-to-content 링크 없음. 반복 헤더/사이드바 앞에 skip 링크 미존재.,"layout.tsx body 직후에 <a href='#main-content' class='sr-only focus:not-sr-only'>본문 바로 가기</a> 추가. main에 id='main-content' 부여."
+Accessibility,A-16,페이지 제목 (title),O,src/app/layout.tsx,15-18,title.default='lazy but crazy' + template='%s | lazy but crazy'. study 페이지 동적 타이틀 생성.,해당 없음
+Accessibility,A-17,링크 텍스트 서술성,O,src/components/study/studyHeader/index.tsx,27,SVG 링크에 aria-label='Back to home'. studyShortcuts 페이지명 텍스트. promptDisplay '학습 페이지 열기 →',해당 없음
+Accessibility,A-23,마크업 오류 (잘못된 중첩),O,src/,전체,TSX 전체에서 잘못된 태그 중첩/닫히지 않은 태그 없음. TypeScript JSX 컴파일 타임 검출.,해당 없음
+Accessibility,A-24,웹 표준 (시맨틱 HTML),X,src/app/homeClient.tsx,138,"<main> 역할 div에 role=main 없음. studyLayout 탭 UI에 role=tablist/tab/aria-selected 없음.","homeClient: <main> 태그 사용. studyLayout 탭 버튼에 role=tab aria-selected={activeTab==='doc'} 추가. 컨테이너에 role=tablist."
+Accessibility,A-33,동적 ARIA (aria-live 등),X,src/components/common/sidebar/index.tsx,25-53,"sidebar 햄버거 버튼에 aria-expanded 없음. generateProgress aria-live 없음. 탭 버튼 aria-selected 없음.","sidebar: aria-expanded={isOpen} aria-controls='sidebar-panel'. generateProgress: <div aria-live='polite'>. 탭: aria-selected 추가."
+Best Practices,BP-01,http:// 리소스 혼용 없음,O,src/app/layout.tsx,53,Google Tag Manager https:// 사용. 코드베이스 전반 http:// 하드코딩 리소스 없음.,해당 없음
+Best Practices,BP-02,pnpm audit (취약 의존성),X,package.json,전체,"HIGH: minimatch <10.2.1 (CVE-2026-26996 ReDoS) 2건. MODERATE: ajv <8.18.0 (CVE-2025-69873 ReDoS) 2건. 총 4건 취약점.","pnpm update eslint-config-next @commitlint/cli. 또는 package.json overrides: {""minimatch"": "">=10.2.1"", ""ajv"": "">=8.18.0""}"
+Best Practices,BP-03,CSP 헤더 설정,X,next.config.ts,전체,headers() 함수 없음. Content-Security-Policy 헤더 미설정.,"next.config.ts에 async headers() 추가: Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com;"
+Best Practices,BP-04,보안 헤더 (X-Frame-Options 등),X,next.config.ts,전체,X-Frame-Options, X-Content-Type-Options, HSTS 헤더 전무.,"headers()에 추가: X-Frame-Options: SAMEORIGIN, X-Content-Type-Options: nosniff, Strict-Transport-Security: max-age=63072000, Referrer-Policy: strict-origin-when-cross-origin"
+Best Practices,BP-05,dangerouslySetInnerHTML 미사용,O,src/,전체,dangerouslySetInnerHTML / innerHTML 사용 없음. 마크다운은 react-markdown으로 안전 렌더링.,해당 없음
+Best Practices,BP-06,DOCTYPE charset viewport,O,src/app/layout.tsx,51,Next.js App Router 자동 처리. html lang='ko' 명시.,해당 없음
+Best Practices,BP-07,charset UTF-8,O,src/app/layout.tsx,자동,Next.js 자동 <meta charset='utf-8'> 삽입.,해당 없음
+Best Practices,BP-08,viewport meta,O,src/app/layout.tsx,자동,Next.js 자동 viewport meta 삽입.,해당 없음
+Best Practices,BP-09,deprecated API 없음,O,src/,전체,document.write / 동기 XHR 사용 없음. fetch API + 서버 async/await 패턴 사용.,해당 없음
+Best Practices,BP-10,passive event listeners,△,src/components/study/inlineHighlightOverlay/index.tsx,122,scroll addEventListener에 passive 옵션 없음. resize 이벤트도 passive 미설정.,"addEventListener('scroll', cb, { passive: true }) 추가"
+Best Practices,BP-11,console.error 남용 없음,O,src/lib/toc.ts,26,"서버사이드 console.error 적절 사용. inlineHighlightOverlay console.warn은 NODE_ENV=development 조건부. 프로덕션 미출력.",해당 없음
+Best Practices,BP-12,id 중복 없음,O,src/components/study/studyLayout/index.tsx,203,split-container id 단 1개. url-input-* 단일 인스턴스. demo-${id} 동적 고유 ID.,해당 없음
+Best Practices,BP-13,시맨틱 HTML,O,src/components/study/studyHeader/index.tsx,21,"<header>, <aside>, <nav>, <section>, <main> 사용 확인.",해당 없음
+Best Practices,BP-14,에러 처리 (try/catch),O,src/app/api/prepare/route.ts,74-100,모든 API handler에 try/catch. StudyPageLayout notFound() 처리. homeClient instanceof Error 패턴.,해당 없음
+SEO,SEO-01,metadataBase HTTPS,O,src/app/layout.tsx,21,metadataBase HTTPS 기본값 설정. metadata.ts 동일 패턴.,해당 없음
+SEO,SEO-02,robots noindex 없음,O,src/app/robots.ts,6-11,robots: {index:true follow:true}. robots.ts allow:'/' disallow:'/api/'.,해당 없음
+SEO,SEO-03,title 태그 길이 (50-60자),X,src/app/layout.tsx,16,default title 'lazy but crazy' 14자 — 권장 50-60자 미달.,"layout.tsx title.default를 'lazy but crazy — Developer Documentation Learning Platform'(50자)으로 확장."
+SEO,SEO-04,h1 하나 per page,O,src/app/homeClient.tsx,150,"홈 h1 1개, 스터디 페이지 h1 1개 (studyHeader). 마크다운 내 h1은 원본 문서 구조.",해당 없음
+SEO,SEO-05,meta description 길이 (150-160자),X,src/app/layout.tsx,19-21,기본 description 97자 — 권장 150-160자 미달. study description도 slug에 따라 100자 미만 가능.,"description을 155자 이상으로 확장. 예: 'Developer-first documentation learning platform. Generate Claude Code prompts from official docs. Supports Next.js, React, MDN with interactive demos.'"
+SEO,SEO-06,canonical URL,X,src/app/layout.tsx,전체,alternates.canonical 미설정. Next.js 자동 canonical 미생성.,"layout.tsx: alternates: { canonical: '/' }. metadata.ts buildStudyMetadata: alternates: { canonical: url } 추가."
+SEO,SEO-07,JSON-LD 구조화 데이터,X,src/,전체,JSON-LD / schema.org 코드 없음. WebSite/TechArticle 스키마 기회 있음.,홈: WebSite JSON-LD 추가. 스터디: TechArticle JSON-LD 추가.
+SEO,SEO-08,이미지 alt,O,src/app/homeClient.tsx,143,alt='lazy but crazy'. OG 이미지 alt:'lazy but crazy logo'.,해당 없음
+SEO,SEO-09,URL 구조 서술성,O,src/app/study/[...slug]/page.tsx,전체,/study/framework/version/slug — 계층적 서술적 URL. /demo/nextjs/16.1.6/fetching-data — 의미 있는 kebab-case.,해당 없음
+SEO,SEO-10,내부 링크 anchor text,△,src/components/study/studyShortcuts/index.tsx,39-45,studyShortcuts 페이지명 서술적. 일부 URL 경로 직접 사용(기술 컨텍스트 허용).,anchor text가 URL 경로 그대로인 경우 의미 있는 텍스트로 개선 권장.
+Performance,PERF-01,render-blocking script,O,src/app/layout.tsx,52-63,GTM Script 모두 strategy='afterInteractive' — 렌더 차단 없음.,해당 없음
+Performance,PERF-02,LCP 이미지 fetchpriority,△,src/app/homeClient.tsx,141-148,로고 next/image priority 설정 (fetchpriority=high + preload 자동 생성). 스터디 페이지 이미지 LCP 없음.,마크다운 내 이미지에 대한 lazy/priority 처리 추가 고려.
+Performance,PERF-03,Critical CSS,O,src/app/globals.css,1,Next.js + Tailwind 자동 CSS 퍼지/인라인 처리.,해당 없음
+Performance,PERF-04,img width/height (CLS 방지),O,src/app/homeClient.tsx,144-145,width={208} height={208} 명시. next/image 자동 aspect-ratio.,해당 없음
+Performance,PERF-05,below-fold loading=lazy,-,src/,전체,홈 로고는 above-fold(priority 적절). 마크다운 내 이미지는 react-markdown 표준 img 태그 — lazy 미적용. Next.js Image 미사용으로 자동화 불가.,마크다운 렌더러에서 img 태그에 loading=lazy 속성 추가 커스터마이징.
+Performance,PERF-06,현대 이미지 포맷 (WebP/AVIF),X,src/app/layout.tsx,8,폰트 파일 PretendardVariable.ttf — WOFF2 대신 TTF 사용. (logo.png는 next/image가 WebP 자동 변환).,TTF → WOFF2 변환으로 폰트 파일 용량 약 30% 절감.
+Performance,PERF-07,코드 스플리팅 (dynamic import),X,src/components/study/studyLayout/index.tsx,4-14,MemoSidePanel/ResizeHandle/StudyCoordinator 정적 import. 조건부 렌더링 컴포넌트에 next/dynamic 미사용.,"const MemoSidePanel = dynamic(() => import('@/components/study/memoSidePanel')) 적용"
+Performance,PERF-08,트리 쉐이킹 (barrel export),O,src/components/,전체,개별 파일 default export. 배럴 파일 집중 없음. 직접 경로 import 패턴 사용.,해당 없음
+Performance,PERF-09,레이아웃 스래싱 없음,O,src/components/study/inlineHighlightOverlay/index.tsx,58-113,getBoundingClientRect 배치 처리. ResizeObserver 사용. offsetWidth 1회 읽기.,해당 없음
+Core Web Vitals,CWV-01,LCP 요소 초기 HTML 존재,O,src/app/page.tsx,전체,SSR Server Component. StudyPageLayout 마크다운 서버 렌더링 → LCP 요소 초기 HTML 포함.,해당 없음
+Core Web Vitals,CWV-02,fetchpriority=high,O,src/app/homeClient.tsx,147,next/image priority prop = fetchpriority=high + preload link 자동 생성.,해당 없음
+Core Web Vitals,CWV-03,폰트 렌더 차단 없음 (font-display:swap),O,src/app/layout.tsx,9,display:'swap' 설정. -apple-system 폰트 스택 fallback 포함.,해당 없음
+Core Web Vitals,CWV-04,이벤트 핸들러 즉각 피드백,O,src/components/common/button/index.tsx,57-59,isLoading 스피너 즉시 표시. disabled:opacity-50 즉각 피드백. autoFocus 적용.,해당 없음
+Core Web Vitals,CWV-05,무거운 연산 지연 처리,△,src/components/study/docViewer/index.tsx,42-68,useMemo 헤딩 맵 생성. 긴 마크다운에서 content 변경 시 전체 재파싱 발생 — startTransition 미사용.,긴 마크다운 파싱에 useTransition/startTransition 적용 고려.
+Core Web Vitals,CWV-06,img aspect-ratio / width+height,O,src/app/homeClient.tsx,144-145,width={208} height={208} — 1:1 aspect-ratio. CLS 없음.,해당 없음
+Core Web Vitals,CWV-07,뷰포트 위 동적 삽입 없음,X,src/components/study/studyLayout/index.tsx,224-245,MemoSidePanel 조건부 마운트 시 4번째 컬럼 추가 → doc/demo 패널 폭 변경 → CLS 유발 가능.,"MemoSidePanel을 position:fixed 오버레이로 변경하거나 width:0/hidden 처리 후 애니메이션."
+Core Web Vitals,CWV-08,애니메이션 transform/opacity only,△,src/components/study/studyLayout/index.tsx,140-143,리사이즈 시 width:% 직접 변경 → 리플로우 발생. sidebar transition-transform은 OK.,패널 너비 변경에 will-change:width 추가 또는 CSS custom property 활용.
+Core Web Vitals,CWV-09,폰트 교체 CLS 방지,X,src/app/layout.tsx,7-12,TTF 폰트 + font-display:swap → FOUT 구간 CLS 가능. size-adjust/ascent-override 등 metric override 미설정.,"1) TTF→WOFF2 변환. 2) next/font/local adjustFontFallback 설정. 3) 또는 display:'optional'로 CLS 제거."
