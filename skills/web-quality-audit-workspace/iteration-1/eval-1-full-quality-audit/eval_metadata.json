@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "full-quality-audit",
+  "prompt": "변경된 코드에 대해 종합 웹 품질 검토를 실행해줘",
+  "assertions": [
+    "Delegates to accessibility skill (KWCAG2.2 33항목 + 시맨틱 HTML)",
+    "Delegates to seo skill (SEO-01~11 + WP-01~18)",
+    "Analyzes actual target files in both areas",
+    "Generates unified HTML report",
+    "Generates unified CSV report",
+    "Report contains both Section A (접근성) and Section B (SEO & Web Performance)"
+  ]
+}

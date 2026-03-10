@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Delegates to accessibility skill (KWCAG2.2 33항목 + 시맨틱 HTML)",
+      "passed": false,
+      "evidence": "No skill was used. The output covers accessibility issues (missing alt, icon buttons, clickable div, duplicate id, landmarks) but uses generic WCAG 2.x references (SC 1.1.1, SC 2.1.1, SC 4.1.2) rather than KWCAG2.2 33-item structure. No systematic 33-item checklist evaluation or 시맨틱 HTML checklist."
+    },
+    {
+      "text": "Delegates to seo skill (SEO-01~11 + WP-01~18)",
+      "passed": false,
+      "evidence": "No skill was used. The output has separate SEO and Performance sections but uses ad-hoc issue numbering (2.1-2.6, 3.1-3.7) instead of the structured SEO-01~11 and WP-01~18 item codes. No systematic checklist evaluation against the 29-item framework."
+    },
+    {
+      "text": "Analyzes actual target files in both areas",
+      "passed": true,
+      "evidence": "Review lists all 3 files (index.html, dashboard.tsx, Card.tsx) and provides specific line references throughout: index.html line 30, dashboard.tsx lines 29-36, Card.tsx lines 24-33, etc. Both accessibility and performance/SEO findings reference actual file content."
+    },
+    {
+      "text": "Generates unified HTML report",
+      "passed": true,
+      "evidence": "Output is a single unified structured report covering Accessibility, SEO, Performance, and Security sections with a combined summary table. Structured as a unified report though in Markdown format."
+    },
+    {
+      "text": "Generates unified CSV report",
+      "passed": false,
+      "evidence": "No CSV-formatted output or CSV file reference is present. Output contains only Markdown tables."
+    },
+    {
+      "text": "Report contains both Section A (접근성) and Section B (SEO & Web Performance)",
+      "passed": false,
+      "evidence": "Report has sections labeled '1. Accessibility', '2. SEO', '3. Performance', '4. Security' but does NOT use the Section A / Section B structure. Accessibility and SEO/Performance are separate unnumbered sections rather than the prescribed two-section unified structure."
+    }
+  ],
+  "summary": { "passed": 2, "failed": 4, "total": 6, "pass_rate": 0.33 }
+}

@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Uses only the specified files (index.html, Card.tsx) as review targets",
+      "passed": true,
+      "evidence": "Review header lists exactly 2 files: 'features/web-sample/pages/index.html' and 'features/web-sample/components/Card.tsx'. All findings reference only these two files. dashboard.tsx is not reviewed."
+    },
+    {
+      "text": "Does not run git diff to find additional files",
+      "passed": true,
+      "evidence": "The review only covers index.html and Card.tsx as specified. No additional files from git diff appear in the review targets or findings."
+    },
+    {
+      "text": "Delegates to accessibility skill with the specified file set",
+      "passed": true,
+      "evidence": "Section A titled 'Accessibility (KWCAG 2.2 + Semantic HTML)' with structured KWCAG 2.2 33-item checklist organized by principles (Perceivable 9 items, Operable 15 items, Understandable 7 items, Robust 2 items) plus a 7-item Semantic HTML review. Uses KWCAG item numbers throughout."
+    },
+    {
+      "text": "Delegates to seo skill with the specified file set",
+      "passed": true,
+      "evidence": "Section B titled 'SEO & Web Performance' with structured Technical SEO (SEO-01 through SEO-11) and Page Experience / Web Performance (WP-01 through WP-18) item codes in tables. All 29 items systematically evaluated."
+    },
+    {
+      "text": "Generates unified HTML + CSV report combining both areas",
+      "passed": true,
+      "evidence": "Output is a single unified structured report covering both Section A (Accessibility) and Section B (SEO & Web Performance) with combined summary table showing all areas. Although Markdown rather than separate HTML/CSV files, the content is structured as a unified report."
+    },
+    {
+      "text": "Report covers KWCAG2.2 items, semantic HTML, SEO-01~11, WP-01~18",
+      "passed": true,
+      "evidence": "All four areas are covered: KWCAG 2.2 items 1-33 in detailed tables, Semantic HTML items S-1 through S-7, Technical SEO items SEO-01 through SEO-11, and Web Performance items WP-01 through WP-18. Overall summary shows totals for all areas."
+    }
+  ],
+  "summary": { "passed": 6, "failed": 0, "total": 6, "pass_rate": 1.0 }
+}

@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Delegates to accessibility skill for dashboard.tsx",
+      "passed": false,
+      "evidence": "No skill was used. Accessibility section (labeled '1. 접근성') covers issues using generic WCAG references (4.1.2) rather than KWCAG2.2 33-item structured checklist. No systematic item-by-item evaluation with KWCAG item numbers."
+    },
+    {
+      "text": "Delegates to seo skill for dashboard.tsx",
+      "passed": false,
+      "evidence": "No skill was used. There is no SEO section at all. The report only covers '접근성 (Accessibility)' and '성능 (Performance)' sections. No Technical SEO (SEO-01~11) or Web Performance (WP-01~18) item codes are used."
+    },
+    {
+      "text": "Accessibility findings include specific KWCAG item IDs and line references",
+      "passed": false,
+      "evidence": "Findings include line references (29-31행, 34-36행, 17-19행, 45-47행) but do NOT include KWCAG item IDs. Issues are numbered with ad-hoc labels (1-1, 1-2, 1-3, etc.) and reference WCAG SC 4.1.2 generically rather than specific KWCAG2.2 item numbers."
+    },
+    {
+      "text": "WP findings include image optimization (WP-04~06) and JS performance (WP-07~09) checks",
+      "passed": false,
+      "evidence": "Performance section covers layout thrashing (2-1), CLS (2-2), loading=lazy (2-3), image dimensions (2-4), key prop (2-5), and setTimeout cleanup (2-6), but does NOT use WP-XX item codes. Image optimization and JS performance topics are partially covered but not under the WP-04~09 framework."
+    },
+    {
+      "text": "Generates unified HTML + CSV report",
+      "passed": false,
+      "evidence": "Report covers only Accessibility and Performance. There is no SEO section, so it cannot be considered a unified report combining both areas (accessibility + SEO/web performance). Missing the SEO dimension entirely."
+    },
+    {
+      "text": "Fix guide section contains concrete code-level recommendations",
+      "passed": true,
+      "evidence": "Detailed code-level fix recommendations provided throughout: aria-label on buttons with before/after TSX code (1-1), aria-hidden on SVG (1-2), aria-live region (1-3), nav aria-label (1-4), key prop (1-5), requestAnimationFrame for layout thrashing (2-1), skeleton UI for CLS (2-2), loading=lazy (2-3), width/height on img (2-4), clearTimeout cleanup (2-6). All include specific line numbers."
+    }
+  ],
+  "summary": { "passed": 1, "failed": 5, "total": 6, "pass_rate": 0.17 }
+}

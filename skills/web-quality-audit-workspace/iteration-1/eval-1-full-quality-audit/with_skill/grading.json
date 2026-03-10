@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Delegates to accessibility skill (KWCAG2.2 33항목 + 시맨틱 HTML)",
+      "passed": true,
+      "evidence": "Section A explicitly titled '접근성 (Accessibility) — KWCAG2.2 33항목 + 시맨틱 HTML' with all 33 KWCAG items evaluated in structured tables by principle (인식의 용이성 9항목, 운용의 용이성 15항목, 이해의 용이성 7항목, 견고성 2항목) plus a separate 시맨틱 HTML 검토 section with 11 items."
+    },
+    {
+      "text": "Delegates to seo skill (SEO-01~11 + WP-01~18)",
+      "passed": true,
+      "evidence": "Section B explicitly titled 'SEO & Web Performance — Technical SEO 11항목 + Page Experience 18항목' with all SEO-01 through SEO-11 and WP-01 through WP-18 evaluated in structured tables with item codes."
+    },
+    {
+      "text": "Analyzes actual target files in both areas",
+      "passed": true,
+      "evidence": "Review lists 3 target files (index.html, dashboard.tsx, Card.tsx) and references specific line numbers throughout both sections (e.g., index.html:30, Card.tsx:29, dashboard.tsx:12-13, dashboard.tsx:50)."
+    },
+    {
+      "text": "Generates unified HTML report",
+      "passed": true,
+      "evidence": "Output is a single unified structured report covering both Section A (접근성) and Section B (SEO & Web Performance) with structured tables, summary, and fix guide. Although output is Markdown rather than a standalone HTML file, the content is structured as a unified report covering both areas."
+    },
+    {
+      "text": "Generates unified CSV report",
+      "passed": false,
+      "evidence": "No CSV-formatted output or CSV file reference is present in the review.md. The output contains only Markdown tables, not CSV data."
+    },
+    {
+      "text": "Report contains both Section A (접근성) and Section B (SEO & Web Performance)",
+      "passed": true,
+      "evidence": "Report is explicitly divided into 'Section A: 접근성 (Accessibility)' and 'Section B: SEO & Web Performance' with clear section headers and comprehensive coverage of both areas."
+    }
+  ],
+  "summary": { "passed": 5, "failed": 1, "total": 6, "pass_rate": 0.83 }
+}

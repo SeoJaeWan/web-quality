@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Reads references/kwcag22.md before starting review",
+      "passed": true,
+      "evidence": "The review uses exact KWCAG2.2 sequential item numbering (1-33), Korean item names from the reference, the skill-defined classification system (✅/❌/⚠️/➖/🔵 판정불가), and auto-detection categorization (정적분석/판정불가). The complete 33-item evaluation table and semantic HTML review structure match the reference document's format."
+    },
+    {
+      "text": "Evaluates semantic HTML usage (header, nav, main, footer)",
+      "passed": true,
+      "evidence": "The '시맨틱 HTML 검토' section under '맥락 판단 패턴' explicitly evaluates landmark usage: '랜드마크 누락 | ❌ 위반 | <header>, <main>, <footer>, <nav> 등 랜드마크 요소가 전혀 사용되지 않음'. The review also provides a recommended restructured HTML with <header>, <nav>, <main>, and <footer> elements."
+    },
+    {
+      "text": "Checks ARIA attributes and landmark roles",
+      "passed": true,
+      "evidence": "Item 33 (웹 애플리케이션 접근성 준수) is evaluated as ✅ 준수 noting '커스텀 UI 컴포넌트가 없음. 네이티브 HTML 요소만 사용'. The review checks for aria-live in the script section (noting innerHTML without aria-live), evaluates landmark roles in the semantic HTML section, and the overall report structure addresses ARIA comprehensively across multiple items."
+    },
+    {
+      "text": "Evaluates form input labeling and association",
+      "passed": true,
+      "evidence": "Item 29 (레이블 제공) is evaluated as ✅ 준수 with note: '페이지에 <input>, <textarea>, <select> 요소가 없으므로 해당 사항 없음'. Item 28 (오류 정정) similarly evaluated. The semantic HTML section includes '폼 그룹화 | ➖ 해당없음 | 폼 요소가 없음'. While no form elements exist to test, the items were properly evaluated."
+    },
+    {
+      "text": "Classifies findings using result classification system",
+      "passed": true,
+      "evidence": "Consistently uses the 5-tier classification: ✅ 준수 (17 items), ❌ 위반 (4 items: alt text, skip nav, landmark, section structure), ⚠️ 권고 (4 items: title, lang, markup, section), ➖ 해당없음 (5 items), 🔵 판정불가 (3 items with Playwright reason). Semantic HTML items also use the same system."
+    }
+  ],
+  "summary": {"passed": 5, "failed": 0, "total": 5, "pass_rate": 1.0}
+}

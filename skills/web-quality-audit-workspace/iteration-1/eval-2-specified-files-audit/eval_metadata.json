@@ -1,0 +1,13 @@
+{
+  "eval_id": 2,
+  "eval_name": "specified-files-audit",
+  "prompt": "index.html이랑 Card.tsx만 대상으로 웹 품질 전체 감사해줘",
+  "assertions": [
+    "Uses only the specified files (index.html, Card.tsx) as review targets",
+    "Does not run git diff to find additional files",
+    "Delegates to accessibility skill with the specified file set",
+    "Delegates to seo skill with the specified file set",
+    "Generates unified HTML + CSV report combining both areas",
+    "Report covers KWCAG2.2 items, semantic HTML, SEO-01~11, WP-01~18"
+  ]
+}

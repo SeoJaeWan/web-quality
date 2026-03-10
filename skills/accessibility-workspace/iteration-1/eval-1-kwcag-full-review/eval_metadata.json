@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "kwcag-full-review",
+  "prompt": "변경된 웹 코드의 접근성을 KWCAG2.2 기준으로 검토해줘",
+  "assertions": [
+    "Reads references/kwcag22.md before starting review",
+    "Analyzes all 3 target files (index.html, dashboard.tsx, Card.tsx)",
+    "Evaluates all 33 KWCAG2.2 items — none skipped",
+    "Uses O/X/△/N/A or ✅/❌/⚠️/➖ classification system",
+    "Includes semantic HTML review section",
+    "Each ❌ finding includes filename and line reference"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Reads references/guide.md for WP evaluation criteria",
+      "passed": false,
+      "evidence": "No reference to guide.md. The review uses custom section numbering (1-1, 1-2, 2-1, etc.) and ad-hoc severity labels (Critical, High, Medium, Low) rather than the guide's WP item codes and structured format."
+    },
+    {
+      "text": "Checks img width/height or aspect-ratio for CLS prevention (WP-04)",
+      "passed": true,
+      "evidence": "Section 1-1 'Image without explicit width/height (Critical)' identifies dashboard.tsx line 50 missing width/height, explains CLS impact, and provides fix with explicit dimensions plus CSS w-full h-auto."
+    },
+    {
+      "text": "Checks loading='lazy' usage for below-fold images (WP-05)",
+      "passed": true,
+      "evidence": "Section 2-1 'Below-the-fold image without lazy loading (High)' identifies the promo image at line 50, explains it's below-fold based on className='mt-8' and page structure, recommends loading='lazy' and decoding='async'."
+    },
+    {
+      "text": "Checks modern image formats WebP/AVIF (WP-06)",
+      "passed": true,
+      "evidence": "Section 2-2 'No modern image format usage (Medium)' flags .png only usage, notes WebP/AVIF can reduce file size by 30-50%, provides <picture> element fix with AVIF and WebP sources."
+    },
+    {
+      "text": "Checks render-blocking scripts (WP-01)",
+      "passed": false,
+      "evidence": "The review does not check for render-blocking scripts. The target files are dashboard.tsx and Card.tsx (React components), and the review does not evaluate script loading strategies at all."
+    },
+    {
+      "text": "References WP item codes in findings",
+      "passed": false,
+      "evidence": "No WP item codes (WP-01, WP-04, etc.) appear anywhere in the output. Issues use custom numbering: 1-1, 1-2, 2-1, 2-2, 2-3, 2-4, 3-1, 3-2, 3-3."
+    }
+  ],
+  "summary": { "passed": 3, "failed": 3, "total": 6, "pass_rate": 0.5 }
+}

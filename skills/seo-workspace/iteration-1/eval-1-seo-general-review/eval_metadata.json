@@ -1,0 +1,12 @@
+{
+  "eval_id": 1,
+  "eval_name": "seo-general-review",
+  "prompt": "변경된 페이지의 SEO 최적화 상태를 검토해줘",
+  "assertions": [
+    "Reads references/guide.md for evaluation criteria",
+    "Checks meta tags (title, description, canonical)",
+    "Checks heading hierarchy (h1 uniqueness)",
+    "References SEO item IDs (SEO-01~11) in findings",
+    "Provides fix recommendations for identified issues"
+  ]
+}

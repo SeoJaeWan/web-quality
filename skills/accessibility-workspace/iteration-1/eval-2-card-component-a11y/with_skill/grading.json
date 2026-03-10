@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Reads references/kwcag22.md before starting review",
+      "passed": true,
+      "evidence": "The review uses exact KWCAG2.2 sequential item numbering (Items 1-33), Korean item names matching the reference (e.g., '적절한 대체 텍스트 제공', '키보드 사용 보장', '마크업 오류 방지'), and the classification system defined in the skill (✅/❌/⚠️/➖/🔵 판정불가). The structured evaluation of all 33 items with auto-detection categorization confirms the reference was read."
+    },
+    {
+      "text": "Focuses analysis on Card.tsx specifically",
+      "passed": true,
+      "evidence": "The review header states '대상 파일: features/web-sample/components/Card.tsx'. All findings reference Card.tsx with specific line numbers (Card.tsx:24-29, Card.tsx:27, Card.tsx:24-33). Items not applicable to Card.tsx are marked as ➖ 해당없음 with component-scoped reasoning."
+    },
+    {
+      "text": "Identifies concrete issues (e.g., missing alt text, keyboard accessibility)",
+      "passed": true,
+      "evidence": "Identifies 3 concrete violations: (1) Item 10 - div onClick missing tabIndex/role/onKeyDown for keyboard access (Card.tsx:24-29), (2) Item 32 - hardcoded id='card-item' causing duplicate IDs (Card.tsx:27), (3) Item 33 - custom interactive div missing WAI-ARIA role/state (Card.tsx:24-33). Also identifies 3 advisory issues for focus visibility, label/name, and interactive element semantics."
+    },
+    {
+      "text": "Maps each issue to specific KWCAG item ID",
+      "passed": true,
+      "evidence": "Every finding is mapped to a specific KWCAG item number: Item 10 (키보드 사용 보장), Item 11 (초점 이동과 표시), Item 23 (레이블과 네임), Item 32 (마크업 오류 방지), Item 33 (웹 애플리케이션 접근성 준수). The summary table lists violations by item number."
+    },
+    {
+      "text": "Provides fix recommendations for each issue",
+      "passed": true,
+      "evidence": "Each violation includes a '수정 가이드' section with code examples: Item 10 provides two approaches (button replacement or role='button' + tabIndex + onKeyDown), Item 32 shows id removal or useId() hook usage, Item 33 shows role='button' with aria states. A comprehensive '종합 수정 가이드' section consolidates all fixes with before/after code."
+    }
+  ],
+  "summary": {"passed": 5, "failed": 0, "total": 5, "pass_rate": 1.0}
+}

@@ -1,0 +1,35 @@
+{
+  "expectations": [
+    {
+      "text": "Reads references/guide.md for full evaluation criteria",
+      "passed": false,
+      "evidence": "No reference to guide.md. The review uses its own numbering scheme (SEO-01 through SEO-11, WP-01 through WP-18) but these are self-assigned labels that do NOT match the guide's item definitions. For example, the output's 'SEO-01' is 'Missing Meta Description' while the guide's SEO-01 is 'noindex 없음'. The output's WP codes also do not align with the guide's definitions."
+    },
+    {
+      "text": "Evaluates all SEO items (SEO-01 through SEO-11)",
+      "passed": false,
+      "evidence": "The output lists SEO-01 through SEO-11 but with completely different item definitions than the guide. Guide's SEO-01 is 'noindex check' but output's SEO-01 is 'Missing Meta Description'. Guide's SEO-09 is 'DOCTYPE html' but output's SEO-09 is 'hreflang'. Key guide items like DOCTYPE, charset, viewport are not evaluated at all."
+    },
+    {
+      "text": "Evaluates all WP items (WP-01 through WP-18)",
+      "passed": false,
+      "evidence": "The output lists WP-01 through WP-18 but with different definitions than the guide. Guide's WP-01 is 'render-blocking script' but output's WP-01 is 'Render-Blocking CSS'. Guide's WP-04 is 'img width/height' but output's WP-04 is also image width/height (coincidental match). Many guide items (WP-12 LCP in initial HTML, WP-13 INP feedback, WP-14 heavy computation, WP-15 React memo, WP-16 dynamic insertion, WP-17 animation) are not evaluated per their guide definitions."
+    },
+    {
+      "text": "Produces result table with SEO and WP sections",
+      "passed": true,
+      "evidence": "A summary table is present at the bottom with columns ID/Category/Severity/File/Issue, divided into SEO items (SEO-01 through SEO-11) and WP items (WP-01 through WP-18)."
+    },
+    {
+      "text": "Every item has a result (pass/fail/advisory/N/A)",
+      "passed": false,
+      "evidence": "The summary table assigns severity levels (High/Medium/Low/Info) but does not assign pass/fail/advisory/N/A results to each item. Items are listed as issues found rather than checklist results. There is no systematic pass/fail evaluation for all 29 guide items."
+    },
+    {
+      "text": "Provides fix guide for failed items",
+      "passed": true,
+      "evidence": "Each issue section includes a '권장 수정' (recommended fix) with specific code examples: CSS async loading, font-display: swap, font preload, image width/height, lazy loading, picture element for WebP/AVIF, requestAnimationFrame for layout thrashing, min-height for dynamic content, etc."
+    }
+  ],
+  "summary": { "passed": 2, "failed": 4, "total": 6, "pass_rate": 0.33 }
+}

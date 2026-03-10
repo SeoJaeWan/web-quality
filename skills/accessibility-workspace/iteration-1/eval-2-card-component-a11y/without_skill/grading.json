@@ -1,0 +1,30 @@
+{
+  "expectations": [
+    {
+      "text": "Reads references/kwcag22.md before starting review",
+      "passed": false,
+      "evidence": "The without_skill run was instructed not to read the reference document. The review uses non-standard KWCAG item numbering (e.g., '7.1.1 키보드 사용 보장', '7.3.1 마크업 오류 방지', '7.1.2 초점 이동과 표시') rather than the sequential 1-33 numbering defined in kwcag22.md. These '7.x.x' numbers do not match the actual KWCAG2.2 specification."
+    },
+    {
+      "text": "Focuses analysis on Card.tsx specifically",
+      "passed": true,
+      "evidence": "The review header states '대상 파일: features/web-sample/components/Card.tsx'. All 6 findings reference Card.tsx with specific details about the div onClick pattern, id='card-item', and handleClick function."
+    },
+    {
+      "text": "Identifies concrete issues (e.g., missing alt text, keyboard accessibility)",
+      "passed": true,
+      "evidence": "Identifies 6 concrete issues: (1) keyboard inaccessibility of div onClick, (2) missing role attribute, (3) duplicate id='card-item', (4) no focus indicator styles, (5) missing accessible name, (6) direct DOM manipulation in handleClick. Each includes specific code references and explanations."
+    },
+    {
+      "text": "Maps each issue to specific KWCAG item ID",
+      "passed": false,
+      "evidence": "Issues are mapped to incorrect KWCAG identifiers. Uses '7.1.1', '7.3.1', '7.1.2' which are not valid KWCAG2.2 item IDs. The actual KWCAG2.2 uses sequential numbering 1-33 (e.g., Item 10 for keyboard access, Item 32 for markup errors). Without reading the reference document, the mapping is inaccurate."
+    },
+    {
+      "text": "Provides fix recommendations for each issue",
+      "passed": true,
+      "evidence": "Each of the 6 issues includes a '해결 방안' section with code examples: tabIndex + onKeyDown handler, role='button', useId() for unique IDs, focus:outline CSS classes, aria-labelledby pattern, and React useState recommendation. Recommendations are practical and actionable."
+    }
+  ],
+  "summary": {"passed": 3, "failed": 2, "total": 5, "pass_rate": 0.6}
+}
