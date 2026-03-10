@@ -1,6 +1,9 @@
 ---
 name: seo
-description: Optimize for search engine visibility and ranking. Use when asked to "improve SEO", "optimize for search", "fix meta tags", "add structured data", "sitemap optimization", or "search engine optimization".
+description: Optimize for search engine visibility and ranking. web-quality-reviewer를 통해 실행됩니다. 직접 트리거 불가.
+model: sonnet
+context: fork
+agent: web-quality-reviewer
 ---
 
 <Skill_Guide>
@@ -16,13 +19,18 @@ review and outputs a markdown checklist result.
 
 Must read before review:
 
-  .claude/skills/seo/references/guide.md
+  references/guide.md (relative to this skill directory)
 
 Contains: Technical SEO, On-page SEO, Structured data templates, Mobile SEO, International SEO patterns.
 
 ---
 
-## Step 1. Determine Review Scope
+## Step 1. Review Scope
+
+이 스킬이 web-quality-audit 오케스트레이터를 통해 실행된 경우,
+전달받은 파일 목록을 그대로 사용합니다. Step 2로 진행하세요.
+
+단독 실행 시에만 아래를 수행:
 
 ```bash
 git diff --name-only HEAD
@@ -37,7 +45,7 @@ git diff --name-only HEAD
 
 ## Step 2. Load Reference Guide
 
-Read `.claude/skills/seo/references/guide.md` in full before proceeding.
+Read `references/guide.md (relative to this skill directory)` in full before proceeding.
 
 ---
 
@@ -79,7 +87,7 @@ Present findings as a markdown checklist table:
 | Code | Priority | Item | Result | Issue Found |
 |------|----------|------|--------|-------------|
 
-Result values: ✅ Pass / ❌ Fail / ⚠️ Advisory / — N/A
+Result values: ✅ Pass / ❌ Fail / ⚠️ Advisory / ➖ N/A
 
 ---
 
@@ -88,7 +96,7 @@ Result values: ✅ Pass / ❌ Fail / ⚠️ Advisory / — N/A
 1. Confirm every item (SEO-01 through SEO-10) has been evaluated — none skipped.
 2. Every ❌ must include: filename, line number or element, concrete issue description.
 3. Every ⚠️ must include a specific improvement recommendation.
-4. If any item could not be evaluated, mark — and state reason.
+4. If any item could not be evaluated, mark ➖ and state reason.
 5. If zero ❌ items found, state explicitly: "All evaluated items pass."
 
 </Instructions>
@@ -100,16 +108,16 @@ Result values: ✅ Pass / ❌ Fail / ⚠️ Advisory / — N/A
 
 | 코드 | 우선순위 | 항목 | 결과 | 발견된 문제 |
 |------|---------|------|------|------------|
-| SEO-01 | Critical | noindex 없음 | ✅/❌/⚠️/— | |
-| SEO-02 | Critical | title 태그 존재하고 고유 | ✅/❌/⚠️/— | |
-| SEO-03 | Critical | h1 하나 | ✅/❌/⚠️/— | |
-| SEO-04 | Critical | HTTPS 사용 | ✅/❌/⚠️/— | |
-| SEO-05 | High | meta description | ✅/❌/⚠️/— | |
-| SEO-06 | High | canonical URL | ✅/❌/⚠️/— | |
-| SEO-07 | High | 구조화 데이터 (JSON-LD) | ✅/❌/⚠️/— | |
-| SEO-08 | High | 이미지 alt 텍스트 | ✅/❌/⚠️/— | |
-| SEO-09 | Medium | 서술적 URL 구조 | ✅/❌/⚠️/— | |
-| SEO-10 | Medium | 내부 링크 anchor text | ✅/❌/⚠️/— | |
+| SEO-01 | Critical | noindex 없음 | ✅/❌/⚠️/➖ | |
+| SEO-02 | Critical | title 태그 존재하고 고유 | ✅/❌/⚠️/➖ | |
+| SEO-03 | Critical | h1 하나 | ✅/❌/⚠️/➖ | |
+| SEO-04 | Critical | HTTPS 사용 | ✅/❌/⚠️/➖ | |
+| SEO-05 | High | meta description | ✅/❌/⚠️/➖ | |
+| SEO-06 | High | canonical URL | ✅/❌/⚠️/➖ | |
+| SEO-07 | High | 구조화 데이터 (JSON-LD) | ✅/❌/⚠️/➖ | |
+| SEO-08 | High | 이미지 alt 텍스트 | ✅/❌/⚠️/➖ | |
+| SEO-09 | Medium | 서술적 URL 구조 | ✅/❌/⚠️/➖ | |
+| SEO-10 | Medium | 내부 링크 anchor text | ✅/❌/⚠️/➖ | |
 
 ### 수정 가이드
 

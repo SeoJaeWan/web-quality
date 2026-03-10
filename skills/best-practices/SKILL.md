@@ -1,6 +1,9 @@
 ---
 name: best-practices
-description: Apply modern web development best practices for security, compatibility, and code quality. Use when asked to "apply best practices", "security audit", "modernize code", "code quality review", or "check for vulnerabilities".
+description: Apply modern web development best practices for security, compatibility, and code quality. web-quality-reviewer를 통해 실행됩니다. 직접 트리거 불가.
+model: sonnet
+context: fork
+agent: web-quality-reviewer
 ---
 
 <Skill_Guide>
@@ -16,13 +19,18 @@ a markdown checklist result.
 
 Must read before review:
 
-  .claude/skills/best-practices/references/guide.md
+  references/guide.md (relative to this skill directory)
 
 Contains: Security checklist, Compatibility checklist, Code Quality checklist, UX checklist with code patterns and examples.
 
 ---
 
-## Step 1. Determine Review Scope
+## Step 1. Review Scope
+
+이 스킬이 web-quality-audit 오케스트레이터를 통해 실행된 경우,
+전달받은 파일 목록을 그대로 사용합니다. Step 2로 진행하세요.
+
+단독 실행 시에만 아래를 수행:
 
 ```bash
 git diff --name-only HEAD
@@ -37,7 +45,7 @@ git diff --name-only HEAD
 
 ## Step 2. Load Reference Guide
 
-Read `.claude/skills/best-practices/references/guide.md` in full before proceeding.
+Read `references/guide.md (relative to this skill directory)` in full before proceeding.
 
 ---
 
@@ -83,7 +91,7 @@ Present findings as a markdown checklist table:
 | Code | Area | Item | Result | Issue Found |
 |------|------|------|--------|-------------|
 
-Result values: ✅ Pass / ❌ Fail / ⚠️ Advisory / — N/A
+Result values: ✅ Pass / ❌ Fail / ⚠️ Advisory / ➖ N/A
 
 ---
 
@@ -92,7 +100,7 @@ Result values: ✅ Pass / ❌ Fail / ⚠️ Advisory / — N/A
 1. Confirm every item (BP-01 through BP-14) has been evaluated — none skipped.
 2. Every ❌ must include: filename, line number or code pattern, concrete issue description.
 3. Every ⚠️ must include a specific improvement recommendation.
-4. If any item could not be evaluated (e.g. no package.json for BP-02), mark — and state reason.
+4. If any item could not be evaluated (e.g. no package.json for BP-02), mark ➖ and state reason.
 5. If zero ❌ items found, state explicitly: "All evaluated items pass."
 
 </Instructions>
@@ -104,20 +112,20 @@ Result values: ✅ Pass / ❌ Fail / ⚠️ Advisory / — N/A
 
 | 코드 | 영역 | 항목 | 결과 | 발견된 문제 |
 |------|------|------|------|------------|
-| BP-01 | 보안 | HTTPS / mixed content 없음 | ✅/❌/⚠️/— | |
-| BP-02 | 보안 | 취약 의존성 없음 | ✅/❌/⚠️/— | |
-| BP-03 | 보안 | CSP 헤더 | ✅/❌/⚠️/— | |
-| BP-04 | 보안 | 보안 헤더 | ✅/❌/⚠️/— | |
-| BP-05 | 보안 | innerHTML 미검증 입력 | ✅/❌/⚠️/— | |
-| BP-06 | 호환성 | DOCTYPE html | ✅/❌/⚠️/— | |
-| BP-07 | 호환성 | charset UTF-8 최상단 | ✅/❌/⚠️/— | |
-| BP-08 | 호환성 | viewport meta | ✅/❌/⚠️/— | |
-| BP-09 | 호환성 | deprecated API 미사용 | ✅/❌/⚠️/— | |
-| BP-10 | 호환성 | passive listener | ✅/❌/⚠️/— | |
-| BP-11 | 코드품질 | 콘솔 에러 없음 | ✅/❌/⚠️/— | |
-| BP-12 | 코드품질 | 중복 id 없음 | ✅/❌/⚠️/— | |
-| BP-13 | 코드품질 | 시맨틱 HTML | ✅/❌/⚠️/— | |
-| BP-14 | 코드품질 | 에러 처리 | ✅/❌/⚠️/— | |
+| BP-01 | 보안 | HTTPS / mixed content 없음 | ✅/❌/⚠️/➖ | |
+| BP-02 | 보안 | 취약 의존성 없음 | ✅/❌/⚠️/➖ | |
+| BP-03 | 보안 | CSP 헤더 | ✅/❌/⚠️/➖ | |
+| BP-04 | 보안 | 보안 헤더 | ✅/❌/⚠️/➖ | |
+| BP-05 | 보안 | innerHTML 미검증 입력 | ✅/❌/⚠️/➖ | |
+| BP-06 | 호환성 | DOCTYPE html | ✅/❌/⚠️/➖ | |
+| BP-07 | 호환성 | charset UTF-8 최상단 | ✅/❌/⚠️/➖ | |
+| BP-08 | 호환성 | viewport meta | ✅/❌/⚠️/➖ | |
+| BP-09 | 호환성 | deprecated API 미사용 | ✅/❌/⚠️/➖ | |
+| BP-10 | 호환성 | passive listener | ✅/❌/⚠️/➖ | |
+| BP-11 | 코드품질 | 콘솔 에러 없음 | ✅/❌/⚠️/➖ | |
+| BP-12 | 코드품질 | 중복 id 없음 | ✅/❌/⚠️/➖ | |
+| BP-13 | 코드품질 | 시맨틱 HTML | ✅/❌/⚠️/➖ | |
+| BP-14 | 코드품질 | 에러 처리 | ✅/❌/⚠️/➖ | |
 
 ### 수정 가이드
 
