@@ -4,14 +4,15 @@
     {
       "id": 1,
       "prompt": "변경된 페이지의 SEO 최적화 상태를 검토해줘",
-      "expected_output": "SEO-01~10 기준 분석, 우선순위별 이슈 식별",
+      "expected_output": "SEO-01~11 기준 분석, 우선순위별 이슈 식별",
       "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/pages/dashboard.tsx"],
       "expectations": [
         "Reads skills/seo/SKILL.md via Read tool",
+        "Reads references/guide.md for evaluation criteria",
         "Analyzes target files for SEO issues (not just lists items)",
         "Checks meta tags (title, description, canonical)",
         "Checks heading hierarchy (h1 uniqueness, h2-h6 order)",
-        "References SEO item IDs in findings",
+        "References SEO item IDs (SEO-01~11) in findings",
         "Provides fix recommendations for identified issues"
       ]
     },
@@ -30,15 +31,47 @@
     },
     {
       "id": 3,
-      "prompt": "dashboard.tsx의 링크 구조와 이미지 alt 텍스트를 SEO 관점에서 리뷰해줘",
-      "expected_output": "High/Medium SEO 항목 중심, 링크/이미지 최적화 분석",
-      "files": ["../../features/web-sample/pages/dashboard.tsx"],
+      "prompt": "dashboard.tsx에서 이미지 최적화와 렌더링 성능 문제를 점검해줘. 특히 CLS 방지랑 로딩 최적화 위주로",
+      "expected_output": "WP-01~06 중심 이미지/렌더링 최적화 분석, CLS 관련 항목 강조",
+      "files": ["../../features/web-sample/pages/dashboard.tsx", "../../features/web-sample/components/Card.tsx"],
       "expectations": [
         "Reads skills/seo/SKILL.md via Read tool",
-        "Checks image alt text presence and descriptiveness",
-        "Evaluates internal link structure and anchor text",
-        "Checks for nofollow/noindex usage",
-        "Identifies missing or poor alt text with specific element references"
+        "Reads references/guide.md for WP evaluation criteria",
+        "Checks img width/height or aspect-ratio for CLS prevention (WP-04)",
+        "Checks loading='lazy' usage for below-fold images (WP-05)",
+        "Checks modern image formats WebP/AVIF (WP-06)",
+        "Checks render-blocking scripts (WP-01)",
+        "References WP item codes in findings"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "index.html의 JavaScript 로딩 방식과 폰트 최적화, Core Web Vitals 관련 이슈를 분석해줘",
+      "expected_output": "WP-07~18 항목 중심, JS/폰트/LCP/INP/CLS 분석",
+      "files": ["../../features/web-sample/pages/index.html"],
+      "expectations": [
+        "Reads skills/seo/SKILL.md via Read tool",
+        "Checks code splitting and tree shaking patterns (WP-07, WP-08)",
+        "Checks font-display optimization (WP-10)",
+        "Checks font preload (WP-11)",
+        "Evaluates LCP element availability in initial HTML (WP-12)",
+        "Checks for layout thrashing patterns (WP-09)",
+        "References WP item codes in findings"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "변경된 파일 전체에 대해 SEO + 웹 성능 종합 리뷰해줘. SEO-01~11이랑 WP-01~18 전부 다 봐줘",
+      "expected_output": "SEO 11항목 + WP 18항목 전체 평가, 통합 결과표 출력",
+      "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/pages/dashboard.tsx", "../../features/web-sample/components/Card.tsx"],
+      "expectations": [
+        "Reads skills/seo/SKILL.md via Read tool",
+        "Reads references/guide.md for full evaluation criteria",
+        "Evaluates all SEO items (SEO-01 through SEO-11)",
+        "Evaluates all WP items (WP-01 through WP-18)",
+        "Produces result table with SEO and WP sections",
+        "Every item has a result (pass/fail/advisory/N/A)",
+        "Provides fix guide for failed items"
       ]
     }
   ]

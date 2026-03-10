@@ -2,8 +2,6 @@
 name: accessibility
 description: Web accessibility/web standards review. Reviews changed code against KWCAG2.2 and generates HTML + CSV reports. web-quality-reviewer를 통해 실행됩니다. 직접 트리거 불가.
 model: opus
-context: fork
-agent: web-quality-reviewer
 ---
 
 <Skill_Guide>
@@ -180,6 +178,7 @@ grep -E "baseURL|webServer" playwright.config.ts 2>/dev/null | head -5
 ```
 
 Resolution order:
+
 1. Extract `baseURL` from `playwright.config.ts`
 2. If not found, extract `webServer.url`
 3. Infer route from changed files via `git diff --name-only HEAD`:
@@ -211,10 +210,12 @@ browser_evaluate(() => {
 ```
 
 Verdict criteria:
+
 - Normal text: foreground/background contrast ratio ≥ **4.5:1**
 - Large text (18pt+ or 14pt bold): ≥ **3:1**
 
 Results:
+
 - Element below threshold found → `❌` (specify which element)
 - All pass → `✅`
 - Color extraction failed (transparent background, etc.) → `⚠️`
@@ -234,6 +235,7 @@ browser_snapshot()              → verify focus
 ```
 
 Verdict criteria:
+
 - Focus moves visually on Tab and all interactive elements are reachable → `✅`
 - No focus movement or focus trap detected → `❌`
 - Only some elements reachable → `⚠️`
@@ -249,6 +251,7 @@ browser_snapshot()              → snapshot after interaction (verify ARIA stat
 ```
 
 Verdict criteria:
+
 - `aria-expanded`, `aria-selected`, `aria-checked`, `aria-pressed`, etc. change after interaction → `✅`
 - No state change (static ARIA) → `⚠️`
 - No interactive elements found → `➖`
@@ -262,12 +265,12 @@ Mark the verdict method column as `Playwright` in the report.
 
 ## Step 5. Classify Results
 
-| Result | Meaning                                            |
-| ------ | -------------------------------------------------- |
-| `✅`   | Pass: no violation found                           |
-| `❌`   | Fail: violation found (include filename:line)      |
-| `⚠️`   | Advisory: no violation but improvement recommended |
-| `➖`   | N/A: the relevant element does not exist           |
+| Result        | Meaning                                                                                                                                                       |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `✅`          | Pass: no violation found                                                                                                                                      |
+| `❌`          | Fail: violation found (include filename:line)                                                                                                                 |
+| `⚠️`          | Advisory: no violation but improvement recommended                                                                                                            |
+| `➖`          | N/A: the relevant element does not exist                                                                                                                      |
 | `🔵 판정불가` | Runtime verification not possible — must state specific reason (one of 4): playwright.config.ts 없음 / Playwright 미설치 / 브라우저 미설치 / 개발 서버 미실행 |
 
 ---
@@ -326,6 +329,7 @@ mkdir -p "${REPORT_DIR}"
 Read `references/output-format.md` for full HTML + CSV report templates.
 
 Key requirements:
+
 - Result colors: `✅` (green #28a745), `❌` (red #dc3545), `⚠️` (yellow #ffc107), `➖` (gray #6c757d), `🔵 판정불가` (blue #6c8ebf)
 - Structure: summary table → detailed results by principle → semantic HTML review → fix guide
 - Language: Korean / Style: inline CSS only (no external dependencies)

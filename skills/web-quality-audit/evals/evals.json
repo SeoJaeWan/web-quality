@@ -4,43 +4,47 @@
     {
       "id": 1,
       "prompt": "변경된 코드에 대해 종합 웹 품질 검토를 실행해줘",
-      "expected_output": "5개 영역 순차 실행, 통합 리포트 생성",
+      "expected_output": "2개 영역(접근성 + SEO&웹성능) 순차 실행, 통합 HTML+CSV 리포트 생성",
       "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/pages/dashboard.tsx", "../../features/web-sample/components/Card.tsx"],
       "expectations": [
         "Reads skills/web-quality-audit/SKILL.md via Read tool",
-        "Executes all 5 review areas (Accessibility, BP, SEO, Performance, CWV)",
-        "Analyzes actual target files in each area",
+        "Delegates to accessibility skill (KWCAG2.2 33항목 + 시맨틱 HTML)",
+        "Delegates to seo skill (SEO-01~11 + WP-01~18)",
+        "Analyzes actual target files in both areas",
         "Identifies specific issues per area with item IDs",
-        "Generates unified report combining all areas",
-        "Follows sequential execution order (A→B→C→D→E)"
+        "Generates unified HTML report in reports/web-quality/YYYYMMDD-HHmm/report.html",
+        "Generates unified CSV report in reports/web-quality/YYYYMMDD-HHmm/report.csv",
+        "Report contains both Section A (접근성) and Section B (SEO & Web Performance)"
       ]
     },
     {
       "id": 2,
-      "prompt": "접근성이랑 SEO만 검토해줘. 나머지는 안 해도 돼",
-      "expected_output": "접근성(33항목)과 SEO(10항목)만 실행, 나머지 스킵",
-      "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/pages/dashboard.tsx"],
+      "prompt": "index.html이랑 Card.tsx만 대상으로 웹 품질 전체 감사해줘",
+      "expected_output": "지정된 2개 파일에 대해 접근성 + SEO&웹성능 전체 검토, 통합 리포트 생성",
+      "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/components/Card.tsx"],
       "expectations": [
         "Reads skills/web-quality-audit/SKILL.md via Read tool",
-        "Executes only Accessibility and SEO review areas",
-        "Skips Best Practices, Performance, and CWV areas",
-        "Analyzes target files for accessibility issues",
-        "Analyzes target files for SEO issues",
-        "Generates partial report for selected areas only"
+        "Uses only the specified files (index.html, Card.tsx) as review targets",
+        "Does not run git diff to find additional files",
+        "Delegates to accessibility skill with the specified file set",
+        "Delegates to seo skill with the specified file set",
+        "Generates unified HTML + CSV report combining both areas",
+        "Report covers KWCAG2.2 items, semantic HTML, SEO-01~11, WP-01~18"
       ]
     },
     {
       "id": 3,
-      "prompt": "성능과 Core Web Vitals만 집중 분석해줘. 특히 이미지 최적화 관련해서",
-      "expected_output": "Performance(11항목)과 CWV(11항목) 실행, 이미지 항목 강조",
-      "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/components/Card.tsx"],
+      "prompt": "dashboard.tsx 하나만 종합 품질 검토해줘. 접근성이랑 성능 이슈 위주로 자세히 봐줘",
+      "expected_output": "단일 파일 대상 접근성 + SEO&웹성능 검토, 접근성/성능 이슈 상세 분석",
+      "files": ["../../features/web-sample/pages/dashboard.tsx"],
       "expectations": [
         "Reads skills/web-quality-audit/SKILL.md via Read tool",
-        "Executes Performance and CWV review areas",
-        "Skips Accessibility, Best Practices, and SEO areas",
-        "Emphasizes image-related items (PERF-04~06, CWV-07~11)",
-        "Identifies specific image optimization issues in target files",
-        "Provides image-focused optimization recommendations"
+        "Delegates to accessibility skill for dashboard.tsx",
+        "Delegates to seo skill for dashboard.tsx",
+        "Accessibility findings include specific KWCAG item IDs and line references",
+        "WP findings include image optimization (WP-04~06) and JS performance (WP-07~09) checks",
+        "Generates unified HTML + CSV report",
+        "Fix guide section contains concrete code-level recommendations"
       ]
     }
   ]
