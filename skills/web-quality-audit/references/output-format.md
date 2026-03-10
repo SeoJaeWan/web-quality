@@ -1,6 +1,6 @@
 # Output Format Reference
 
-Unified HTML + CSV report templates for web quality audit results (4 areas).
+Unified HTML + CSV report templates for web quality audit results (2 areas).
 
 ---
 
@@ -22,22 +22,18 @@ Unified HTML + CSV report templates for web quality audit results (4 areas).
     .playwright-badge { background: #4a90d9; color: #fff; font-size: 0.75rem; padding: 2px 6px; border-radius: 3px; }
 
     /* 종합 요약 */
-    .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+    .summary-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 32px; }
     .summary-card { border-radius: 6px; padding: 14px; text-align: center; color: #fff; }
     .summary-card .area { font-size: 0.75rem; font-weight: 600; margin-bottom: 6px; }
     .summary-card .score { font-size: 1.5rem; font-weight: 700; }
     .card-a11y { background: #6c8ebf; }
-    .card-bp { background: #82c882; }
     .card-seo { background: #f0a830; }
-    .card-perf { background: #e05c5c; }
 
     /* 섹션 */
     .section { margin-bottom: 36px; }
     .section-header { padding: 12px 16px; border-radius: 6px 6px 0 0; color: #fff; font-weight: 700; font-size: 1rem; }
     .header-a11y { background: #6c8ebf; }
-    .header-bp { background: #82c882; }
     .header-seo { background: #f0a830; }
-    .header-perf { background: #e05c5c; }
 
     table { width: 100%; border-collapse: collapse; }
     th { background: #f9f9f9; font-size: 0.8rem; padding: 8px 10px; text-align: left; border-bottom: 2px solid #ddd; }
@@ -65,7 +61,7 @@ Unified HTML + CSV report templates for web quality audit results (4 areas).
   <div class="meta">
     날짜: {YYYY-MM-DD} &nbsp;|&nbsp;
     검토 파일: {파일 목록} &nbsp;|&nbsp;
-    기준: KWCAG2.2 + Best Practices + SEO + Web Performance &nbsp;|&nbsp;
+    기준: KWCAG2.2 + 시맨틱 HTML + SEO + Web Performance &nbsp;|&nbsp;
     Playwright: {사용됨 / 미사용 — playwright.config.ts 없음}
   </div>
 
@@ -75,53 +71,27 @@ Unified HTML + CSV report templates for web quality audit results (4 areas).
       <div class="area">접근성</div>
       <div class="score">{통과수}/{전체수}</div>
     </div>
-    <div class="summary-card card-bp">
-      <div class="area">Best Practices</div>
-      <div class="score">{통과수}/{전체수}</div>
-    </div>
     <div class="summary-card card-seo">
-      <div class="area">SEO</div>
-      <div class="score">{통과수}/{전체수}</div>
-    </div>
-    <div class="summary-card card-perf">
-      <div class="area">Web Performance</div>
+      <div class="area">SEO & Web Performance</div>
       <div class="score">{통과수}/{전체수}</div>
     </div>
   </div>
 
   <!-- 섹션 A: 접근성 -->
   <div class="section">
-    <div class="section-header header-a11y">A. 접근성 (KWCAG2.2 33항목)</div>
+    <div class="section-header header-a11y">A. 접근성 (KWCAG2.2 33항목 + 시맨틱 HTML 7항목)</div>
     <table>
       <tr><th>번호</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th></tr>
-      <!-- accessibility-review 스킬 위임 결과 33행 삽입 -->
+      <!-- accessibility 스킬 위임 결과 33+7행 삽입 -->
     </table>
   </div>
 
-  <!-- 섹션 B: Best Practices -->
+  <!-- 섹션 B: SEO & Web Performance -->
   <div class="section">
-    <div class="section-header header-bp">B. Best Practices</div>
+    <div class="section-header header-seo">B. SEO & Web Performance (Technical SEO 11항목 + Page Experience 18항목)</div>
     <table>
       <tr><th>코드</th><th>영역</th><th>항목명</th><th>결과</th><th>발견된 문제</th></tr>
-      <!-- BP-01 ~ BP-14 rows -->
-    </table>
-  </div>
-
-  <!-- 섹션 C: SEO -->
-  <div class="section">
-    <div class="section-header header-seo">C. SEO</div>
-    <table>
-      <tr><th>코드</th><th>우선순위</th><th>항목명</th><th>결과</th><th>발견된 문제</th></tr>
-      <!-- SEO-01 ~ SEO-10 rows -->
-    </table>
-  </div>
-
-  <!-- 섹션 D: Web Performance -->
-  <div class="section">
-    <div class="section-header header-perf">D. Web Performance</div>
-    <table>
-      <tr><th>코드</th><th>영역</th><th>항목명</th><th>결과</th><th>발견된 문제</th></tr>
-      <!-- WP-01 ~ WP-18 rows -->
+      <!-- SEO-01 ~ SEO-11, WP-01 ~ WP-18 rows -->
     </table>
   </div>
 
@@ -150,9 +120,9 @@ Unified HTML + CSV report templates for web quality audit results (4 areas).
 접근성,A-08,명도 대비,❌,Playwright,"#nav .link 대비 3.2:1 (기준 4.5:1)","색상을 #595959로 변경"
 접근성,A-10,키보드 접근성,✅,Playwright,,
 접근성,A-33,동적 ARIA,✅,Playwright,,
-Best Practices,BP-01,HTTPS / mixed content 없음,✅,정적분석,,
-Best Practices,BP-03,CSP 헤더,❌,정적분석,Content-Security-Policy 미설정,meta 또는 헤더에 CSP 추가
+SEO,SEO-01,noindex 없음,✅,정적분석,,
 SEO,SEO-05,meta description,❌,정적분석,meta description 없음,"<meta name=""description"" content=""...""> 추가"
+SEO,SEO-09,DOCTYPE html 선언,✅,정적분석,,
 Web Performance,WP-01,render-blocking script,❌,정적분석,defer 없는 script 태그,script 태그에 defer 추가
 Web Performance,WP-02,fetchpriority="high",❌,정적분석,LCP 이미지에 속성 없음,히어로 이미지에 fetchpriority="high" 추가
 ```

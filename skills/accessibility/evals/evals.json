@@ -1,5 +1,5 @@
 {
-  "skill_name": "accessibility-review",
+  "skill_name": "accessibility",
   "evals": [
     {
       "id": 1,
@@ -7,7 +7,7 @@
       "expected_output": "kwcag22.md 참조하여 33개 항목 평가, O/X/△/N/A 분류표 생성, HTML+CSV 리포트 출력",
       "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/pages/dashboard.tsx", "../../features/web-sample/components/Card.tsx"],
       "expectations": [
-        "Reads skills/accessibility-review/SKILL.md via Read tool",
+        "Reads skills/accessibility/SKILL.md via Read tool",
         "Reads kwcag22.md reference file for evaluation criteria",
         "Analyzes actual target files (index.html, dashboard.tsx, Card.tsx)",
         "Produces evaluation table with O/X/△/N/A classifications",

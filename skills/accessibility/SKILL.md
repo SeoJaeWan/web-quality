@@ -1,5 +1,5 @@
 ---
-name: accessibility-review
+name: accessibility
 description: Web accessibility/web standards review. Reviews changed code against KWCAG2.2 and generates HTML + CSV reports. web-quality-reviewer를 통해 실행됩니다. 직접 트리거 불가.
 model: opus
 context: fork

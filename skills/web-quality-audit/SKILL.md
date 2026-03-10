@@ -1,6 +1,6 @@
 ---
 name: web-quality-audit
-description: Comprehensive web quality review across 4 areas: accessibility (KWCAG2.2), best-practices, SEO, and web-performance (Performance + Core Web Vitals). Generates unified HTML + CSV reports. Use when asked to "web quality audit", "종합 품질 검토", "웹 품질 감사", "전체 품질 리뷰", "접근성 검토", "a11y 체크", "웹표준 확인".
+description: Comprehensive web quality review across 2 areas: accessibility (KWCAG2.2 + semantic HTML, 40 items) and SEO & web performance (Technical SEO + Page Experience, 29 items). Generates unified HTML + CSV reports. Use when asked to "web quality audit", "종합 품질 검토", "웹 품질 감사", "전체 품질 리뷰", "접근성 검토", "a11y 체크", "웹표준 확인", "SEO 검토", "성능 검토".
 model: sonnet
 context: fork
 agent: web-quality-reviewer
@@ -9,21 +9,19 @@ agent: web-quality-reviewer
 <Skill_Guide>
 <Purpose>
 After completing work, performs a comprehensive review of changed web code
-across four quality areas — Accessibility (KWCAG2.2), Best Practices, SEO,
-and Web Performance (Performance + Core Web Vitals) — and generates a single
-unified HTML + CSV report. The accessibility area is fully delegated to the
-accessibility-review skill; the remaining three areas delegate to their
-respective individual skills.
+across two quality areas — Accessibility (KWCAG2.2 + Semantic HTML) and
+SEO & Web Performance (Technical SEO + Page Experience / Core Web Vitals) —
+and generates a single unified HTML + CSV report. The accessibility area is
+fully delegated to the accessibility skill; the SEO & performance area
+delegates to the seo skill.
 </Purpose>
 
 <Instructions>
 
 ## 내부 실행 순서
 
-1. accessibility-review 스킬 실행
-2. best-practices 스킬 실행
-3. seo 스킬 실행
-4. web-performance 스킬 실행
+1. accessibility 스킬 실행
+2. seo 스킬 실행
 
 진입점: 항상 web-quality-reviewer 에이전트를 통해 실행
 
@@ -44,11 +42,11 @@ git diff --name-only HEAD
 
 ---
 
-## Step 2. Accessibility Review — Delegate to accessibility-review skill
+## Step 2. Accessibility Review — Delegate to accessibility skill
 
-Delegate KWCAG2.2 33-item accessibility review to the `accessibility-review` skill.
+Delegate KWCAG2.2 33-item accessibility review to the `accessibility` skill.
 
-Reference: `<plugin-root>/skills/accessibility-review/SKILL.md`
+Reference: `<plugin-root>/skills/accessibility/SKILL.md`
 
 Delegation instructions:
 - Step 1 (scope) is already determined — pass the same file set
@@ -59,33 +57,17 @@ Collected results → **Section A: Accessibility**
 
 ---
 
-## Step 3. Best Practices Review — Delegate to best-practices skill
-
-Execute the 'best-practices' skill Step 3 (Static Analysis) against the same file set determined in Step 1.
-Collect the result row for each BP-code item.
-Collected results → Section B: Best Practices
-
----
-
-## Step 4. SEO Review — Delegate to seo skill
+## Step 3. SEO & Web Performance Review — Delegate to seo skill
 
 Execute the 'seo' skill Step 3 (Static Analysis) against the same file set determined in Step 1.
-Collect the result row for each SEO-code item.
-Collected results → Section C: SEO
+Collect the result row for each SEO-code and WP-code item.
+Collected results → **Section B: SEO & Web Performance**
 
 ---
 
-## Step 5. Web Performance Review — Delegate to web-performance skill
+## Step 4. Generate Unified Report
 
-Execute the 'web-performance' skill Step 3 (Static Analysis) against the same file set determined in Step 1.
-Collect the result row for each WP-code item.
-Collected results → Section D: Web Performance
-
----
-
-## Step 6. Generate Unified Report
-
-Collect results from all 4 sections (A–D) and generate a single HTML + CSV file.
+Collect results from both sections (A–B) and generate a single HTML + CSV file.
 
 ```bash
 # 타임스탬프 계산
@@ -102,12 +84,12 @@ ${REPORT_DIR}/report.csv
 
 ---
 
-## Step 7. Verify Results
+## Step 5. Verify Results
 
-1. Confirm all four sections (A–D) have been collected — none may be skipped.
+1. Confirm both sections (A–B) have been collected — none may be skipped.
 2. Confirm both `reports/web-quality/YYYYMMDD-HHmm/report.html` and `reports/web-quality/YYYYMMDD-HHmm/report.csv` have been written.
-3. Verify the HTML report contains all four section headers (A–D).
-4. Verify the CSV contains rows for all four areas.
+3. Verify the HTML report contains both section headers (A–B).
+4. Verify the CSV contains rows for both areas.
 5. If any section was skipped or failed, report the reason and do not claim completion.
 
 </Instructions>
@@ -117,9 +99,9 @@ ${REPORT_DIR}/report.csv
 Read `references/output-format.md` for full HTML + CSV report templates.
 
 Key requirements:
-- 4-area summary grid (접근성/BP/SEO/Web Performance) with color-coded cards
+- 2-area summary grid (접근성 / SEO & Web Performance) with color-coded cards
 - Badge classes: `badge-pass` (✅), `badge-fail` (❌), `badge-partial` (⚠️), `badge-na` (➖), `badge-unknown` (🔵)
-- Section headers color-coded: a11y=#6c8ebf, bp=#82c882, seo=#f0a830, perf=#e05c5c
+- Section headers color-coded: a11y=#6c8ebf, seo=#f0a830
 - Fix guide section: only ❌ items, with code examples
 - CSV header: `영역,코드,항목명,결과,판정방식,발견된 문제,수정 가이드`
 - Language: Korean / Style: inline CSS only
