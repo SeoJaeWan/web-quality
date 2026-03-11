@@ -1,0 +1,21 @@
+ID,File,Line,Category,Severity,Rule,Issue,Recommendation
+A1,index.html,30,Accessibility,Critical,WCAG 2.1 SC 1.1.1 – Non-text Content,"Image missing alt attribute: <img src=""/public/logo.png"">",Add a descriptive alt attribute or alt="" if decorative.
+A2,dashboard.tsx,29-36,Accessibility,Critical,WCAG 2.1 SC 4.1.2 – Name Role Value,Icon-only buttons lack accessible labels (no aria-label or visually-hidden text).,Add aria-label to each icon button describing its action.
+A3,Card.tsx,27,Accessibility,Major,HTML Specification – ID Uniqueness,"Duplicate id=""card-item"" when Card is rendered in a list; violates DOM uniqueness and breaks aria-labelledby/describedby references.",Use a unique id per instance (e.g. pass an id prop or generate with useId).
+A4,Card.tsx,29,Accessibility,Major,WCAG 2.1 SC 2.1.1 – Keyboard,"Clickable div with onClick has no keyboard support (no role=""button"", no tabIndex, no onKeyDown).",Use a <button> element or add role="button" tabIndex={0} and keyboard event handlers.
+A5,dashboard.tsx,46,Accessibility,Minor,React Best Practice – List Keys,Mapped items rendered without a key prop; may cause screen-reader re-announce issues on re-render.,Add a stable unique key to each mapped element.
+A6,dashboard.tsx,50,Accessibility,Minor,WCAG 2.1 SC 1.4.3 – Image Sizing,Image in section lacks explicit width/height; may shift layout for assistive tech users.,Add width and height attributes or use CSS aspect-ratio.
+S1,index.html,6,SEO,Major,SEO – Title Tag,"Page title ""Sample Page"" is generic and non-descriptive; search engines rely on title for ranking.",Use a specific descriptive title with target keywords (50-60 chars).
+S2,index.html,7,SEO,Critical,SEO – Meta Description,No <meta name=""description""> tag; search results will show auto-generated snippets.,Add a unique meta description (120-160 chars) summarizing the page.
+S3,index.html,8,SEO,Major,SEO – Structured Data,No JSON-LD or structured data markup; limits rich-result eligibility.,Add appropriate Schema.org JSON-LD (e.g. WebPage or Organization).
+S4,index.html,–,SEO,Minor,SEO – Canonical URL,No <link rel=""canonical""> tag; risks duplicate-content indexing issues.,Add a canonical link element pointing to the preferred URL.
+S5,index.html,–,SEO,Minor,SEO – Open Graph / Twitter Cards,No og: or twitter: meta tags; links shared on social media will lack rich previews.,Add Open Graph and Twitter Card meta tags.
+P1,index.html,10,Performance,Major,Web Vitals – Render Blocking,Synchronous external stylesheet in <head> blocks first paint.,Use media=""print"" onload hack or load CSS asynchronously; inline critical CSS.
+P2,index.html,13-17,Performance,Major,Web Vitals – Font Display,"@font-face missing font-display: swap; causes invisible text during font load (FOIT).",Add font-display: swap to the @font-face rule.
+P3,index.html,33,Performance,Major,Web Vitals – CLS,Image missing width and height attributes causes layout shift when loaded.,Add explicit width and height attributes to <img>.
+P4,dashboard.tsx,11-13,Performance,Major,Web Vitals – Layout Thrashing,Reading offsetHeight then writing style.minHeight in same frame forces synchronous reflow.,Batch reads and writes or use requestAnimationFrame to separate them.
+P5,dashboard.tsx,17-19,Performance,Major,Web Vitals – CLS,Dynamic content inserted via setTimeout without size reservation shifts layout.,Reserve space with min-height or CSS containment before content loads.
+P6,dashboard.tsx,50,Performance,Minor,Web Vitals – LCP / Lazy Loading,"Below-fold image lacks loading=""lazy""; browser will eagerly fetch it.",Add loading="lazy" to images below the initial viewport.
+P7,Card.tsx,13,Performance,Minor,Production Readiness,console.log left in production code; adds unnecessary I/O and can leak data.,Remove or guard with a debug flag / environment check.
+SEC1,index.html,42,Security,Critical,OWASP – XSS,innerHTML used with unsanitized user input from location.hash; enables reflected XSS.,Use textContent instead of innerHTML or sanitize input with DOMPurify.
+SEC2,Card.tsx,17,Security,Minor,Code Quality – DOM Queries,"document.querySelector used inside a React component instead of refs; fragile and can select unintended elements.",Use React useRef to reference elements within the component tree.

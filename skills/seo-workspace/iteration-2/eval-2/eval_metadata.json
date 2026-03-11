@@ -1,0 +1,1 @@
+{"eval_id":2,"eval_name":"meta-tags-structured-data","prompt":"index.html의 메타 태그와 구조화 데이터를 SEO 관점에서 점검해줘","assertions":[{"id":"meta-description-missing","text":"meta description 누락 감지"},{"id":"json-ld-missing","text":"JSON-LD 구조화 데이터 누락 감지"},{"id":"canonical-missing","text":"canonical URL 누락 감지"},{"id":"title-quality-issue","text":"title 태그가 너무 짧거나 일반적임을 지적"}]}

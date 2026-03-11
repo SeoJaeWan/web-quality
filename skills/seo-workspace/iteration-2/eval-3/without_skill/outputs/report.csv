@@ -1,0 +1,11 @@
+id,file,line,severity,category,issue,description,recommendation
+1,dashboard.tsx,16-19,high,CLS,"Dynamic content insertion without size reservation","setTimeout으로 items를 비동기 삽입하면서 컨테이너에 고정 높이나 min-height를 미리 확보하지 않아 레이아웃 이동(CLS)이 발생한다.","삽입될 콘텐츠 영역에 min-height 또는 aspect-ratio를 CSS로 미리 지정하거나, skeleton placeholder를 렌더링하여 공간을 예약한다."
+2,dashboard.tsx,50,high,Image Optimization,"img 태그에 width/height 미지정 (CLS)","<img>에 width와 height 속성이 없어 이미지 로드 전까지 브라우저가 공간을 확보하지 못해 CLS가 발생한다.","명시적 width/height 속성을 추가하거나 aspect-ratio CSS를 사용한다. Next.js라면 next/image 컴포넌트를 사용한다."
+3,dashboard.tsx,50,high,Image Optimization,"Below-fold 이미지에 loading=lazy 미적용","페이지 하단(mt-8) 이미지에 loading='lazy'가 없어 초기 로드 시 불필요한 네트워크 요청이 발생한다.","<img loading='lazy' decoding='async'>를 추가하여 뷰포트 밖 이미지의 지연 로딩을 활성화한다."
+4,dashboard.tsx,50,medium,Image Optimization,"srcSet/sizes 미사용 (반응형 이미지 미지원)","단일 src만 사용하여 모바일 등 작은 화면에서도 원본 크기 이미지를 다운로드한다.","srcSet과 sizes 속성을 추가하거나 <picture> 요소를 사용하여 디바이스별 적절한 이미지를 제공한다."
+5,dashboard.tsx,50,medium,Image Optimization,"차세대 이미지 포맷(WebP/AVIF) 미사용","PNG 포맷만 사용하여 파일 크기가 불필요하게 클 수 있다.","WebP 또는 AVIF 포맷을 추가 제공하고 <picture><source> 태그로 폴백 처리한다."
+6,dashboard.tsx,10-14,high,Rendering Performance,"Layout thrashing (강제 리플로우)","offsetHeight 읽기 직후 style.minHeight를 설정하여 강제 리플로우가 연속 발생한다.","requestAnimationFrame 또는 ResizeObserver를 사용하여 읽기/쓰기를 분리하거나, CSS로 min-height를 선언적으로 지정한다."
+7,dashboard.tsx,45-47,medium,Rendering Performance,"리스트 항목에 key prop 누락","items.map()에서 key가 없어 React가 비효율적으로 리렌더링하며 콘솔 경고도 발생한다.","고유한 key prop을 추가한다 (예: key={item} 또는 고유 ID 사용)."
+8,dashboard.tsx,50,low,Image Optimization,"decoding=async 미사용","이미지 디코딩이 메인 스레드를 차단할 수 있다.","decoding='async'를 추가하여 이미지 디코딩을 비동기로 처리한다."
+9,Card.tsx,17-20,low,Rendering Performance,"document.querySelector 직접 DOM 조작","React의 가상 DOM을 우회하여 직접 DOM을 조작하면 불필요한 리페인트가 발생하고 React의 렌더링 최적화를 방해한다.","useRef를 사용하여 특정 요소를 참조하고 상태 기반으로 스타일을 변경한다."
+10,Card.tsx,13,low,Rendering Performance,"console.log가 프로덕션 코드에 남아 있음","이벤트 핸들러에 console.log가 있어 반복 호출 시 미미하지만 불필요한 성능 비용이 발생한다.","프로덕션 빌드에서는 console.log를 제거하거나 환경 변수로 분기한다."

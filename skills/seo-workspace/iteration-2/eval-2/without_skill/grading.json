@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "meta description 누락 감지", "passed": true, "evidence": "Issue SEO-002 (Critical): 'Missing Meta Description - No <meta name=\"description\"> tag found.'"},
+    {"text": "JSON-LD 구조화 데이터 누락 감지", "passed": true, "evidence": "Issue SEO-003 (Critical): 'No Structured Data (JSON-LD) - No JSON-LD or Schema.org structured data found on the page.'"},
+    {"text": "canonical URL 누락 감지", "passed": true, "evidence": "Issue SEO-005 (Major): 'Missing Canonical URL - No <link rel=\"canonical\"> tag found.'"},
+    {"text": "title 태그가 너무 짧거나 일반적임을 지적", "passed": true, "evidence": "Issue SEO-001 (Critical): 'Generic Title Tag - The <title> is \"Sample Page\" which is too generic. It lacks target keywords, a brand name, and descriptive content.'"}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.00}
+}

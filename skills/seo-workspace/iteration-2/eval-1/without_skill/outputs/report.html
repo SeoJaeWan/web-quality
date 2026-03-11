@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEO Optimization Review Report</title>
+  <style>
+    :root {
+      --critical: #dc2626;
+      --high: #ea580c;
+      --medium: #ca8a04;
+      --low: #2563eb;
+      --good: #16a34a;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 1.75rem; margin-bottom: 0.25rem; }
+    .subtitle { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .summary-card .count {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .summary-card .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .critical .count { color: var(--critical); }
+    .high .count { color: var(--high); }
+    .medium .count { color: var(--medium); }
+    .low .count { color: var(--low); }
+    .score-card .count { color: var(--critical); }
+
+    .file-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .file-header {
+      background: #f1f5f9;
+      padding: 1rem 1.25rem;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .file-score {
+      font-size: 0.85rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .score-bad { background: #fef2f2; color: var(--critical); }
+    .score-warn { background: #fffbeb; color: var(--medium); }
+
+    .issue-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .issue-table th {
+      text-align: left;
+      padding: 0.6rem 1rem;
+      background: #f8fafc;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .issue-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+      vertical-align: top;
+    }
+    .issue-table tr:last-child td { border-bottom: none; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge-critical { background: #fef2f2; color: var(--critical); }
+    .badge-high { background: #fff7ed; color: var(--high); }
+    .badge-medium { background: #fffbeb; color: var(--medium); }
+    .badge-low { background: #eff6ff; color: var(--low); }
+
+    .category-tag {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      background: #f1f5f9;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-right: 0.25rem;
+    }
+
+    .recommendation {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .overall-score {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .overall-score .big-score {
+      font-size: 3.5rem;
+      font-weight: 800;
+    }
+    .overall-score .out-of {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SEO Optimization Review Report</h1>
+    <p class="subtitle">Generated: 2026-03-11 | Files reviewed: index.html, dashboard.tsx</p>
+
+    <div class="overall-score">
+      <div class="big-score" style="color: var(--critical);">32<span class="out-of"> / 100</span></div>
+      <p style="color: var(--text-muted); font-size:0.95rem;">Overall SEO Score</p>
+    </div>
+
+    <div class="summary-grid">
+      <div class="summary-card critical">
+        <div class="count">3</div>
+        <div class="label">Critical</div>
+      </div>
+      <div class="summary-card high">
+        <div class="count">5</div>
+        <div class="label">High</div>
+      </div>
+      <div class="summary-card medium">
+        <div class="count">12</div>
+        <div class="label">Medium</div>
+      </div>
+      <div class="summary-card low">
+        <div class="count">4</div>
+        <div class="label">Low</div>
+      </div>
+      <div class="summary-card">
+        <div class="count" style="color: var(--good);">2</div>
+        <div class="label">Files</div>
+      </div>
+    </div>
+
+    <!-- index.html -->
+    <div class="file-section">
+      <div class="file-header">
+        <span>index.html</span>
+        <span class="file-score score-bad">SEO Score: 30/100</span>
+      </div>
+      <table class="issue-table">
+        <thead>
+          <tr>
+            <th style="width:60px;">Line</th>
+            <th style="width:80px;">Severity</th>
+            <th style="width:140px;">Category</th>
+            <th>Issue &amp; Recommendation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>7</td>
+            <td><span class="badge badge-critical">Critical</span></td>
+            <td><span class="category-tag">Meta Tags</span></td>
+            <td>
+              <strong>Missing meta description tag</strong>
+              <div class="recommendation">Add <code>&lt;meta name="description" content="..."&gt;</code> with a unique 150-160 character description summarizing the page content. This directly impacts click-through rates from search results.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>30</td>
+            <td><span class="badge badge-critical">Critical</span></td>
+            <td><span class="category-tag">Accessibility</span><span class="category-tag">SEO</span></td>
+            <td>
+              <strong>Image missing alt attribute</strong>
+              <div class="recommendation">Add a descriptive <code>alt</code> attribute to <code>&lt;img src="/public/logo.png"&gt;</code>. Missing alt text hurts both accessibility and image search SEO. If the image is decorative, use <code>alt=""</code>.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td><span class="badge badge-high">High</span></td>
+            <td><span class="category-tag">Meta Tags</span></td>
+            <td>
+              <strong>Title tag is too generic ("Sample Page")</strong>
+              <div class="recommendation">Replace with a descriptive, keyword-rich title of 50-60 characters that accurately describes the page content. The title tag is one of the most important on-page SEO factors.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td><span class="badge badge-high">High</span></td>
+            <td><span class="category-tag">Structured Data</span></td>
+            <td>
+              <strong>No JSON-LD structured data</strong>
+              <div class="recommendation">Add a <code>&lt;script type="application/ld+json"&gt;</code> block with appropriate schema (e.g., Organization, WebPage, BreadcrumbList) to enable rich results in search engines.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-high">High</span></td>
+            <td><span class="category-tag">Meta Tags</span></td>
+            <td>
+              <strong>Missing canonical link tag</strong>
+              <div class="recommendation">Add <code>&lt;link rel="canonical" href="https://..."&gt;</code> to specify the preferred URL and prevent duplicate content issues across URL variations.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-high">High</span></td>
+            <td><span class="category-tag">Crawlability</span></td>
+            <td>
+              <strong>No reference to sitemap.xml</strong>
+              <div class="recommendation">Create a sitemap.xml and reference it in robots.txt. Sitemaps help search engine crawlers discover and index all pages efficiently.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Social SEO</span></td>
+            <td>
+              <strong>Missing Open Graph meta tags</strong>
+              <div class="recommendation">Add <code>og:title</code>, <code>og:description</code>, <code>og:image</code>, and <code>og:url</code> meta tags to control how the page appears when shared on social platforms.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Social SEO</span></td>
+            <td>
+              <strong>Missing Twitter Card meta tags</strong>
+              <div class="recommendation">Add <code>twitter:card</code>, <code>twitter:title</code>, <code>twitter:description</code> meta tags for optimized display on Twitter/X.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Meta Tags</span></td>
+            <td>
+              <strong>Missing robots meta tag</strong>
+              <div class="recommendation">Add <code>&lt;meta name="robots" content="index, follow"&gt;</code> to explicitly control search engine crawling and indexing behavior.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Performance</span></td>
+            <td>
+              <strong>Render-blocking CSS loaded synchronously in head</strong>
+              <div class="recommendation">Use <code>media</code> attribute, <code>&lt;link rel="preload"&gt;</code>, or load CSS asynchronously to prevent render-blocking. Page speed is a confirmed Google ranking factor.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>13-17</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Performance</span></td>
+            <td>
+              <strong>@font-face missing font-display: swap</strong>
+              <div class="recommendation">Add <code>font-display: swap</code> to prevent Flash of Invisible Text (FOIT) and improve Largest Contentful Paint (LCP) scores.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>33</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Performance</span><span class="category-tag">CLS</span></td>
+            <td>
+              <strong>Image missing width and height attributes</strong>
+              <div class="recommendation">Add explicit <code>width</code> and <code>height</code> attributes to <code>&lt;img src="/public/promo.png"&gt;</code> to prevent Cumulative Layout Shift (CLS). CLS is a Core Web Vital that affects rankings.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Mobile</span></td>
+            <td>
+              <strong>No theme-color meta tag</strong>
+              <div class="recommendation">Add <code>&lt;meta name="theme-color" content="#..."&gt;</code> for mobile browser theming and improved mobile experience.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>37-44</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="category-tag">Performance</span></td>
+            <td>
+              <strong>Inline render-blocking script in body</strong>
+              <div class="recommendation">Move script to end of body with <code>defer</code> attribute, or use async loading to avoid blocking page rendering.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>42</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="category-tag">Security</span></td>
+            <td>
+              <strong>innerHTML usage with user input (XSS risk)</strong>
+              <div class="recommendation">Use <code>textContent</code> instead of <code>innerHTML</code> to prevent XSS attacks. Search engines may flag insecure pages, and Chrome shows security warnings that hurt user trust.</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- dashboard.tsx -->
+    <div class="file-section">
+      <div class="file-header">
+        <span>dashboard.tsx</span>
+        <span class="file-score score-bad">SEO Score: 35/100</span>
+      </div>
+      <table class="issue-table">
+        <thead>
+          <tr>
+            <th style="width:60px;">Line</th>
+            <th style="width:80px;">Severity</th>
+            <th style="width:140px;">Category</th>
+            <th>Issue &amp; Recommendation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-critical">Critical</span></td>
+            <td><span class="category-tag">Meta Tags</span></td>
+            <td>
+              <strong>No page title or meta tags defined</strong>
+              <div class="recommendation">Use Next.js <code>&lt;Head&gt;</code> component or React Helmet to set a unique <code>&lt;title&gt;</code>, <code>meta description</code>, and other SEO meta tags for this route. Without these, the page is essentially invisible to search engines.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-high">High</span></td>
+            <td><span class="category-tag">Meta Tags</span></td>
+            <td>
+              <strong>No meta description for this page/route</strong>
+              <div class="recommendation">Ensure each route has a unique meta description. For React SPAs, use a head management library to inject meta tags dynamically per route.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-high">High</span></td>
+            <td><span class="category-tag">Structured Data</span></td>
+            <td>
+              <strong>No structured data for dashboard content</strong>
+              <div class="recommendation">Add JSON-LD structured data appropriate to the page content (e.g., WebApplication, SoftwareApplication schema) to enable rich results.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>16-19</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Performance</span><span class="category-tag">CLS</span></td>
+            <td>
+              <strong>Dynamic content insertion without size reservation causes CLS</strong>
+              <div class="recommendation">Reserve space with <code>min-height</code> or use CSS <code>aspect-ratio</code> to prevent layout shift when items load asynchronously. CLS is a Core Web Vital ranking factor.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Performance</span></td>
+            <td>
+              <strong>Below-fold image missing loading="lazy" attribute</strong>
+              <div class="recommendation">Add <code>loading="lazy"</code> to images below the fold to defer loading until they are near the viewport. This improves initial page load performance and LCP.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>50</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Performance</span><span class="category-tag">CLS</span></td>
+            <td>
+              <strong>Image missing explicit width and height</strong>
+              <div class="recommendation">Add <code>width</code> and <code>height</code> attributes to prevent CLS. In JSX, use inline style or CSS <code>aspect-ratio</code> as an alternative.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>29-36</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">Accessibility</span><span class="category-tag">SEO</span></td>
+            <td>
+              <strong>Icon buttons missing aria-label</strong>
+              <div class="recommendation">Add <code>aria-label</code> to icon-only buttons for screen reader accessibility. Accessibility quality signals contribute to overall page quality assessment by search engines.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-medium">Medium</span></td>
+            <td><span class="category-tag">SEO</span></td>
+            <td>
+              <strong>No internal linking or breadcrumb navigation</strong>
+              <div class="recommendation">Add breadcrumb navigation with BreadcrumbList structured data for better crawl context and enhanced SERP display.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>45-46</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="category-tag">Performance</span></td>
+            <td>
+              <strong>List items rendered without stable key prop</strong>
+              <div class="recommendation">Add unique <code>key</code> prop to mapped elements. While primarily a React concern, unstable keys cause unnecessary re-renders that degrade performance.</div>
+            </td>
+          </tr>
+          <tr>
+            <td>-</td>
+            <td><span class="badge badge-low">Low</span></td>
+            <td><span class="category-tag">Navigation</span></td>
+            <td>
+              <strong>No breadcrumb or internal link structure</strong>
+              <div class="recommendation">Add breadcrumb navigation to help search engines understand site hierarchy and improve SERP display with breadcrumb rich results.</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="file-section" style="padding: 1.25rem;">
+      <h3 style="margin-bottom: 0.75rem;">Key Recommendations Summary</h3>
+      <ol style="padding-left: 1.25rem; display: flex; flex-direction: column; gap: 0.5rem;">
+        <li><strong>Add meta description and improve title tags</strong> -- These are the most impactful on-page SEO elements. Every page needs a unique, descriptive title (50-60 chars) and meta description (150-160 chars).</li>
+        <li><strong>Implement structured data (JSON-LD)</strong> -- Add schema.org markup to enable rich results in search engines, significantly improving click-through rates.</li>
+        <li><strong>Add canonical URLs</strong> -- Prevent duplicate content issues by specifying the canonical URL for each page.</li>
+        <li><strong>Fix Core Web Vitals issues (CLS, LCP)</strong> -- Add image dimensions, font-display: swap, and reserve space for dynamic content to improve ranking signals.</li>
+        <li><strong>Add social meta tags (OG + Twitter)</strong> -- Control how pages appear when shared, driving indirect SEO benefits through social engagement.</li>
+        <li><strong>Fix accessibility issues</strong> -- Add alt text to all images and aria-labels to icon buttons. Accessibility improvements contribute to overall page quality.</li>
+        <li><strong>Set up head management for React routes</strong> -- Use Next.js Head or React Helmet so each route has proper SEO meta tags.</li>
+      </ol>
+    </div>
+
+    <div class="footer">
+      <p>SEO Optimization Review Report | Generated on 2026-03-11</p>
+      <p>Reviewed files: index.html, dashboard.tsx | Total issues found: 24</p>
+    </div>
+  </div>
+</body>
+</html>

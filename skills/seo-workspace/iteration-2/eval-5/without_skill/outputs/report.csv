@@ -1,0 +1,30 @@
+id,category,item,severity,file,line,status,description
+SEO-01,SEO,Meta Description,High,index.html,-,FAIL,No <meta name="description"> tag found. Search engines will auto-generate a snippet which may be inaccurate.
+SEO-02,SEO,Title Tag,Medium,index.html,6,WARN,"Title tag exists but is generic (""Sample Page""). Should be descriptive and include target keywords (50-60 chars recommended)."
+SEO-03,SEO,Heading Hierarchy,Low,index.html,-,PASS,H1 is present and used once. dashboard.tsx uses h1 > h2 correctly. Card.tsx uses h3 appropriately.
+SEO-04,SEO,Structured Data (JSON-LD),High,index.html,-,FAIL,No JSON-LD or other structured data markup found. This limits rich snippet eligibility in SERPs.
+SEO-05,SEO,Canonical URL,Medium,index.html,-,FAIL,No <link rel="canonical"> tag present. Risk of duplicate content issues.
+SEO-06,SEO,Open Graph / Social Meta,Medium,index.html,-,FAIL,"No Open Graph (og:title, og:description, og:image) or Twitter Card meta tags. Social sharing previews will be poor."
+SEO-07,SEO,Image Alt Attributes,High,index.html,30,FAIL,"<img src=""/public/logo.png""> is missing the alt attribute entirely. This hurts accessibility and image SEO."
+SEO-08,SEO,Semantic HTML,Low,dashboard.tsx,-,PASS,"Good use of <main>, <nav>, <section> elements. Heading hierarchy is well-structured."
+SEO-09,SEO,Internal Linking / Anchor Text,Low,index.html,-,PASS,"Links use descriptive anchor text (""About Us"", ""latest deals"") and use HTTPS."
+SEO-10,SEO,Robots / Sitemap Hints,Medium,index.html,-,FAIL,No <meta name="robots"> tag or sitemap reference found. Search engine crawling behavior is undefined.
+SEO-11,SEO,Hreflang / i18n,Low,index.html,-,WARN,"lang=""en"" is set on <html>, which is good. No hreflang tags, but may not be needed if single-language site."
+WP-01,Web Performance,Render-Blocking CSS,High,index.html,10,"FAIL","External stylesheet <link rel=""stylesheet"" href=""https://cdn.example.com/styles.css""> is render-blocking. Should use media query, preload, or async loading strategy."
+WP-02,Web Performance,Font Display Swap,Medium,index.html,13-17,FAIL,"@font-face for ""CustomFont"" is missing font-display: swap. This causes invisible text (FOIT) during font loading."
+WP-03,Web Performance,Image Dimensions (CLS),High,index.html,33,FAIL,"<img src=""/public/promo.png""> is missing width and height attributes, causing Cumulative Layout Shift (CLS)."
+WP-04,Web Performance,Image Dimensions (CLS),Medium,dashboard.tsx,50,FAIL,<img src="/public/promo.png"> in dashboard is also missing explicit width/height attributes causing CLS risk.
+WP-05,Web Performance,Lazy Loading Images,Medium,dashboard.tsx,50,FAIL,"Below-fold image lacks loading=""lazy"" attribute. All non-critical images should be lazily loaded."
+WP-06,Web Performance,Layout Thrashing,High,dashboard.tsx,12-13,FAIL,"Reading offsetHeight then immediately writing style.minHeight causes forced synchronous reflow (layout thrashing). Use requestAnimationFrame or CSS-based approach."
+WP-07,Web Performance,CLS from Dynamic Content,High,dashboard.tsx,17-19,FAIL,"setTimeout inserts content (setItems) without pre-allocated space, causing layout shift. Reserve space with min-height or skeleton UI."
+WP-08,Web Performance,Inline Script Blocking,Medium,index.html,37-44,WARN,"Inline <script> in body is parser-blocking. Consider defer/async pattern or move to external file with defer attribute."
+WP-09,Web Performance,Console.log in Production,Low,Card.tsx,13,FAIL,"console.log left in production code. Adds minor overhead and leaks internal info. Remove or gate behind development flag."
+WP-10,Web Performance,DOM Querying in Event Handlers,Medium,Card.tsx,17,WARN,"document.querySelector('.card-highlight') in onClick handler bypasses React's virtual DOM. Use useRef instead for better performance and safety."
+WP-11,Web Performance,Duplicate DOM IDs,Medium,Card.tsx,27,FAIL,"id=""card-item"" is hardcoded. When Card is rendered in a list, all instances share the same ID, violating HTML spec and breaking querySelector/getElementById."
+WP-12,Web Performance,React List Keys,Medium,dashboard.tsx,45-46,FAIL,"List items rendered via items.map() lack a key prop. React cannot efficiently reconcile the list, leading to unnecessary re-renders."
+WP-13,Web Performance,Resource Hints (preconnect/prefetch),Medium,index.html,-,FAIL,"No <link rel=""preconnect""> for cdn.example.com or font origin. Adding preconnect would reduce connection setup latency."
+WP-14,Web Performance,Critical CSS / Above-the-fold,Medium,index.html,-,WARN,No inline critical CSS. All styles depend on external stylesheet which is render-blocking. Consider inlining critical-path CSS.
+WP-15,Web Performance,Image Format Optimization,Low,index.html,27,WARN,"Images use .png format. Consider modern formats (WebP, AVIF) for smaller file sizes and faster loading."
+WP-16,Web Performance,Script Placement / Defer,Medium,index.html,37,WARN,Inline script accesses DOM directly. If moved to external file it should use defer. Current inline placement blocks parsing.
+WP-17,Web Performance,XSS via innerHTML,High,index.html,42,FAIL,"innerHTML is set with unsanitized user input (location.hash). This is both a security vulnerability and forces the browser to re-parse the DOM subtree."
+WP-18,Web Performance,Third-Party Resource Impact,Medium,index.html,10,WARN,External CDN resource (cdn.example.com/styles.css) introduces a single point of failure and additional DNS/TCP/TLS overhead. Consider self-hosting critical assets.

@@ -1,0 +1,16 @@
+{
+  "expectations": [
+    {"text": "HTML report file (report.html) was generated", "passed": true, "evidence": "report.html exists with Korean-language quality audit report."},
+    {"text": "CSV report file (report.csv) was generated", "passed": true, "evidence": "report.csv exists with 70 rows covering all sections."},
+    {"text": "Report contains accessibility section (Section A)", "passed": true, "evidence": "HTML report has section 'A. 접근성' with all KWCAG items listed."},
+    {"text": "Report contains SEO and Web Performance section (Section B)", "passed": true, "evidence": "CSV contains SEO-01 to SEO-11 and WP-01 to WP-18 items."},
+    {"text": "All 33 KWCAG2.2 items are evaluated (none skipped)", "passed": true, "evidence": "CSV contains items A-01 through A-33 plus SH-01 to SH-07, all with results."},
+    {"text": "All SEO items (SEO-01 through SEO-11) are evaluated", "passed": true, "evidence": "CSV contains SEO-01 through SEO-11 each with results."},
+    {"text": "All WP items (WP-01 through WP-18) are evaluated", "passed": true, "evidence": "CSV contains WP-01 through WP-18 each with results."},
+    {"text": "Failed items include specific issue descriptions with file/line references", "passed": true, "evidence": "Failed items include references like 'index.html:30', 'Card.tsx:24', 'Card.tsx:27', 'index.html:37'."},
+    {"text": "Fix guide section exists with concrete code-level recommendations", "passed": true, "evidence": "CSV has '수정 가이드' column with specific code-level fixes for each failed item."},
+    {"text": "Report is written in Korean", "passed": true, "evidence": "Report is in Korean. Title: '웹 품질 종합 감사 리포트', all content in Korean."},
+    {"text": "Only index.html and Card.tsx are reviewed (no dashboard.tsx)", "passed": true, "evidence": "HTML meta shows '검토 파일: index.html, Card.tsx'. No mention of dashboard.tsx in the reviewed files. Dashboard.tsx is not referenced in findings."}
+  ],
+  "summary": {"passed": 11, "failed": 0, "total": 11, "pass_rate": 1.00}
+}

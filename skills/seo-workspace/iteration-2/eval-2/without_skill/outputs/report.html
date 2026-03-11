@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEO Audit Report - index.html</title>
+  <style>
+    :root {
+      --critical: #dc2626;
+      --major: #ea580c;
+      --minor: #ca8a04;
+      --pass: #16a34a;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem; }
+    .container { max-width: 960px; margin: 0 auto; }
+    h1 { font-size: 1.75rem; margin-bottom: 0.25rem; }
+    .subtitle { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+    .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .summary-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; text-align: center; }
+    .summary-card .count { font-size: 2rem; font-weight: 700; }
+    .summary-card .label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
+    .critical .count { color: var(--critical); }
+    .major .count { color: var(--major); }
+    .minor .count { color: var(--minor); }
+    .pass .count { color: var(--pass); }
+    .section { margin-bottom: 2rem; }
+    .section h2 { font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
+    .issue { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; border-left: 4px solid transparent; }
+    .issue.severity-critical { border-left-color: var(--critical); }
+    .issue.severity-major { border-left-color: var(--major); }
+    .issue.severity-minor { border-left-color: var(--minor); }
+    .issue.severity-pass { border-left-color: var(--pass); }
+    .issue-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+    .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; color: #fff; text-transform: uppercase; }
+    .badge-critical { background: var(--critical); }
+    .badge-major { background: var(--major); }
+    .badge-minor { background: var(--minor); }
+    .badge-pass { background: var(--pass); }
+    .issue-id { font-family: monospace; color: var(--text-muted); font-size: 0.85rem; }
+    .issue-title { font-weight: 600; }
+    .issue-detail { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.4rem; }
+    .recommendation { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: 0.5rem 0.75rem; font-size: 0.85rem; color: #166534; }
+    .recommendation strong { font-weight: 600; }
+    .meta-info { font-size: 0.8rem; color: var(--text-muted); margin-top: 2rem; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SEO Audit Report</h1>
+    <p class="subtitle">File: index.html &mdash; Meta Tags &amp; Structured Data Review</p>
+
+    <div class="summary">
+      <div class="summary-card critical">
+        <div class="count">3</div>
+        <div class="label">Critical</div>
+      </div>
+      <div class="summary-card major">
+        <div class="count">7</div>
+        <div class="label">Major</div>
+      </div>
+      <div class="summary-card minor">
+        <div class="count">4</div>
+        <div class="label">Minor</div>
+      </div>
+      <div class="summary-card pass">
+        <div class="count">2</div>
+        <div class="label">Pass</div>
+      </div>
+    </div>
+
+    <!-- Critical Issues -->
+    <div class="section">
+      <h2>Critical Issues</h2>
+
+      <div class="issue severity-critical">
+        <div class="issue-header">
+          <span class="badge badge-critical">Critical</span>
+          <span class="issue-id">SEO-001</span>
+          <span class="issue-title">Generic Title Tag</span>
+        </div>
+        <p class="issue-detail">
+          Line 6: The <code>&lt;title&gt;</code> is "Sample Page" which is too generic. It lacks target keywords, a brand name, and descriptive content. Search engines rely heavily on title tags for ranking signals.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Use a descriptive title (50-60 characters) containing primary keywords, e.g. <code>&lt;title&gt;Product Name - Primary Keyword | Brand Name&lt;/title&gt;</code>.
+        </div>
+      </div>
+
+      <div class="issue severity-critical">
+        <div class="issue-header">
+          <span class="badge badge-critical">Critical</span>
+          <span class="issue-id">SEO-002</span>
+          <span class="issue-title">Missing Meta Description</span>
+        </div>
+        <p class="issue-detail">
+          No <code>&lt;meta name="description"&gt;</code> tag found. The meta description is a key factor in click-through rate from search results. Without it, search engines will auto-generate a snippet which may not be optimal.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Add <code>&lt;meta name="description" content="..."&gt;</code> with a compelling 150-160 character summary that includes target keywords and a call to action.
+        </div>
+      </div>
+
+      <div class="issue severity-critical">
+        <div class="issue-header">
+          <span class="badge badge-critical">Critical</span>
+          <span class="issue-id">SEO-003</span>
+          <span class="issue-title">No Structured Data (JSON-LD)</span>
+        </div>
+        <p class="issue-detail">
+          No JSON-LD or Schema.org structured data found on the page. Structured data enables rich snippets in search results (ratings, breadcrumbs, FAQs, etc.) and helps search engines understand page content.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Add JSON-LD structured data in a <code>&lt;script type="application/ld+json"&gt;</code> block. At minimum, include WebPage or WebSite schema. Example:
+          <pre style="margin-top:0.5rem;background:#f1f5f9;padding:0.5rem;border-radius:4px;overflow-x:auto;font-size:0.8rem">&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Page Title",
+  "description": "Page description",
+  "url": "https://example.com/"
+}
+&lt;/script&gt;</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Major Issues -->
+    <div class="section">
+      <h2>Major Issues</h2>
+
+      <div class="issue severity-major">
+        <div class="issue-header">
+          <span class="badge badge-major">Major</span>
+          <span class="issue-id">SEO-004</span>
+          <span class="issue-title">Missing Robots Meta Tag</span>
+        </div>
+        <p class="issue-detail">
+          No <code>&lt;meta name="robots"&gt;</code> tag is present. While search engines default to "index, follow", explicitly declaring the directive is a best practice for controlling crawl behavior.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Add <code>&lt;meta name="robots" content="index, follow"&gt;</code> to explicitly declare indexing intent.
+        </div>
+      </div>
+
+      <div class="issue severity-major">
+        <div class="issue-header">
+          <span class="badge badge-major">Major</span>
+          <span class="issue-id">SEO-005</span>
+          <span class="issue-title">Missing Canonical URL</span>
+        </div>
+        <p class="issue-detail">
+          No <code>&lt;link rel="canonical"&gt;</code> tag found. Without a canonical URL, duplicate content issues can arise from URL variations (www vs non-www, trailing slashes, query parameters).
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Add <code>&lt;link rel="canonical" href="https://example.com/"&gt;</code> pointing to the preferred version of the page URL.
+        </div>
+      </div>
+
+      <div class="issue severity-major">
+        <div class="issue-header">
+          <span class="badge badge-major">Major</span>
+          <span class="issue-id">SEO-006</span>
+          <span class="issue-title">Missing Open Graph Meta Tags</span>
+        </div>
+        <p class="issue-detail">
+          No Open Graph tags found (og:title, og:description, og:image, og:url, og:type). These tags control how the page appears when shared on social media platforms like Facebook, LinkedIn, and others.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Add Open Graph meta tags:
+          <pre style="margin-top:0.5rem;background:#f1f5f9;padding:0.5rem;border-radius:4px;overflow-x:auto;font-size:0.8rem">&lt;meta property="og:type" content="website"&gt;
+&lt;meta property="og:title" content="Page Title"&gt;
+&lt;meta property="og:description" content="Page description"&gt;
+&lt;meta property="og:url" content="https://example.com/"&gt;
+&lt;meta property="og:image" content="https://example.com/image.png"&gt;</pre>
+        </div>
+      </div>
+
+      <div class="issue severity-major">
+        <div class="issue-header">
+          <span class="badge badge-major">Major</span>
+          <span class="issue-id">SEO-007</span>
+          <span class="issue-title">Missing Twitter Card Meta Tags</span>
+        </div>
+        <p class="issue-detail">
+          No Twitter Card tags found (twitter:card, twitter:title, twitter:description). These control the appearance of links shared on Twitter/X.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Add Twitter Card meta tags:
+          <pre style="margin-top:0.5rem;background:#f1f5f9;padding:0.5rem;border-radius:4px;overflow-x:auto;font-size:0.8rem">&lt;meta name="twitter:card" content="summary_large_image"&gt;
+&lt;meta name="twitter:title" content="Page Title"&gt;
+&lt;meta name="twitter:description" content="Page description"&gt;
+&lt;meta name="twitter:image" content="https://example.com/image.png"&gt;</pre>
+        </div>
+      </div>
+
+      <div class="issue severity-major">
+        <div class="issue-header">
+          <span class="badge badge-major">Major</span>
+          <span class="issue-id">SEO-009</span>
+          <span class="issue-title">Missing Organization Structured Data</span>
+        </div>
+        <p class="issue-detail">
+          No Organization or WebSite schema found. These schemas provide brand identity signals to search engines and can enable knowledge panel features in SERPs.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Add Organization JSON-LD with name, url, logo, contactPoint, and sameAs properties linking to social profiles.
+        </div>
+      </div>
+
+      <div class="issue severity-major">
+        <div class="issue-header">
+          <span class="badge badge-major">Major</span>
+          <span class="issue-id">SEO-010</span>
+          <span class="issue-title">Missing BreadcrumbList Structured Data</span>
+        </div>
+        <p class="issue-detail">
+          No BreadcrumbList schema found. Breadcrumb structured data improves SERP appearance by showing the page's position within the site hierarchy.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> If the site has hierarchical navigation, add BreadcrumbList JSON-LD to enable breadcrumb rich results in search.
+        </div>
+      </div>
+
+      <div class="issue severity-major">
+        <div class="issue-header">
+          <span class="badge badge-major">Major</span>
+          <span class="issue-id">SEO-013</span>
+          <span class="issue-title">Missing Favicon Declaration</span>
+        </div>
+        <p class="issue-detail">
+          No <code>&lt;link rel="icon"&gt;</code> or favicon reference found. Favicons affect brand recognition in browser tabs, bookmarks, and search results.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Add <code>&lt;link rel="icon" href="/favicon.ico"&gt;</code> and consider including <code>&lt;link rel="apple-touch-icon"&gt;</code> for iOS devices.
+        </div>
+      </div>
+    </div>
+
+    <!-- Minor Issues -->
+    <div class="section">
+      <h2>Minor Issues</h2>
+
+      <div class="issue severity-minor">
+        <div class="issue-header">
+          <span class="badge badge-minor">Minor</span>
+          <span class="issue-id">SEO-008</span>
+          <span class="issue-title">Language Attribute Could Be More Specific</span>
+        </div>
+        <p class="issue-detail">
+          Line 2: The <code>lang="en"</code> attribute is valid but could be more specific (e.g., <code>en-US</code> or <code>en-GB</code>) if targeting a specific geographic audience.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Consider using a region-specific locale code if the site targets a specific English-speaking market.
+        </div>
+      </div>
+
+      <div class="issue severity-minor">
+        <div class="issue-header">
+          <span class="badge badge-minor">Minor</span>
+          <span class="issue-id">SEO-014</span>
+          <span class="issue-title">Image Missing Alt Attribute</span>
+        </div>
+        <p class="issue-detail">
+          Line 30: The image at <code>/public/logo.png</code> has no <code>alt</code> attribute. This hurts image SEO and accessibility. Search engines use alt text to understand image content.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Add descriptive alt text to all images, e.g. <code>alt="Company Logo"</code>.
+        </div>
+      </div>
+
+      <div class="issue severity-minor">
+        <div class="issue-header">
+          <span class="badge badge-minor">Minor</span>
+          <span class="issue-id">SEO-015</span>
+          <span class="issue-title">Render-Blocking External CSS</span>
+        </div>
+        <p class="issue-detail">
+          Line 10: A synchronous external stylesheet (<code>cdn.example.com/styles.css</code>) in <code>&lt;head&gt;</code> blocks rendering. Slow page load times negatively impact Core Web Vitals and search rankings.
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Consider inlining critical CSS, using <code>&lt;link rel="preload"&gt;</code>, or deferring non-critical styles with media queries.
+        </div>
+      </div>
+
+      <div class="issue severity-minor">
+        <div class="issue-header">
+          <span class="badge badge-minor">Minor</span>
+          <span class="issue-id">SEO-016</span>
+          <span class="issue-title">Missing font-display: swap</span>
+        </div>
+        <p class="issue-detail">
+          Lines 13-17: The <code>@font-face</code> for "CustomFont" does not declare <code>font-display: swap</code>. This can cause Flash of Invisible Text (FOIT), negatively impacting Largest Contentful Paint (LCP).
+        </p>
+        <div class="recommendation">
+          <strong>Recommendation:</strong> Add <code>font-display: swap;</code> to the <code>@font-face</code> declaration.
+        </div>
+      </div>
+    </div>
+
+    <!-- Passing Items -->
+    <div class="section">
+      <h2>Passing Items</h2>
+
+      <div class="issue severity-pass">
+        <div class="issue-header">
+          <span class="badge badge-pass">Pass</span>
+          <span class="issue-id">SEO-011</span>
+          <span class="issue-title">Charset Declaration</span>
+        </div>
+        <p class="issue-detail">Line 4: <code>&lt;meta charset="UTF-8"&gt;</code> is correctly declared.</p>
+      </div>
+
+      <div class="issue severity-pass">
+        <div class="issue-header">
+          <span class="badge badge-pass">Pass</span>
+          <span class="issue-id">SEO-012</span>
+          <span class="issue-title">Viewport Meta Tag</span>
+        </div>
+        <p class="issue-detail">Line 5: <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code> is correctly configured for mobile responsiveness.</p>
+      </div>
+    </div>
+
+    <p class="meta-info">Generated on 2026-03-11 | SEO Audit: Meta Tags &amp; Structured Data</p>
+  </div>
+</body>
+</html>

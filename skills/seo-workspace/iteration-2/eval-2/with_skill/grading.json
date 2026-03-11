@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "meta description 누락 감지", "passed": true, "evidence": "SEO-05 marked Fail: '<meta name=\"description\"> 태그 없음. 검색 결과 스니펫에 표시될 설명이 없어 CTR 저하 우려.'"},
+    {"text": "JSON-LD 구조화 데이터 누락 감지", "passed": true, "evidence": "SEO-07 marked Fail: '<script type=\"application/ld+json\"> 없음. 검색 결과 리치 스니펫 노출 불가.'"},
+    {"text": "canonical URL 누락 감지", "passed": true, "evidence": "SEO-06 marked Fail: '<link rel=\"canonical\"> 없음. 중복 콘텐츠 문제 발생 가능.'"},
+    {"text": "title 태그가 너무 짧거나 일반적임을 지적", "passed": true, "evidence": "SEO-02 marked Fail: '<title>Sample Page</title> (11자) — 너무 짧고 비서술적. 50-60자 권장, 주요 키워드를 앞에 배치해야 함.'"}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.00}
+}

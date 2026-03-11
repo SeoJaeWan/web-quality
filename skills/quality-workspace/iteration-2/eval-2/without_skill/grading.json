@@ -1,0 +1,16 @@
+{
+  "expectations": [
+    {"text": "HTML report file (report.html) was generated", "passed": true, "evidence": "report.html exists with meaningful content."},
+    {"text": "CSV report file (report.csv) was generated", "passed": true, "evidence": "report.csv exists with 17 rows of issue data."},
+    {"text": "Report contains accessibility section (Section A)", "passed": false, "evidence": "Report has an Accessibility category but not a structured Section A with KWCAG2.2 checklist."},
+    {"text": "Report contains SEO and Web Performance section (Section B)", "passed": false, "evidence": "Report has SEO and Performance categories with ad-hoc issues, not a structured Section B."},
+    {"text": "All 33 KWCAG2.2 items are evaluated (none skipped)", "passed": false, "evidence": "Only 6 accessibility issues listed ad-hoc. No 33-item KWCAG2.2 systematic evaluation."},
+    {"text": "All SEO items (SEO-01 through SEO-11) are evaluated", "passed": false, "evidence": "Only 4 SEO issues listed with custom formatting, not the standard SEO-01~11 format."},
+    {"text": "All WP items (WP-01 through WP-18) are evaluated", "passed": false, "evidence": "Only 5 performance issues listed, not the standard WP-01~18 format."},
+    {"text": "Failed items include specific issue descriptions with file/line references", "passed": true, "evidence": "Issues include file/line references: 'index.html line 30', 'Card.tsx line 25-27', 'Card.tsx line 29', etc."},
+    {"text": "Fix guide section exists with concrete code-level recommendations", "passed": true, "evidence": "Each issue has a Recommendation column with specific code-level fixes."},
+    {"text": "Report is written in Korean", "passed": false, "evidence": "Report is written in English. Title: 'Web Quality Audit Report'."},
+    {"text": "Only index.html and Card.tsx are reviewed (no dashboard.tsx)", "passed": true, "evidence": "Report subtitle: 'Audited files: index.html, Card.tsx'. No dashboard.tsx is mentioned or reviewed."}
+  ],
+  "summary": {"passed": 5, "failed": 6, "total": 11, "pass_rate": 0.45}
+}

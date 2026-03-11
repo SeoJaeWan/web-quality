@@ -1,0 +1,17 @@
+{
+  "expectations": [
+    {"text": "HTML report file (report.html) was generated", "passed": true, "evidence": "report.html exists with Korean-language quality audit report."},
+    {"text": "CSV report file (report.csv) was generated", "passed": true, "evidence": "report.csv exists with 70 rows covering all accessibility, SEO, and WP items."},
+    {"text": "Report contains accessibility section (Section A)", "passed": true, "evidence": "CSV and HTML contain accessibility section with A-01 through A-33 plus SH-01 to SH-07."},
+    {"text": "Report contains SEO and Web Performance section (Section B)", "passed": true, "evidence": "CSV contains SEO-01 to SEO-11 and WP-01 to WP-18 items."},
+    {"text": "All 33 KWCAG2.2 items are evaluated (none skipped)", "passed": true, "evidence": "CSV contains A-01 through A-33 all with results (✅/❌/⚠️/➖)."},
+    {"text": "All SEO items (SEO-01 through SEO-11) are evaluated", "passed": true, "evidence": "CSV contains SEO-01 through SEO-11 with results. Many are ➖ N/A since only dashboard.tsx was reviewed."},
+    {"text": "All WP items (WP-01 through WP-18) are evaluated", "passed": true, "evidence": "CSV contains WP-01 through WP-18 with results."},
+    {"text": "Failed items include specific issue descriptions with file/line references", "passed": true, "evidence": "Failed items include references like 'dashboard.tsx:29-31,34-36', 'dashboard.tsx:45-47', 'dashboard.tsx:50', 'dashboard.tsx:12-13', 'dashboard.tsx:17-19'."},
+    {"text": "Fix guide section exists with concrete code-level recommendations", "passed": true, "evidence": "CSV has '수정 가이드' column with specific fixes for each failed item."},
+    {"text": "Report is written in Korean", "passed": true, "evidence": "Report is in Korean. Title: '웹 품질 종합 감사 리포트', all content in Korean."},
+    {"text": "Accessibility findings include specific KWCAG item IDs and line references", "passed": true, "evidence": "Accessibility findings map to specific KWCAG items (A-17, A-23, A-32, A-33) with line references like 'dashboard.tsx:29-31,34-36' and 'dashboard.tsx:45-47'."},
+    {"text": "Performance findings include code-level analysis (layout thrashing, lazy loading, etc.)", "passed": true, "evidence": "WP-09: 'dashboard.tsx:12-13 — offsetHeight 읽기 직후 style.minHeight 쓰기. 강제 리플로우 발생'. WP-05: 'dashboard.tsx:50 — below-fold 이미지에 loading=lazy 미지정'. WP-18: 'dashboard.tsx:17-19 — setTimeout 500ms 후 items 동적 삽입. 공간 미예약으로 CLS 발생'."}
+  ],
+  "summary": {"passed": 12, "failed": 0, "total": 12, "pass_rate": 1.00}
+}

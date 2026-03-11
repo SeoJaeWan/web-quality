@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "Detected absence of landmark elements (header/nav/main/footer)", "passed": true, "evidence": "Semantic HTML section: 랜드마크 요소 marked ❌ Fail: 'index.html — <header>, <main>, <footer>, <nav> 랜드마크 요소가 전혀 사용되지 않음. <body> 내부에 제목, 링크, 이미지, 본문 텍스트가 직접 나열됨.'"},
+    {"text": "Detected missing alt attribute on logo img", "passed": true, "evidence": "Item 1 (적절한 대체 텍스트) marked ❌ Fail: 'index.html:30 — <img src=\"/public/logo.png\" width=\"120\" height=\"40\" />에 alt 속성이 없음. 로고 이미지로 추정되며 의미 있는 대체 텍스트가 필요함.'"},
+    {"text": "Checked html lang attribute", "passed": true, "evidence": "Item 25 (기본 언어 표시) marked ✅ Pass: '<html lang=\"en\"> — 유효한 ISO 639-1 언어 코드 사용. 페이지 콘텐츠가 영어이므로 적절함.'"},
+    {"text": "Report includes a dedicated semantic HTML review section", "passed": true, "evidence": "Report has a '시맨틱 HTML 검토' section with 7 sub-items: landmarks, section structure, interactive elements, list structure, presentational tags, form groups, and other semantic elements."},
+    {"text": "Uses the standard classification system", "passed": true, "evidence": "Report uses ✅/❌/⚠️/➖ symbols throughout the checklist for Pass/Fail/Advisory/N/A classifications."}
+  ],
+  "summary": {"passed": 5, "failed": 0, "total": 5, "pass_rate": 1.00}
+}

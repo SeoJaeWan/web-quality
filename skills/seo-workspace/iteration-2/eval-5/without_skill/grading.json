@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "29개 항목(SEO-01~11, WP-01~18) 모두 포함", "passed": false, "evidence": "Report uses custom numbering (SEO-01 through SEO-11 and WP-01 through WP-18 labels are used) but uses different item names than standard. The CSV contains 29 rows but with custom category names rather than standard item names."},
+    {"text": "SEO-XX, WP-XX 형식의 표준 코드 사용", "passed": true, "evidence": "CSV uses SEO-01 through SEO-11 and WP-01 through WP-18 codes in the id column."},
+    {"text": "모든 항목에 Pass/Fail/N/A 결과 표기", "passed": true, "evidence": "All items have a status: FAIL, WARN, or PASS. Every row has a result designation."},
+    {"text": "파일명과 라인 번호 참조 포함", "passed": true, "evidence": "Issues reference specific files and lines: 'index.html line 10', 'dashboard.tsx line 12-13', 'Card.tsx line 13', 'Card.tsx line 27', 'index.html line 42', etc."}
+  ],
+  "summary": {"passed": 3, "failed": 1, "total": 4, "pass_rate": 0.75}
+}

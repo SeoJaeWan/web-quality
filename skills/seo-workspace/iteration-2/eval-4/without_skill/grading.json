@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "render-blocking 인라인 스크립트 감지", "passed": true, "evidence": "Issue: 'Inline render-blocking script' (High, line 37-44): 'Synchronous inline <script> in <body> blocks HTML parsing and rendering.'"},
+    {"text": "font-display 속성 누락 감지", "passed": true, "evidence": "Issue: 'Missing font-display descriptor' (High, lines 13-17): 'The @font-face declaration for CustomFont does not include font-display: swap. This causes Flash of Invisible Text (FOIT).'"},
+    {"text": "render-blocking CSS 감지", "passed": true, "evidence": "Issue: 'Render-blocking external CSS' (High, line 10): 'The synchronous <link rel=\"stylesheet\"> in <head> blocks rendering until the entire CSS file downloads.'"},
+    {"text": "폰트 preload 누락 감지", "passed": true, "evidence": "Issue: 'No font preloading' (Medium): 'The custom font file (/fonts/custom.woff2) is not preloaded. The browser discovers it only after parsing CSS, adding latency to font loading.'"}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.00}
+}

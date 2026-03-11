@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO &amp; Web Performance 검토 결과</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1200px; margin: 0 auto; padding: 24px; color: #1a1a1a; background: #fafafa; }
+  h1 { border-bottom: 3px solid #2563eb; padding-bottom: 12px; }
+  h2 { margin-top: 32px; color: #1e40af; }
+  h3 { margin-top: 24px; color: #374151; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
+  th, td { border: 1px solid #d1d5db; padding: 8px 12px; text-align: left; }
+  th { background: #f3f4f6; font-weight: 600; }
+  tr:nth-child(even) { background: #f9fafb; }
+  .pass { color: #059669; } .fail { color: #dc2626; } .warn { color: #d97706; } .na { color: #6b7280; } .unknown { color: #3b82f6; }
+  .summary-box { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 16px 0; }
+  .file-list { background: #eff6ff; border-left: 4px solid #2563eb; padding: 12px 16px; margin: 16px 0; }
+  .fix-section { background: #fef2f2; border-left: 4px solid #dc2626; padding: 16px; margin: 12px 0; border-radius: 0 8px 8px 0; }
+  .fix-section h4 { margin-top: 0; color: #991b1b; }
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 13px; }
+  .stats { display: flex; gap: 16px; flex-wrap: wrap; }
+  .stat-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 24px; text-align: center; min-width: 120px; }
+  .stat-card .number { font-size: 28px; font-weight: 700; }
+  .stat-card .label { font-size: 12px; color: #6b7280; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>SEO &amp; Web Performance 검토 결과 &mdash; 2026-03-11</h1>
+
+<div class="file-list">
+  <strong>검토 파일:</strong><br>
+  <code>features/web-sample/pages/index.html</code><br>
+  <code>features/web-sample/pages/dashboard.tsx</code>
+</div>
+
+<div class="summary-box">
+  <h3 style="margin-top:0">검토 요약</h3>
+  <div class="stats">
+    <div class="stat-card"><div class="number fail">14</div><div class="label">실패 (FAIL)</div></div>
+    <div class="stat-card"><div class="number pass">11</div><div class="label">통과 (PASS)</div></div>
+    <div class="stat-card"><div class="number warn">3</div><div class="label">권고 (Advisory)</div></div>
+    <div class="stat-card"><div class="number na">1</div><div class="label">해당없음 (N/A)</div></div>
+  </div>
+  <p style="margin-top:12px; color:#6b7280; font-size:14px;">Lighthouse 실행 불가 (개발 서버 없음) &mdash; 전체 항목 정적분석으로 판정</p>
+</div>
+
+<h2>Technical SEO (11항목)</h2>
+<table>
+  <thead>
+    <tr><th>코드</th><th>우선순위</th><th>항목</th><th>결과</th><th>판정방식</th><th>발견된 문제</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SEO-01</td><td>Critical</td><td>noindex 없음</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td>두 파일 모두 noindex 메타 태그 없음. 정상.</td>
+    </tr>
+    <tr>
+      <td>SEO-02</td><td>Critical</td><td>title 태그 존재하고 고유 (50-60자)</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html</strong>: <code>&lt;title&gt;Sample Page&lt;/title&gt;</code> &mdash; 11자로 너무 짧음 (권장 50-60자). 페이지 내용을 대표하지 못하는 범용적 제목.<br>
+      <strong>dashboard.tsx</strong>: React 컴포넌트에 title 설정 없음 (document.title 또는 Helmet 등 미사용).</td>
+    </tr>
+    <tr>
+      <td>SEO-03</td><td>Critical</td><td>페이지당 h1 하나</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td>index.html: h1 1개. dashboard.tsx: h1 1개. 정상.</td>
+    </tr>
+    <tr>
+      <td>SEO-04</td><td>Critical</td><td>HTTPS 사용</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td>index.html의 외부 링크 및 리소스가 모두 https:// 사용. dashboard.tsx는 상대경로 사용. 정상.</td>
+    </tr>
+    <tr>
+      <td>SEO-05</td><td>High</td><td>meta description 존재 (150-160자)</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html</strong>: <code>&lt;meta name="description"&gt;</code> 태그 완전 누락. 검색 결과에 적절한 설명이 표시되지 않음.</td>
+    </tr>
+    <tr>
+      <td>SEO-06</td><td>High</td><td>canonical URL 설정</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html</strong>: <code>&lt;link rel="canonical"&gt;</code> 태그 누락. 중복 콘텐츠 문제 발생 가능.</td>
+    </tr>
+    <tr>
+      <td>SEO-07</td><td>High</td><td>구조화 데이터 (JSON-LD)</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html</strong>: <code>&lt;script type="application/ld+json"&gt;</code> 없음. 검색 엔진이 콘텐츠 의미를 이해하기 어려움.</td>
+    </tr>
+    <tr>
+      <td>SEO-08</td><td>Medium</td><td>서술적 URL 구조</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td>href 속성에 쿼리 파라미터 없이 서술적 경로 사용. 정상.</td>
+    </tr>
+    <tr>
+      <td>SEO-09</td><td>High</td><td>DOCTYPE html 선언</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td><strong>index.html</strong> 1행: <code>&lt;!DOCTYPE html&gt;</code> 정상 선언.</td>
+    </tr>
+    <tr>
+      <td>SEO-10</td><td>High</td><td>charset UTF-8 head 최상단</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td><strong>index.html</strong>: <code>&lt;meta charset="UTF-8"&gt;</code>이 head 내 첫 번째 요소. 정상.</td>
+    </tr>
+    <tr>
+      <td>SEO-11</td><td>High</td><td>viewport meta 태그</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td><strong>index.html</strong>: <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code> 정상.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Page Experience / Web Performance (18항목)</h2>
+<table>
+  <thead>
+    <tr><th>코드</th><th>영역</th><th>항목</th><th>결과</th><th>판정방식</th><th>발견된 문제</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>WP-01</td><td>CRP</td><td>render-blocking script 없음</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html (37-44행)</strong>: <code>&lt;script&gt;</code> 인라인 스크립트가 <code>defer</code>/<code>async</code>/<code>type="module"</code> 없이 body 하단에 위치. 렌더링 차단 가능성.</td>
+    </tr>
+    <tr>
+      <td>WP-02</td><td>CRP</td><td>LCP 이미지 fetchpriority + preload</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html (27행)</strong>: hero 이미지 <code>&lt;img src="/public/hero.png"&gt;</code>에 <code>fetchpriority="high"</code> 미설정. head 내 <code>&lt;link rel="preload" as="image"&gt;</code>도 없음.</td>
+    </tr>
+    <tr>
+      <td>WP-03</td><td>CRP</td><td>Critical CSS 처리</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html (10행)</strong>: <code>&lt;link rel="stylesheet" href="https://cdn.example.com/styles.css"&gt;</code>가 media 속성 없이 head에 위치하여 렌더링 차단.</td>
+    </tr>
+    <tr>
+      <td>WP-04</td><td>이미지</td><td>img width/height 또는 aspect-ratio (CLS 방지)</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html (33행)</strong>: <code>&lt;img src="/public/promo.png"&gt;</code> &mdash; width/height 미지정. CLS 발생 위험.<br>
+      <strong>dashboard.tsx (50행)</strong>: <code>&lt;img src="/public/promo.png"&gt;</code> &mdash; width/height 및 aspect-ratio 미지정.</td>
+    </tr>
+    <tr>
+      <td>WP-05</td><td>이미지</td><td>loading="lazy" (below-fold)</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html (30, 33행)</strong>: <code>/public/logo.png</code>, <code>/public/promo.png</code>에 <code>loading="lazy"</code> 미설정.<br>
+      <strong>dashboard.tsx (50행)</strong>: below-fold 이미지에 <code>loading="lazy"</code> 미설정.</td>
+    </tr>
+    <tr>
+      <td>WP-06</td><td>이미지</td><td>현대 이미지 포맷 (WebP/AVIF)</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td>모든 이미지가 <code>.png</code> 포맷 사용. <code>&lt;picture&gt;</code> 요소나 WebP/AVIF 변환 없음.</td>
+    </tr>
+    <tr>
+      <td>WP-07</td><td>JS</td><td>코드 스플리팅</td>
+      <td class="warn">&#9888; Advisory</td><td>정적분석</td>
+      <td><strong>dashboard.tsx</strong>: 동적 <code>import()</code> 표현식 없음. 앱 규모가 커지면 코드 스플리팅 적용 권장.</td>
+    </tr>
+    <tr>
+      <td>WP-08</td><td>JS</td><td>트리 쉐이킹 패턴</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td>전체 라이브러리 임포트 (<code>import _ from 'lodash'</code> 등) 패턴 미발견.</td>
+    </tr>
+    <tr>
+      <td>WP-09</td><td>JS</td><td>레이아웃 스래싱 없음</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>dashboard.tsx (11-13행)</strong>: <code>useEffect</code> 내에서 <code>offsetHeight</code> 읽기 직후 <code>style.minHeight</code> 쓰기 &mdash; 레이아웃 스래싱 패턴.</td>
+    </tr>
+    <tr>
+      <td>WP-10</td><td>폰트</td><td>font-display 최적화 (block 금지)</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html (13-17행)</strong>: <code>@font-face</code>에 <code>font-display</code> 속성 누락. 폰트 로딩 중 텍스트가 보이지 않을 수 있음 (FOIT).</td>
+    </tr>
+    <tr>
+      <td>WP-11</td><td>폰트</td><td>중요 폰트 preload</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>index.html</strong>: <code>/fonts/custom.woff2</code> 사용하나 <code>&lt;link rel="preload" as="font"&gt;</code> 없음.</td>
+    </tr>
+    <tr>
+      <td>WP-12</td><td>LCP</td><td>LCP 요소 초기 HTML에 존재</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>dashboard.tsx (17-19행)</strong>: 대시보드 주요 콘텐츠가 <code>useEffect</code> + <code>setTimeout</code>으로 JS 실행 후에만 렌더링됨. LCP 지연 원인.</td>
+    </tr>
+    <tr>
+      <td>WP-13</td><td>INP</td><td>이벤트 핸들러 즉각 시각 피드백</td>
+      <td class="warn">&#9888; Advisory</td><td>정적분석</td>
+      <td><strong>dashboard.tsx (29-36행)</strong>: SVG 아이콘 버튼에 클릭 핸들러 미정의 상태. 핸들러 추가 시 즉각적 시각 피드백(loading 상태 등) 구현 권장.</td>
+    </tr>
+    <tr>
+      <td>WP-14</td><td>INP</td><td>무거운 연산 지연 처리</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td>동기적 무거운 연산 루프 미발견.</td>
+    </tr>
+    <tr>
+      <td>WP-15</td><td>INP</td><td>React memo 활용</td>
+      <td class="warn">&#9888; Advisory</td><td>정적분석</td>
+      <td><strong>dashboard.tsx</strong>: Dashboard 컴포넌트에 <code>React.memo()</code> 미적용. 부모 리렌더 시 불필요한 리렌더 발생 가능. 규모 확대 시 적용 권장.</td>
+    </tr>
+    <tr>
+      <td>WP-16</td><td>CLS</td><td>뷰포트 위 동적 삽입 금지</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td><code>prepend()</code>, <code>insertBefore()</code> 패턴 미발견.</td>
+    </tr>
+    <tr>
+      <td>WP-17</td><td>CLS</td><td>애니메이션 transform/opacity만</td>
+      <td class="pass">&#10003; Pass</td><td>정적분석</td>
+      <td>height/width/top/left/margin/padding에 대한 CSS transition 미발견.</td>
+    </tr>
+    <tr>
+      <td>WP-18</td><td>CLS</td><td>동적 콘텐츠 공간 예약</td>
+      <td class="fail">&#10007; Fail</td><td>정적분석</td>
+      <td><strong>dashboard.tsx (41행, 17-19행)</strong>: <code>setTimeout</code>으로 동적 삽입되는 아이템 목록에 대해 <code>min-height</code> 등 공간 예약 없음. CLS 발생 위험.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>수정 가이드</h2>
+
+<div class="fix-section">
+<h4>SEO-02: title 태그 최적화 (index.html 6행)</h4>
+<p>현재 <code>&lt;title&gt;Sample Page&lt;/title&gt;</code>은 11자로 너무 짧고 범용적입니다.</p>
+<pre>&lt;!-- 수정 전 --&gt;
+&lt;title&gt;Sample Page&lt;/title&gt;
+
+&lt;!-- 수정 후 (예시) --&gt;
+&lt;title&gt;Sample Page - 주요 키워드를 포함한 설명적 제목 | 브랜드명&lt;/title&gt;</pre>
+<p>50-60자 이내로 페이지 핵심 키워드를 포함한 고유 제목을 작성하세요.</p>
+</div>
+
+<div class="fix-section">
+<h4>SEO-05: meta description 추가 (index.html head 내)</h4>
+<pre>&lt;meta name="description" content="이 페이지에 대한 150-160자 이내의 설명을 작성하세요. 핵심 키워드를 자연스럽게 포함하고, 사용자의 클릭을 유도하는 문구를 사용하세요."&gt;</pre>
+</div>
+
+<div class="fix-section">
+<h4>SEO-06: canonical URL 추가 (index.html head 내)</h4>
+<pre>&lt;link rel="canonical" href="https://example.com/"&gt;</pre>
+</div>
+
+<div class="fix-section">
+<h4>SEO-07: 구조화 데이터 추가 (index.html)</h4>
+<pre>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Sample Page",
+  "url": "https://example.com/"
+}
+&lt;/script&gt;</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-01: render-blocking script 제거 (index.html 37행)</h4>
+<p>인라인 스크립트를 외부 파일로 분리하고 <code>defer</code> 속성을 추가하거나, DOM 조작이 필요한 경우 <code>DOMContentLoaded</code> 이벤트를 사용하세요.</p>
+<pre>&lt;!-- 수정 후 --&gt;
+&lt;script defer src="/scripts/main.js"&gt;&lt;/script&gt;</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-02: LCP 이미지 최적화 (index.html 27행)</h4>
+<pre>&lt;!-- head 내 preload 추가 --&gt;
+&lt;link rel="preload" href="/public/hero.png" as="image" fetchpriority="high"&gt;
+
+&lt;!-- img 태그에 fetchpriority 추가 --&gt;
+&lt;img src="/public/hero.png" alt="Hero banner" width="800" height="400" fetchpriority="high"&gt;</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-03: Critical CSS 처리 (index.html 10행)</h4>
+<pre>&lt;!-- 수정 전 --&gt;
+&lt;link rel="stylesheet" href="https://cdn.example.com/styles.css" /&gt;
+
+&lt;!-- 수정 후: Critical CSS 인라인 + 나머지 비동기 로드 --&gt;
+&lt;style&gt;/* 위 폴드 필수 CSS */&lt;/style&gt;
+&lt;link rel="preload" href="https://cdn.example.com/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'"&gt;
+&lt;noscript&gt;&lt;link rel="stylesheet" href="https://cdn.example.com/styles.css"&gt;&lt;/noscript&gt;</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-04: 이미지 width/height 추가</h4>
+<p><strong>index.html (33행)</strong> 및 <strong>dashboard.tsx (50행)</strong>:</p>
+<pre>&lt;!-- 수정 전 --&gt;
+&lt;img src="/public/promo.png" alt="Promotional banner" /&gt;
+
+&lt;!-- 수정 후 --&gt;
+&lt;img src="/public/promo.png" alt="Promotional banner" width="800" height="400" /&gt;</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-05: loading="lazy" 추가</h4>
+<p>LCP 이미지가 아닌 below-fold 이미지에 lazy loading 적용:</p>
+<pre>&lt;img src="/public/logo.png" width="120" height="40" loading="lazy" alt="Logo"&gt;
+&lt;img src="/public/promo.png" alt="Promo" width="800" height="400" loading="lazy"&gt;</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-06: WebP/AVIF 포맷 적용</h4>
+<pre>&lt;picture&gt;
+  &lt;source type="image/avif" srcset="/public/hero.avif"&gt;
+  &lt;source type="image/webp" srcset="/public/hero.webp"&gt;
+  &lt;img src="/public/hero.png" alt="Hero banner" width="800" height="400"&gt;
+&lt;/picture&gt;</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-09: 레이아웃 스래싱 수정 (dashboard.tsx 11-13행)</h4>
+<pre>// 수정 전
+const h = containerRef.current.offsetHeight;
+containerRef.current.style.minHeight = h + "px";
+
+// 수정 후: requestAnimationFrame으로 읽기/쓰기 분리
+requestAnimationFrame(() =&gt; {
+  const h = containerRef.current.offsetHeight;
+  requestAnimationFrame(() =&gt; {
+    containerRef.current.style.minHeight = h + "px";
+  });
+});</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-10: font-display 추가 (index.html 13-17행)</h4>
+<pre>@font-face {
+  font-family: "CustomFont";
+  src: url("/fonts/custom.woff2") format("woff2");
+  font-display: swap;  /* 또는 optional */
+}</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-11: 폰트 preload 추가 (index.html head 내)</h4>
+<pre>&lt;link rel="preload" href="/fonts/custom.woff2" as="font" type="font/woff2" crossorigin&gt;</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-12: LCP 요소 초기 HTML 렌더링 (dashboard.tsx 17-19행)</h4>
+<p>대시보드 콘텐츠가 <code>useEffect</code> + <code>setTimeout</code>으로 지연 로딩됩니다. 서버 사이드 렌더링(SSR) 또는 초기 상태에 기본 데이터를 포함시키세요.</p>
+<pre>// 수정 전
+const [items, setItems] = useState&lt;string[]&gt;([]);
+
+// 수정 후: 초기 데이터 포함
+const [items, setItems] = useState&lt;string[]&gt;(["Dashboard", "Analytics", "Reports"]);</pre>
+</div>
+
+<div class="fix-section">
+<h4>WP-18: 동적 콘텐츠 공간 예약 (dashboard.tsx 41행)</h4>
+<pre>&lt;!-- 수정 전 --&gt;
+&lt;section ref={containerRef} className="grid gap-4"&gt;
+
+&lt;!-- 수정 후: min-height로 공간 예약 --&gt;
+&lt;section ref={containerRef} className="grid gap-4" style={{ minHeight: '200px' }}&gt;</pre>
+</div>
+
+</body>
+</html>

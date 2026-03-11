@@ -1,0 +1,1 @@
+{"eval_id":3,"eval_name":"image-cls-optimization","prompt":"dashboard.tsx에서 이미지 최적화와 렌더링 성능 문제를 점검해줘. 특히 CLS 방지랑 로딩 최적화 위주로","assertions":[{"id":"img-dimensions-missing","text":"이미지 width/height 속성 누락 감지"},{"id":"lazy-loading-missing","text":"loading=lazy 누락 감지"},{"id":"layout-thrashing","text":"레이아웃 스래싱 패턴 감지"},{"id":"dynamic-content-cls","text":"동적 콘텐츠 CLS 문제 감지"}]}

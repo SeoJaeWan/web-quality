@@ -1,0 +1,470 @@
+{
+  "metadata": {
+    "skill_name": "quality",
+    "timestamp": "2026-03-11",
+    "evals_run": [
+      "full-3files-quality-review",
+      "specified-2files-quality-audit",
+      "single-file-detail-review"
+    ],
+    "runs_per_configuration": 1
+  },
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0
+      },
+      "time_seconds": {
+        "mean": 261.97,
+        "stddev": 17.92
+      },
+      "tokens": {
+        "mean": 74928.33,
+        "stddev": 1834.84
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.42,
+        "stddev": 0.02
+      },
+      "time_seconds": {
+        "mean": 96.47,
+        "stddev": 18.38
+      },
+      "tokens": {
+        "mean": 16858.33,
+        "stddev": 1621.89
+      }
+    },
+    "delta": {
+      "pass_rate": "+58.0%",
+      "time_seconds": "+165.5",
+      "tokens": "+58070"
+    }
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "full-3files-quality-review",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "total": 10,
+        "time_seconds": 284.7,
+        "tokens": 76893
+      },
+      "expectations": [
+        {
+          "text": "HTML report file (report.html) was generated",
+          "passed": true,
+          "evidence": "report.html exists with meaningful content, Korean-language quality audit report."
+        },
+        {
+          "text": "CSV report file (report.csv) was generated",
+          "passed": true,
+          "evidence": "report.csv exists with 70 rows covering accessibility (A-01 to A-33, SH-01 to SH-07), SEO (SEO-01 to SEO-11), and Web Performance (WP-01 to WP-18)."
+        },
+        {
+          "text": "Report contains accessibility section (Section A)",
+          "passed": true,
+          "evidence": "HTML report has section header 'A. 접근성 (KWCAG2.2 33항목 + 시맨틱 HTML 7항목)' with all accessibility items listed."
+        },
+        {
+          "text": "Report contains SEO and Web Performance section (Section B)",
+          "passed": true,
+          "evidence": "CSV contains SEO section (SEO-01 to SEO-11) and Web Performance section (WP-01 to WP-18). HTML report includes both sections."
+        },
+        {
+          "text": "All 33 KWCAG2.2 items are evaluated (none skipped)",
+          "passed": true,
+          "evidence": "CSV contains items A-01 through A-33, each with a result (✅/❌/⚠️/➖). All 33 KWCAG items are present and evaluated."
+        },
+        {
+          "text": "All SEO items (SEO-01 through SEO-11) are evaluated",
+          "passed": true,
+          "evidence": "CSV contains SEO-01 through SEO-11, each with a result (✅/❌/⚠️)."
+        },
+        {
+          "text": "All WP items (WP-01 through WP-18) are evaluated",
+          "passed": true,
+          "evidence": "CSV contains WP-01 through WP-18, each with a result (✅/❌/⚠️/➖)."
+        },
+        {
+          "text": "Failed items include specific issue descriptions with file/line references",
+          "passed": true,
+          "evidence": "Failed items include references like 'index.html:30', 'Card.tsx:24-29', 'dashboard.tsx:29-36', 'Card.tsx:27', 'dashboard.tsx:45-46', 'index.html:37-44', 'dashboard.tsx:12-13'."
+        },
+        {
+          "text": "Fix guide section exists with concrete code-level recommendations",
+          "passed": true,
+          "evidence": "CSV has a '수정 가이드' column with specific code fixes. HTML report includes a fix guide section with concrete code recommendations."
+        },
+        {
+          "text": "Report is written in Korean",
+          "passed": true,
+          "evidence": "Report is primarily in Korean. Title: '웹 품질 종합 감사 리포트', sections in Korean, all item descriptions and fix guides in Korean."
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "full-3files-quality-review",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.4,
+        "passed": 4,
+        "total": 10,
+        "time_seconds": 122.3,
+        "tokens": 19149
+      },
+      "expectations": [
+        {
+          "text": "HTML report file (report.html) was generated",
+          "passed": true,
+          "evidence": "report.html exists with meaningful content (80+ lines of styled HTML report)."
+        },
+        {
+          "text": "CSV report file (report.csv) was generated",
+          "passed": true,
+          "evidence": "report.csv exists with 21 rows of issue data across Accessibility, SEO, Performance, and Security categories."
+        },
+        {
+          "text": "Report contains accessibility section (Section A)",
+          "passed": false,
+          "evidence": "Report does not have a structured 'Section A' for accessibility. It has an 'Accessibility' category with 6 ad-hoc issues, not a systematic KWCAG2.2 checklist."
+        },
+        {
+          "text": "Report contains SEO and Web Performance section (Section B)",
+          "passed": false,
+          "evidence": "Report has separate SEO (5 issues) and Performance (7 issues) categories but not a structured Section B with SEO-01~11 and WP-01~18 format."
+        },
+        {
+          "text": "All 33 KWCAG2.2 items are evaluated (none skipped)",
+          "passed": false,
+          "evidence": "Only 6 accessibility issues are listed ad-hoc. No structured 33-item KWCAG2.2 checklist."
+        },
+        {
+          "text": "All SEO items (SEO-01 through SEO-11) are evaluated",
+          "passed": false,
+          "evidence": "Only 5 SEO issues listed (S1-S5) using custom IDs, not the standard SEO-01~11 format."
+        },
+        {
+          "text": "All WP items (WP-01 through WP-18) are evaluated",
+          "passed": false,
+          "evidence": "Only 7 performance issues listed (P1-P7) using custom IDs, not the standard WP-01~18 format."
+        },
+        {
+          "text": "Failed items include specific issue descriptions with file/line references",
+          "passed": true,
+          "evidence": "Issues include file/line references: 'index.html line 30', 'dashboard.tsx lines 29-36', 'Card.tsx line 27', 'Card.tsx line 29', 'index.html line 42', etc."
+        },
+        {
+          "text": "Fix guide section exists with concrete code-level recommendations",
+          "passed": true,
+          "evidence": "Each issue has a Recommendation column with specific code-level fixes like 'Add aria-label to each icon button', 'Use a <button> element or add role=\"button\"', etc."
+        },
+        {
+          "text": "Report is written in Korean",
+          "passed": false,
+          "evidence": "Report is written entirely in English. Title: 'Web Quality Review Report'. All descriptions and recommendations in English."
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "specified-2files-quality-audit",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 11,
+        "total": 11,
+        "time_seconds": 260.3,
+        "tokens": 75414
+      },
+      "expectations": [
+        {
+          "text": "HTML report file (report.html) was generated",
+          "passed": true,
+          "evidence": "report.html exists with Korean-language quality audit report."
+        },
+        {
+          "text": "CSV report file (report.csv) was generated",
+          "passed": true,
+          "evidence": "report.csv exists with 70 rows covering all sections."
+        },
+        {
+          "text": "Report contains accessibility section (Section A)",
+          "passed": true,
+          "evidence": "HTML report has section 'A. 접근성' with all KWCAG items listed."
+        },
+        {
+          "text": "Report contains SEO and Web Performance section (Section B)",
+          "passed": true,
+          "evidence": "CSV contains SEO-01 to SEO-11 and WP-01 to WP-18 items."
+        },
+        {
+          "text": "All 33 KWCAG2.2 items are evaluated (none skipped)",
+          "passed": true,
+          "evidence": "CSV contains items A-01 through A-33 plus SH-01 to SH-07, all with results."
+        },
+        {
+          "text": "All SEO items (SEO-01 through SEO-11) are evaluated",
+          "passed": true,
+          "evidence": "CSV contains SEO-01 through SEO-11 each with results."
+        },
+        {
+          "text": "All WP items (WP-01 through WP-18) are evaluated",
+          "passed": true,
+          "evidence": "CSV contains WP-01 through WP-18 each with results."
+        },
+        {
+          "text": "Failed items include specific issue descriptions with file/line references",
+          "passed": true,
+          "evidence": "Failed items include references like 'index.html:30', 'Card.tsx:24', 'Card.tsx:27', 'index.html:37'."
+        },
+        {
+          "text": "Fix guide section exists with concrete code-level recommendations",
+          "passed": true,
+          "evidence": "CSV has '수정 가이드' column with specific code-level fixes for each failed item."
+        },
+        {
+          "text": "Report is written in Korean",
+          "passed": true,
+          "evidence": "Report is in Korean. Title: '웹 품질 종합 감사 리포트', all content in Korean."
+        },
+        {
+          "text": "Only index.html and Card.tsx are reviewed (no dashboard.tsx)",
+          "passed": true,
+          "evidence": "HTML meta shows '검토 파일: index.html, Card.tsx'. No mention of dashboard.tsx in the reviewed files. Dashboard.tsx is not referenced in findings."
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "specified-2files-quality-audit",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.45,
+        "passed": 5,
+        "total": 11,
+        "time_seconds": 81.1,
+        "tokens": 15815
+      },
+      "expectations": [
+        {
+          "text": "HTML report file (report.html) was generated",
+          "passed": true,
+          "evidence": "report.html exists with meaningful content."
+        },
+        {
+          "text": "CSV report file (report.csv) was generated",
+          "passed": true,
+          "evidence": "report.csv exists with 17 rows of issue data."
+        },
+        {
+          "text": "Report contains accessibility section (Section A)",
+          "passed": false,
+          "evidence": "Report has an Accessibility category but not a structured Section A with KWCAG2.2 checklist."
+        },
+        {
+          "text": "Report contains SEO and Web Performance section (Section B)",
+          "passed": false,
+          "evidence": "Report has SEO and Performance categories with ad-hoc issues, not a structured Section B."
+        },
+        {
+          "text": "All 33 KWCAG2.2 items are evaluated (none skipped)",
+          "passed": false,
+          "evidence": "Only 6 accessibility issues listed ad-hoc. No 33-item KWCAG2.2 systematic evaluation."
+        },
+        {
+          "text": "All SEO items (SEO-01 through SEO-11) are evaluated",
+          "passed": false,
+          "evidence": "Only 4 SEO issues listed with custom formatting, not the standard SEO-01~11 format."
+        },
+        {
+          "text": "All WP items (WP-01 through WP-18) are evaluated",
+          "passed": false,
+          "evidence": "Only 5 performance issues listed, not the standard WP-01~18 format."
+        },
+        {
+          "text": "Failed items include specific issue descriptions with file/line references",
+          "passed": true,
+          "evidence": "Issues include file/line references: 'index.html line 30', 'Card.tsx line 25-27', 'Card.tsx line 29', etc."
+        },
+        {
+          "text": "Fix guide section exists with concrete code-level recommendations",
+          "passed": true,
+          "evidence": "Each issue has a Recommendation column with specific code-level fixes."
+        },
+        {
+          "text": "Report is written in Korean",
+          "passed": false,
+          "evidence": "Report is written in English. Title: 'Web Quality Audit Report'."
+        },
+        {
+          "text": "Only index.html and Card.tsx are reviewed (no dashboard.tsx)",
+          "passed": true,
+          "evidence": "Report subtitle: 'Audited files: index.html, Card.tsx'. No dashboard.tsx is mentioned or reviewed."
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "single-file-detail-review",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 12,
+        "total": 12,
+        "time_seconds": 240.9,
+        "tokens": 72478
+      },
+      "expectations": [
+        {
+          "text": "HTML report file (report.html) was generated",
+          "passed": true,
+          "evidence": "report.html exists with Korean-language quality audit report."
+        },
+        {
+          "text": "CSV report file (report.csv) was generated",
+          "passed": true,
+          "evidence": "report.csv exists with 70 rows covering all accessibility, SEO, and WP items."
+        },
+        {
+          "text": "Report contains accessibility section (Section A)",
+          "passed": true,
+          "evidence": "CSV and HTML contain accessibility section with A-01 through A-33 plus SH-01 to SH-07."
+        },
+        {
+          "text": "Report contains SEO and Web Performance section (Section B)",
+          "passed": true,
+          "evidence": "CSV contains SEO-01 to SEO-11 and WP-01 to WP-18 items."
+        },
+        {
+          "text": "All 33 KWCAG2.2 items are evaluated (none skipped)",
+          "passed": true,
+          "evidence": "CSV contains A-01 through A-33 all with results (✅/❌/⚠️/➖)."
+        },
+        {
+          "text": "All SEO items (SEO-01 through SEO-11) are evaluated",
+          "passed": true,
+          "evidence": "CSV contains SEO-01 through SEO-11 with results. Many are ➖ N/A since only dashboard.tsx was reviewed."
+        },
+        {
+          "text": "All WP items (WP-01 through WP-18) are evaluated",
+          "passed": true,
+          "evidence": "CSV contains WP-01 through WP-18 with results."
+        },
+        {
+          "text": "Failed items include specific issue descriptions with file/line references",
+          "passed": true,
+          "evidence": "Failed items include references like 'dashboard.tsx:29-31,34-36', 'dashboard.tsx:45-47', 'dashboard.tsx:50', 'dashboard.tsx:12-13', 'dashboard.tsx:17-19'."
+        },
+        {
+          "text": "Fix guide section exists with concrete code-level recommendations",
+          "passed": true,
+          "evidence": "CSV has '수정 가이드' column with specific fixes for each failed item."
+        },
+        {
+          "text": "Report is written in Korean",
+          "passed": true,
+          "evidence": "Report is in Korean. Title: '웹 품질 종합 감사 리포트', all content in Korean."
+        },
+        {
+          "text": "Accessibility findings include specific KWCAG item IDs and line references",
+          "passed": true,
+          "evidence": "Accessibility findings map to specific KWCAG items (A-17, A-23, A-32, A-33) with line references like 'dashboard.tsx:29-31,34-36' and 'dashboard.tsx:45-47'."
+        },
+        {
+          "text": "Performance findings include code-level analysis (layout thrashing, lazy loading, etc.)",
+          "passed": true,
+          "evidence": "WP-09: 'dashboard.tsx:12-13 — offsetHeight 읽기 직후 style.minHeight 쓰기. 강제 리플로우 발생'. WP-05: 'dashboard.tsx:50 — below-fold 이미지에 loading=lazy 미지정'. WP-18: 'dashboard.tsx:17-19 — setTimeout 500ms 후 items 동적 삽입. 공간 미예약으로 CLS 발생'."
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "single-file-detail-review",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.42,
+        "passed": 5,
+        "total": 12,
+        "time_seconds": 86.0,
+        "tokens": 15611
+      },
+      "expectations": [
+        {
+          "text": "HTML report file (report.html) was generated",
+          "passed": true,
+          "evidence": "report.html exists with styled HTML report for dashboard.tsx."
+        },
+        {
+          "text": "CSV report file (report.csv) was generated",
+          "passed": true,
+          "evidence": "report.csv exists with 13 rows of issue data."
+        },
+        {
+          "text": "Report contains accessibility section (Section A)",
+          "passed": false,
+          "evidence": "Report has Accessibility issues listed but not a structured Section A with KWCAG2.2 checklist format."
+        },
+        {
+          "text": "Report contains SEO and Web Performance section (Section B)",
+          "passed": false,
+          "evidence": "Report has Performance issues but not a structured Section B with SEO-01~11 / WP-01~18 format."
+        },
+        {
+          "text": "All 33 KWCAG2.2 items are evaluated (none skipped)",
+          "passed": false,
+          "evidence": "Only 6 accessibility issues listed ad-hoc. No systematic 33-item evaluation."
+        },
+        {
+          "text": "All SEO items (SEO-01 through SEO-11) are evaluated",
+          "passed": false,
+          "evidence": "No SEO items evaluated. Report focuses only on accessibility and performance issues."
+        },
+        {
+          "text": "All WP items (WP-01 through WP-18) are evaluated",
+          "passed": false,
+          "evidence": "Only 7 performance issues listed ad-hoc. Not a structured WP-01~18 evaluation."
+        },
+        {
+          "text": "Failed items include specific issue descriptions with file/line references",
+          "passed": true,
+          "evidence": "Issues include line references: 'lines 29-31', 'lines 34-36', 'line 30', 'lines 12-13', 'lines 17-19', 'line 50', 'lines 45-47'."
+        },
+        {
+          "text": "Fix guide section exists with concrete code-level recommendations",
+          "passed": true,
+          "evidence": "Each issue has a Recommendation with specific code-level advice."
+        },
+        {
+          "text": "Report is written in Korean",
+          "passed": false,
+          "evidence": "Report is in English. Title: 'Quality Review Report — dashboard.tsx'."
+        },
+        {
+          "text": "Accessibility findings include specific KWCAG item IDs and line references",
+          "passed": false,
+          "evidence": "Accessibility findings do not reference KWCAG item IDs. They use generic categories like 'Accessibility' with severity levels but no KWCAG numbering."
+        },
+        {
+          "text": "Performance findings include code-level analysis (layout thrashing, lazy loading, etc.)",
+          "passed": true,
+          "evidence": "Performance section includes: 'Layout thrashing in useEffect' (lines 12-13), 'Delayed content insertion causes CLS' (lines 17-19), 'Image missing loading=lazy' (line 50), 'Image missing explicit width and height' (line 50)."
+        }
+      ]
+    }
+  ],
+  "notes": []
+}

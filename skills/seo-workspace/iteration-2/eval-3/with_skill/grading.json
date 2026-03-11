@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "이미지 width/height 속성 누락 감지", "passed": true, "evidence": "WP-04 marked Fail: 'dashboard.tsx line 50: img에 width/height 및 aspect-ratio 모두 없음. CLS 발생'."},
+    {"text": "loading=lazy 누락 감지", "passed": true, "evidence": "WP-05 marked Fail: 'dashboard.tsx line 50: below-fold 이미지에 loading=lazy 없음'."},
+    {"text": "레이아웃 스래싱 패턴 감지", "passed": true, "evidence": "WP-09 marked Fail: 'dashboard.tsx lines 11-13: offsetHeight 읽기 후 style.minHeight 쓰기 — 강제 리플로우'."},
+    {"text": "동적 콘텐츠 CLS 문제 감지", "passed": true, "evidence": "WP-18 marked Fail: 'dashboard.tsx line 41: 동적 items 영역에 min-height 등 공간 예약 없음'. Also WP-16 Fail: 'dashboard.tsx lines 17-19: setTimeout 후 그리드 상단에 콘텐츠 동적 삽입. CLS 발생'."}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.00}
+}

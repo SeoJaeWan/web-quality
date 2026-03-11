@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEO &amp; Web Performance 검토 결과 — 2026-03-11</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 2rem; color: #1a1a1a; line-height: 1.6; }
+  h1 { border-bottom: 2px solid #333; padding-bottom: 0.5rem; }
+  h2 { margin-top: 2rem; color: #2c3e50; }
+  h3 { margin-top: 1.5rem; color: #34495e; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+  th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; font-size: 14px; }
+  th { background: #f5f5f5; font-weight: 600; }
+  tr:nth-child(even) { background: #fafafa; }
+  .pass { color: #27ae60; }
+  .fail { color: #e74c3c; }
+  .advisory { color: #f39c12; }
+  .na { color: #95a5a6; }
+  .fix-section { background: #fff3cd; border-left: 4px solid #f39c12; padding: 1rem; margin: 0.5rem 0; }
+  .critical-fix { background: #f8d7da; border-left: 4px solid #e74c3c; padding: 1rem; margin: 0.5rem 0; }
+  code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+  pre { background: #f4f4f4; padding: 1rem; border-radius: 4px; overflow-x: auto; font-size: 13px; }
+  .summary-box { background: #eef; border: 1px solid #ccd; border-radius: 8px; padding: 1rem 1.5rem; margin: 1rem 0; }
+</style>
+</head>
+<body>
+
+<h1>SEO &amp; Web Performance 검토 결과 — 2026-03-11</h1>
+
+<p><strong>검토 파일:</strong></p>
+<ul>
+  <li><code>features/web-sample/pages/dashboard.tsx</code></li>
+  <li><code>features/web-sample/components/Card.tsx</code></li>
+</ul>
+
+<div class="summary-box">
+  <strong>Lighthouse 메트릭 요약:</strong> Lighthouse 미실행 (정적분석만 수행)
+</div>
+
+<h2>Technical SEO (11항목)</h2>
+
+<table>
+  <thead>
+    <tr><th>코드</th><th>우선순위</th><th>항목</th><th>결과</th><th>판정방식</th><th>발견된 문제</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>SEO-01</td><td>Critical</td><td>noindex 없음</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>React 컴포넌트 파일로 meta 태그 범위 밖. 레이아웃/HTML 엔트리에서 확인 필요.</td></tr>
+    <tr><td>SEO-02</td><td>Critical</td><td>title 태그 존재하고 고유</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>컴포넌트 파일에 title 태그 없음. 상위 레이아웃에서 확인 필요.</td></tr>
+    <tr><td>SEO-03</td><td>Critical</td><td>h1 하나</td><td class="pass">&#9989; Pass</td><td>정적분석</td><td>dashboard.tsx에 &lt;h1&gt; 1개 존재 (line 25). Card.tsx에는 h1 없음.</td></tr>
+    <tr><td>SEO-04</td><td>Critical</td><td>HTTPS 사용</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>외부 리소스 URL이 없어 HTTP/HTTPS 판정 불가. 이미지 경로가 상대경로(<code>/public/promo.png</code>) 사용.</td></tr>
+    <tr><td>SEO-05</td><td>High</td><td>meta description</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>컴포넌트 파일 범위 밖. 상위 레이아웃에서 확인 필요.</td></tr>
+    <tr><td>SEO-06</td><td>High</td><td>canonical URL</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>컴포넌트 파일 범위 밖. 상위 레이아웃에서 확인 필요.</td></tr>
+    <tr><td>SEO-07</td><td>High</td><td>구조화 데이터 (JSON-LD)</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>컴포넌트 파일에 JSON-LD 없음. 대시보드 페이지 특성상 필수는 아님.</td></tr>
+    <tr><td>SEO-08</td><td>Medium</td><td>서술적 URL 구조</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>라우팅 설정 파일 미포함. 파일명 기준 <code>/dashboard</code> 경로는 적절함.</td></tr>
+    <tr><td>SEO-09</td><td>High</td><td>DOCTYPE html 선언</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>컴포넌트 파일 범위 밖. HTML 엔트리에서 확인 필요.</td></tr>
+    <tr><td>SEO-10</td><td>High</td><td>charset UTF-8 최상단</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>컴포넌트 파일 범위 밖. HTML 엔트리에서 확인 필요.</td></tr>
+    <tr><td>SEO-11</td><td>High</td><td>viewport meta 태그</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>컴포넌트 파일 범위 밖. HTML 엔트리에서 확인 필요.</td></tr>
+  </tbody>
+</table>
+
+<h2>Page Experience / Web Performance (18항목)</h2>
+
+<table>
+  <thead>
+    <tr><th>코드</th><th>영역</th><th>항목</th><th>결과</th><th>판정방식</th><th>발견된 문제</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>WP-01</td><td>CRP</td><td>render-blocking script 없음</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>HTML 엔트리 파일이 아닌 React 컴포넌트이므로 script 태그 패턴 확인 불가.</td></tr>
+    <tr><td>WP-02</td><td>CRP</td><td>LCP fetchpriority + preload</td><td class="advisory">&#9888;&#65039; Advisory</td><td>정적분석</td><td><code>dashboard.tsx</code> line 50: 이미지에 <code>fetchpriority</code> 속성 없음. LCP 후보 이미지라면 <code>fetchpriority="high"</code> 추가 권장.</td></tr>
+    <tr><td>WP-03</td><td>CRP</td><td>Critical CSS 처리</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>CSS 로딩 방식은 빌드 설정/HTML 엔트리에서 확인 필요. Tailwind 클래스 사용 중.</td></tr>
+    <tr><td>WP-04</td><td>이미지</td><td>img width/height 또는 aspect-ratio (CLS 방지)</td><td class="fail">&#10060; Fail</td><td>정적분석</td><td><code>dashboard.tsx</code> line 50: <code>&lt;img src="/public/promo.png" alt="Promo" className="mt-8" /&gt;</code> — <code>width</code>, <code>height</code> 속성 및 <code>aspect-ratio</code> CSS 모두 없음. 이미지 로드 시 레이아웃 시프트(CLS) 발생.</td></tr>
+    <tr><td>WP-05</td><td>이미지</td><td>loading="lazy" (below-fold)</td><td class="fail">&#10060; Fail</td><td>정적분석</td><td><code>dashboard.tsx</code> line 50: below-fold 이미지(<code>className="mt-8"</code>로 하단 배치)에 <code>loading="lazy"</code> 없음. 초기 로딩 시 불필요한 네트워크 요청 발생.</td></tr>
+    <tr><td>WP-06</td><td>이미지</td><td>WebP/AVIF 포맷</td><td class="fail">&#10060; Fail</td><td>정적분석</td><td><code>dashboard.tsx</code> line 50: <code>.png</code> 포맷 사용. <code>&lt;picture&gt;</code> 요소 없음. WebP/AVIF 등 현대 이미지 포맷 미사용으로 파일 크기 비효율적.</td></tr>
+    <tr><td>WP-07</td><td>JS</td><td>코드 스플리팅</td><td class="advisory">&#9888;&#65039; Advisory</td><td>정적분석</td><td>동적 <code>import()</code> 표현식 없음. 페이지 규모가 커질 경우 코드 스플리팅 도입 권장.</td></tr>
+    <tr><td>WP-08</td><td>JS</td><td>트리 쉐이킹 패턴</td><td class="pass">&#9989; Pass</td><td>정적분석</td><td>named import 사용 (<code>import React, { useEffect, useRef, useState }</code>). 전체 라이브러리 import 패턴 없음.</td></tr>
+    <tr><td>WP-09</td><td>JS</td><td>레이아웃 스래싱 없음</td><td class="fail">&#10060; Fail</td><td>정적분석</td><td><code>dashboard.tsx</code> lines 11-13: <code>offsetHeight</code> 읽기 직후 <code>style.minHeight</code> 쓰기 — 연속적 리플로우 강제(레이아웃 스래싱). 브라우저가 레이아웃을 2회 계산해야 하므로 렌더링 성능 저하.</td></tr>
+    <tr><td>WP-10</td><td>폰트</td><td>font-display 최적화</td><td class="na">&#10134; N/A</td><td>정적분석</td><td><code>@font-face</code> 선언 없음. Tailwind/시스템 폰트 사용 추정.</td></tr>
+    <tr><td>WP-11</td><td>폰트</td><td>중요 폰트 preload</td><td class="na">&#10134; N/A</td><td>정적분석</td><td>커스텀 폰트 미사용으로 preload 불필요.</td></tr>
+    <tr><td>WP-12</td><td>LCP</td><td>LCP 요소 초기 HTML 존재</td><td class="fail">&#10060; Fail</td><td>정적분석</td><td><code>dashboard.tsx</code> lines 17-19: <code>useEffect</code> + <code>setTimeout</code>으로 콘텐츠(<code>items</code>) 로드. LCP 후보 텍스트/요소가 초기 렌더에 없고 500ms 지연 후 삽입됨. 서버사이드 렌더링 또는 초기 상태에 데이터 포함 필요.</td></tr>
+    <tr><td>WP-13</td><td>INP</td><td>이벤트 핸들러 즉각 피드백</td><td class="advisory">&#9888;&#65039; Advisory</td><td>정적분석</td><td><code>Card.tsx</code> line 11-21: <code>handleClick</code>에서 <code>document.querySelector</code>로 DOM 직접 조작하지만 즉각적 시각 피드백(예: 로딩 상태, 버튼 활성화) 없음. React state 기반 피드백 권장.</td></tr>
+    <tr><td>WP-14</td><td>INP</td><td>무거운 연산 지연 처리</td><td class="pass">&#9989; Pass</td><td>정적분석</td><td>현재 코드에서 무거운 동기 연산 패턴 없음.</td></tr>
+    <tr><td>WP-15</td><td>INP</td><td>React memo 활용</td><td class="advisory">&#9888;&#65039; Advisory</td><td>정적분석</td><td><code>Card.tsx</code>: 리스트 내에서 반복 렌더링될 수 있는 컴포넌트이나 <code>React.memo()</code> 미적용. 부모 리렌더 시 불필요한 재렌더링 가능.</td></tr>
+    <tr><td>WP-16</td><td>CLS</td><td>뷰포트 위 동적 삽입 금지</td><td class="fail">&#10060; Fail</td><td>정적분석</td><td><code>dashboard.tsx</code> lines 17-19: <code>setTimeout</code> 후 <code>setItems</code>로 그리드 상단에 콘텐츠 동적 삽입. 아래쪽 이미지 등 기존 요소가 밀려나면서 CLS 발생. 초기 렌더 시 placeholder 공간 확보 필요.</td></tr>
+    <tr><td>WP-17</td><td>CLS</td><td>애니메이션 transform/opacity만</td><td class="pass">&#9989; Pass</td><td>정적분석</td><td>CSS transition/animation에서 레이아웃 속성(height, width, top, left, margin, padding) 애니메이션 없음.</td></tr>
+    <tr><td>WP-18</td><td>CLS</td><td>동적 콘텐츠 공간 예약</td><td class="fail">&#10060; Fail</td><td>정적분석</td><td><code>dashboard.tsx</code> line 41: <code>&lt;section ref={containerRef} className="grid gap-4"&gt;</code> — 동적으로 삽입되는 items 영역에 <code>min-height</code> 등 공간 예약 없음. 500ms 후 콘텐츠 삽입 시 레이아웃 시프트 발생.</td></tr>
+  </tbody>
+</table>
+
+<h2>수정 가이드</h2>
+
+<h3>&#10060; WP-04: 이미지 width/height 누락 (CLS 방지)</h3>
+<div class="critical-fix">
+  <p><strong>파일:</strong> <code>dashboard.tsx</code> line 50</p>
+  <p><strong>문제:</strong> <code>&lt;img&gt;</code> 태그에 크기 정보가 없어 이미지 로드 시 레이아웃이 밀림</p>
+  <p><strong>수정 방법:</strong></p>
+  <pre>&lt;!-- Before --&gt;
+&lt;img src="/public/promo.png" alt="Promo" className="mt-8" /&gt;
+
+&lt;!-- After --&gt;
+&lt;img src="/public/promo.png" alt="Promo" className="mt-8"
+     width="800" height="400"
+     style={{ aspectRatio: '2/1' }} /&gt;</pre>
+</div>
+
+<h3>&#10060; WP-05: loading="lazy" 누락</h3>
+<div class="critical-fix">
+  <p><strong>파일:</strong> <code>dashboard.tsx</code> line 50</p>
+  <p><strong>문제:</strong> below-fold 이미지가 즉시 로드되어 초기 페이지 로딩 시간 증가</p>
+  <p><strong>수정 방법:</strong></p>
+  <pre>&lt;img src="/public/promo.webp" alt="Promo" className="mt-8"
+     width="800" height="400"
+     loading="lazy" decoding="async" /&gt;</pre>
+</div>
+
+<h3>&#10060; WP-06: 현대 이미지 포맷 미사용</h3>
+<div class="critical-fix">
+  <p><strong>파일:</strong> <code>dashboard.tsx</code> line 50</p>
+  <p><strong>문제:</strong> PNG 포맷은 WebP/AVIF 대비 파일 크기가 2-3배 큼</p>
+  <p><strong>수정 방법:</strong></p>
+  <pre>&lt;picture&gt;
+  &lt;source type="image/avif" srcSet="/public/promo.avif" /&gt;
+  &lt;source type="image/webp" srcSet="/public/promo.webp" /&gt;
+  &lt;img src="/public/promo.png" alt="Promo" className="mt-8"
+       width="800" height="400"
+       loading="lazy" decoding="async" /&gt;
+&lt;/picture&gt;</pre>
+</div>
+
+<h3>&#10060; WP-09: 레이아웃 스래싱</h3>
+<div class="critical-fix">
+  <p><strong>파일:</strong> <code>dashboard.tsx</code> lines 11-13</p>
+  <p><strong>문제:</strong> <code>offsetHeight</code> 읽기 → <code>style.minHeight</code> 쓰기 연속 호출로 강제 리플로우 2회 발생</p>
+  <p><strong>수정 방법:</strong> 읽기와 쓰기를 분리하거나 <code>requestAnimationFrame</code> 활용</p>
+  <pre>useEffect(() =&gt; {
+  if (containerRef.current) {
+    const h = containerRef.current.offsetHeight; // 읽기
+    requestAnimationFrame(() =&gt; {
+      if (containerRef.current) {
+        containerRef.current.style.minHeight = h + "px"; // 쓰기 (다음 프레임)
+      }
+    });
+  }
+}, []);</pre>
+</div>
+
+<h3>&#10060; WP-12: LCP 요소가 초기 HTML에 없음</h3>
+<div class="critical-fix">
+  <p><strong>파일:</strong> <code>dashboard.tsx</code> lines 17-19</p>
+  <p><strong>문제:</strong> <code>useEffect</code> + <code>setTimeout(500ms)</code>으로 메인 콘텐츠 로드. LCP 측정 시 빈 화면이 먼저 표시됨.</p>
+  <p><strong>수정 방법:</strong></p>
+  <ul>
+    <li>초기 상태에 기본값 설정: <code>useState(["Dashboard", "Analytics", "Reports"])</code></li>
+    <li>또는 서버사이드 렌더링(SSR/SSG)으로 초기 데이터 전달</li>
+    <li>API 호출이 필요한 경우 <code>getServerSideProps</code> 또는 <code>loader</code> 활용</li>
+  </ul>
+</div>
+
+<h3>&#10060; WP-16: 뷰포트 위 동적 삽입 (CLS)</h3>
+<div class="critical-fix">
+  <p><strong>파일:</strong> <code>dashboard.tsx</code> lines 17-19, 45-47</p>
+  <p><strong>문제:</strong> 500ms 후 그리드 상단에 아이템 3개가 삽입되면서 아래쪽 이미지가 밀려남 (CLS 발생)</p>
+  <p><strong>수정 방법:</strong> 초기 상태에 데이터를 포함하거나, 삽입 영역에 고정 높이 예약</p>
+</div>
+
+<h3>&#10060; WP-18: 동적 콘텐츠 공간 미예약</h3>
+<div class="critical-fix">
+  <p><strong>파일:</strong> <code>dashboard.tsx</code> line 41</p>
+  <p><strong>문제:</strong> 동적으로 삽입되는 items 영역에 <code>min-height</code>가 없어 콘텐츠 삽입 시 레이아웃 시프트 발생</p>
+  <p><strong>수정 방법:</strong></p>
+  <pre>&lt;section ref={containerRef} className="grid gap-4" style={{ minHeight: '200px' }}&gt;
+  {/* ... */}
+&lt;/section&gt;</pre>
+</div>
+
+<h3>&#9888;&#65039; WP-02: fetchpriority 미설정</h3>
+<div class="fix-section">
+  <p><strong>파일:</strong> <code>dashboard.tsx</code> line 50</p>
+  <p><strong>권장:</strong> 이미지가 LCP 후보인 경우 <code>fetchpriority="high"</code> 추가. 단, below-fold 이미지인 경우 <code>loading="lazy"</code>가 더 적합.</p>
+</div>
+
+<h3>&#9888;&#65039; WP-07: 코드 스플리팅 미적용</h3>
+<div class="fix-section">
+  <p><strong>권장:</strong> 페이지 규모가 커질 경우 <code>React.lazy(() =&gt; import('./Component'))</code> 패턴으로 코드 스플리팅 도입.</p>
+</div>
+
+<h3>&#9888;&#65039; WP-13: 이벤트 핸들러 시각 피드백 부재</h3>
+<div class="fix-section">
+  <p><strong>파일:</strong> <code>Card.tsx</code> lines 11-21</p>
+  <p><strong>권장:</strong> 클릭 시 React state로 즉각적 시각 피드백 제공. <code>document.querySelector</code> 대신 ref 사용.</p>
+</div>
+
+<h3>&#9888;&#65039; WP-15: React.memo 미적용</h3>
+<div class="fix-section">
+  <p><strong>파일:</strong> <code>Card.tsx</code></p>
+  <p><strong>권장:</strong> <code>export default React.memo(Card)</code>로 불필요한 리렌더링 방지.</p>
+</div>
+
+</body>
+</html>

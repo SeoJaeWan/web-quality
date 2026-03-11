@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "render-blocking 인라인 스크립트 감지", "passed": true, "evidence": "WP-01 marked Fail: 'line 37: 인라인 <script>가 defer/async 없이 동기 실행됨. 렌더링 차단 발생.'"},
+    {"text": "font-display 속성 누락 감지", "passed": true, "evidence": "WP-10 marked Fail: 'line 13-17: @font-face에 font-display 속성 미설정. 기본값 \"auto\"로 FOIT 발생.'"},
+    {"text": "render-blocking CSS 감지", "passed": true, "evidence": "WP-03 marked Fail: 'line 10: 외부 CSS가 media 속성 없이 동기 로딩. 렌더링 차단.'"},
+    {"text": "폰트 preload 누락 감지", "passed": true, "evidence": "WP-11 marked Fail: '<link rel=\"preload\" as=\"font\"> 태그 없음. 폰트 발견 지연.'"}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.00}
+}

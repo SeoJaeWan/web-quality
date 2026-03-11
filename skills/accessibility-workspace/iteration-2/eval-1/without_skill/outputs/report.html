@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KWCAG 2.2 Accessibility Review Report</title>
+  <style>
+    :root {
+      --color-error: #dc2626;
+      --color-error-bg: #fef2f2;
+      --color-warning: #d97706;
+      --color-warning-bg: #fffbeb;
+      --color-good: #16a34a;
+      --color-good-bg: #f0fdf4;
+      --color-border: #e5e7eb;
+      --color-header-bg: #1e293b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1e293b; line-height: 1.6; background: #f8fafc; }
+    header { background: var(--color-header-bg); color: #fff; padding: 2rem; }
+    header h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+    header p { opacity: 0.85; font-size: 0.95rem; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 1.5rem; }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .summary-card { background: #fff; border-radius: 8px; padding: 1.25rem; border: 1px solid var(--color-border); text-align: center; }
+    .summary-card .count { font-size: 2rem; font-weight: 700; }
+    .summary-card .label { font-size: 0.85rem; color: #64748b; margin-top: 0.25rem; }
+    .count.error { color: var(--color-error); }
+    .count.warning { color: var(--color-warning); }
+    .count.good { color: var(--color-good); }
+    h2 { font-size: 1.25rem; margin: 2rem 0 1rem; border-bottom: 2px solid var(--color-header-bg); padding-bottom: 0.5rem; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid var(--color-border); margin-bottom: 2rem; }
+    th { background: #f1f5f9; text-align: left; padding: 0.75rem 1rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: #475569; }
+    td { padding: 0.75rem 1rem; border-top: 1px solid var(--color-border); font-size: 0.9rem; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+    .badge-error { background: var(--color-error-bg); color: var(--color-error); }
+    .badge-warning { background: var(--color-warning-bg); color: var(--color-warning); }
+    .file-tag { font-family: monospace; font-size: 0.82rem; background: #e2e8f0; padding: 0.1rem 0.45rem; border-radius: 4px; }
+    .guideline-tag { font-family: monospace; font-size: 0.82rem; color: #6366f1; }
+    .recommendation { color: #475569; font-size: 0.85rem; }
+    .file-section { margin-bottom: 2.5rem; }
+    footer { text-align: center; padding: 2rem; color: #94a3b8; font-size: 0.8rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>KWCAG 2.2 Accessibility Review Report</h1>
+      <p>Generated: 2026-03-11 | Reviewed files: index.html, dashboard.tsx, Card.tsx</p>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Summary -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="count" style="color: #1e293b;">20</div>
+        <div class="label">Total Issues</div>
+      </div>
+      <div class="summary-card">
+        <div class="count error">6</div>
+        <div class="label">Errors (Must Fix)</div>
+      </div>
+      <div class="summary-card">
+        <div class="count warning">14</div>
+        <div class="label">Warnings (Should Fix)</div>
+      </div>
+      <div class="summary-card">
+        <div class="count good">3</div>
+        <div class="label">Files Reviewed</div>
+      </div>
+    </div>
+
+    <!-- File: index.html -->
+    <div class="file-section">
+      <h2>index.html</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Line</th>
+            <th>Severity</th>
+            <th>KWCAG 2.2 Guideline</th>
+            <th>Issue</th>
+            <th>Recommendation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A01</td>
+            <td>2</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">5.1.1</span> Appropriate Use of Language Specification</td>
+            <td><code>lang="en"</code> may be incorrect if page content is in Korean.</td>
+            <td class="recommendation">Set the <code>lang</code> attribute to match the primary language of the page content.</td>
+          </tr>
+          <tr>
+            <td>A02</td>
+            <td>30</td>
+            <td><span class="badge badge-error">Error</span></td>
+            <td><span class="guideline-tag">7.1.1</span> Text Alternatives for Non-text Content</td>
+            <td><code>&lt;img&gt;</code> element for logo is missing the <code>alt</code> attribute entirely.</td>
+            <td class="recommendation">Add a descriptive <code>alt</code> attribute. Use <code>alt=""</code> only if purely decorative.</td>
+          </tr>
+          <tr>
+            <td>A03</td>
+            <td>42</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">7.1.1</span> Text Alternatives for Non-text Content</td>
+            <td><code>innerHTML</code> used with user-supplied input can inject inaccessible DOM content.</td>
+            <td class="recommendation">Use <code>textContent</code> instead of <code>innerHTML</code> to prevent injection of arbitrary DOM.</td>
+          </tr>
+          <tr>
+            <td>A13</td>
+            <td>21</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">7.3.1</span> Heading and Label</td>
+            <td>Page has only <code>&lt;h1&gt;</code> with no subheadings. Heading hierarchy may be incomplete.</td>
+            <td class="recommendation">Ensure a logical heading hierarchy (h1 &gt; h2 &gt; h3) to aid screen reader navigation.</td>
+          </tr>
+          <tr>
+            <td>A15</td>
+            <td>20-45</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">6.1.1</span> Structural Organization of Content</td>
+            <td>Page body lacks landmark regions (no <code>&lt;main&gt;</code> or <code>&lt;nav&gt;</code>).</td>
+            <td class="recommendation">Wrap page content in semantic landmark elements such as <code>&lt;main&gt;</code> and <code>&lt;nav&gt;</code>.</td>
+          </tr>
+          <tr>
+            <td>A16</td>
+            <td>24</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">7.3.2</span> Consistent Navigation</td>
+            <td>No skip navigation link at the top of the page.</td>
+            <td class="recommendation">Add a skip-to-content link for keyboard users at the top of the page.</td>
+          </tr>
+          <tr>
+            <td>A19</td>
+            <td>33</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">7.1.1</span> Text Alternatives for Non-text Content</td>
+            <td>Image missing explicit <code>width</code>/<code>height</code> attributes, causing layout shift that can disorient users.</td>
+            <td class="recommendation">Add <code>width</code> and <code>height</code> attributes to prevent content layout shifts.</td>
+          </tr>
+          <tr>
+            <td>A20</td>
+            <td>37-44</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">6.2.1</span> Avoidance of Inappropriate Markup</td>
+            <td>Inline script in body without <code>defer</code>/<code>async</code> blocks parsing and may affect assistive technology loading.</td>
+            <td class="recommendation">Move script to end of body or use <code>defer</code> attribute.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- File: dashboard.tsx -->
+    <div class="file-section">
+      <h2>dashboard.tsx</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Line</th>
+            <th>Severity</th>
+            <th>KWCAG 2.2 Guideline</th>
+            <th>Issue</th>
+            <th>Recommendation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A04</td>
+            <td>29-31</td>
+            <td><span class="badge badge-error">Error</span></td>
+            <td><span class="guideline-tag">7.1.1</span> Text Alternatives for Non-text Content</td>
+            <td>First icon-only <code>&lt;button&gt;</code> with SVG has no accessible name. Screen readers announce it as an unnamed button.</td>
+            <td class="recommendation">Add <code>aria-label</code> describing the button purpose (e.g. <code>aria-label="Settings"</code>).</td>
+          </tr>
+          <tr>
+            <td>A05</td>
+            <td>34-36</td>
+            <td><span class="badge badge-error">Error</span></td>
+            <td><span class="guideline-tag">7.1.1</span> Text Alternatives for Non-text Content</td>
+            <td>Second icon-only <code>&lt;button&gt;</code> with SVG has no accessible name.</td>
+            <td class="recommendation">Add <code>aria-label</code> describing the button purpose.</td>
+          </tr>
+          <tr>
+            <td>A06</td>
+            <td>30</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">7.1.1</span> Text Alternatives for Non-text Content</td>
+            <td>First SVG element lacks <code>role="img"</code> and <code>&lt;title&gt;</code> / <code>aria-label</code>.</td>
+            <td class="recommendation">Add <code>role="img"</code> and a <code>&lt;title&gt;</code> element inside the SVG, or <code>aria-hidden="true"</code> if the parent button has a label.</td>
+          </tr>
+          <tr>
+            <td>A07</td>
+            <td>35</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">7.1.1</span> Text Alternatives for Non-text Content</td>
+            <td>Second SVG element lacks <code>role="img"</code> and <code>&lt;title&gt;</code> / <code>aria-label</code>.</td>
+            <td class="recommendation">Add <code>role="img"</code> and a <code>&lt;title&gt;</code> element inside the SVG, or <code>aria-hidden="true"</code> if the parent button has a label.</td>
+          </tr>
+          <tr>
+            <td>A08</td>
+            <td>50</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">7.1.1</span> Text Alternatives for Non-text Content</td>
+            <td>Image <code>alt="Promo"</code> is insufficiently descriptive.</td>
+            <td class="recommendation">Provide a meaningful alt text that describes the image content or purpose.</td>
+          </tr>
+          <tr>
+            <td>A14</td>
+            <td>46</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">7.3.1</span> Heading and Label</td>
+            <td>List items rendered via <code>.map()</code> without a <code>key</code> prop may cause unstable rendering and confuse assistive technology.</td>
+            <td class="recommendation">Add a unique <code>key</code> prop to each mapped element.</td>
+          </tr>
+          <tr>
+            <td>A17</td>
+            <td>17-19</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">7.3.3</span> Consistent Identification</td>
+            <td>Dynamic content injected after 500ms delay without notifying assistive technology.</td>
+            <td class="recommendation">Use <code>aria-live="polite"</code> on the container so screen readers announce new content.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- File: Card.tsx -->
+    <div class="file-section">
+      <h2>Card.tsx</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Line</th>
+            <th>Severity</th>
+            <th>KWCAG 2.2 Guideline</th>
+            <th>Issue</th>
+            <th>Recommendation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A09</td>
+            <td>29</td>
+            <td><span class="badge badge-error">Error</span></td>
+            <td><span class="guideline-tag">7.2.1</span> Keyboard Accessibility</td>
+            <td><code>&lt;div&gt;</code> with <code>onClick</code> is not keyboard accessible. No <code>onKeyDown</code>, no <code>role</code>, no <code>tabIndex</code>.</td>
+            <td class="recommendation">Add <code>role="button"</code>, <code>tabIndex={0}</code>, and an <code>onKeyDown</code> handler (Enter/Space), or replace with a <code>&lt;button&gt;</code> element.</td>
+          </tr>
+          <tr>
+            <td>A10</td>
+            <td>26-27</td>
+            <td><span class="badge badge-error">Error</span></td>
+            <td><span class="guideline-tag">7.2.1</span> Keyboard Accessibility</td>
+            <td>Clickable <code>&lt;div&gt;</code> lacks visible focus indicator styling.</td>
+            <td class="recommendation">Ensure the clickable element has a visible focus outline (e.g. <code>focus:outline</code> or <code>:focus-visible</code> styles).</td>
+          </tr>
+          <tr>
+            <td>A11</td>
+            <td>26</td>
+            <td><span class="badge badge-error">Error</span></td>
+            <td><span class="guideline-tag">7.4.1</span> Role and Properties of UI Components</td>
+            <td>Clickable <code>&lt;div&gt;</code> missing ARIA role. Screen readers cannot identify it as interactive.</td>
+            <td class="recommendation">Add <code>role="button"</code> or replace with a semantic <code>&lt;button&gt;</code> element.</td>
+          </tr>
+          <tr>
+            <td>A12</td>
+            <td>27</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">5.3.1</span> Uniqueness of ID</td>
+            <td>Static <code>id="card-item"</code> creates duplicate IDs when multiple Card components are rendered.</td>
+            <td class="recommendation">Use a dynamic unique ID (e.g. based on title or index) or remove the static id.</td>
+          </tr>
+          <tr>
+            <td>A18</td>
+            <td>29</td>
+            <td><span class="badge badge-warning">Warning</span></td>
+            <td><span class="guideline-tag">7.2.2</span> Sufficient Time for Input</td>
+            <td><code>onClick</code> on <code>&lt;div&gt;</code> without keyboard support means keyboard/switch users cannot activate the card.</td>
+            <td class="recommendation">Provide equivalent keyboard interaction or use a native interactive element.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Positive Findings -->
+    <h2>Positive Findings</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="file-tag">index.html</span></td>
+          <td>Hero image has descriptive <code>alt</code> text and explicit <code>width</code>/<code>height</code> attributes.</td>
+        </tr>
+        <tr>
+          <td><span class="file-tag">index.html</span></td>
+          <td>Links use HTTPS and have descriptive text ("About Us", "latest deals").</td>
+        </tr>
+        <tr>
+          <td><span class="file-tag">dashboard.tsx</span></td>
+          <td>Uses semantic HTML landmarks: <code>&lt;main&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;section&gt;</code>.</td>
+        </tr>
+        <tr>
+          <td><span class="file-tag">dashboard.tsx</span></td>
+          <td>Proper heading hierarchy with <code>&lt;h1&gt;</code> followed by <code>&lt;h2&gt;</code>.</td>
+        </tr>
+        <tr>
+          <td><span class="file-tag">Card.tsx</span></td>
+          <td>Uses proper heading level (<code>&lt;h3&gt;</code>) for card titles, maintaining hierarchy.</td>
+        </tr>
+        <tr>
+          <td><span class="file-tag">Card.tsx</span></td>
+          <td>Well-typed TypeScript component with explicit prop interfaces.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <footer>
+    <p>KWCAG 2.2 Accessibility Review &mdash; Generated by automated analysis on 2026-03-11</p>
+  </footer>
+</body>
+</html>

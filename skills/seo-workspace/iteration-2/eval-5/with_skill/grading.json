@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "29개 항목(SEO-01~11, WP-01~18) 모두 포함", "passed": true, "evidence": "CSV contains all 29 items: SEO-01 through SEO-11 and WP-01 through WP-18, each with a structured result (Pass/Fail/Advisory/N/A)."},
+    {"text": "SEO-XX, WP-XX 형식의 표준 코드 사용", "passed": true, "evidence": "All items use standard SEO-XX and WP-XX codes: SEO-01, SEO-02, ..., SEO-11, WP-01, WP-02, ..., WP-18."},
+    {"text": "모든 항목에 Pass/Fail/N/A 결과 표기", "passed": true, "evidence": "Every item has a result: ✅ Pass, ❌ Fail, ⚠️ Advisory, or ➖ N/A. No items are left without a result."},
+    {"text": "파일명과 라인 번호 참조 포함", "passed": true, "evidence": "Issues include specific file:line references: 'index.html:6', 'index.html:37-44', 'dashboard.tsx:12-13', 'Card.tsx:11-20', 'index.html:13-17', etc."}
+  ],
+  "summary": {"passed": 4, "failed": 0, "total": 4, "pass_rate": 1.00}
+}
