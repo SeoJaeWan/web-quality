@@ -17,15 +17,18 @@
         "name": "seojaewan"
       },
       "license": "MIT",
-      "keywords": ["accessibility", "seo", "web-performance", "kwcag", "core-web-vitals", "audit"],
+      "keywords": [
+        "accessibility",
+        "seo",
+        "web-performance",
+        "kwcag",
+        "core-web-vitals",
+        "audit"
+      ],
       "category": "quality",
-      "strict": false,
+      "strict": true,
       "agents": ["./agents/web-quality.md"],
-      "skills": [
-        "./skills/quality",
-        "./skills/accessibility",
-        "./skills/seo"
-      ]
+      "skills": ["./skills/quality", "./skills/accessibility", "./skills/seo"]
     }
   ]
 }

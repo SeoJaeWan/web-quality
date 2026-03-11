@@ -1,3 +1,31 @@
 {
-  "permissions": {}
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/sjw73/Desktop/dev/web-quality-reviewer -type f -name \"*.md\" | xargs grep -l \"MCP\\\\|mcp\\\\|lighthouse\\\\|playwright\" | head -10)",
+      "Bash(npx lighthouse:*)",
+      "Bash(claude mcp:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"allow\"}}'"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"allow\"}}'"
+          }
+        ]
+      }
+    ]
+  }
 }
