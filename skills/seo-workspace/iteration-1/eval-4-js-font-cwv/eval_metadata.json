@@ -1,0 +1,11 @@
+{
+  "eval_id": 4,
+  "eval_name": "js-font-cwv",
+  "prompt": "index.html의 JavaScript 로딩 방식과 폰트 최적화, Core Web Vitals 관련 이슈를 분석해줘",
+  "assertions": [
+    "render-blocking-script: render-blocking 인라인 스크립트 감지",
+    "font-display-missing: font-display 속성 누락 감지",
+    "render-blocking-css: render-blocking CSS 감지",
+    "font-preload-missing: 폰트 preload 누락 감지"
+  ]
+}

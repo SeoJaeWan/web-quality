@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEO &amp; Web Performance Review Report</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 1100px; margin: 0 auto; padding: 24px; color: #1a1a1a; line-height: 1.6; }
+    h1 { border-bottom: 3px solid #2563eb; padding-bottom: 8px; }
+    h2 { margin-top: 32px; color: #1e40af; }
+    h3 { margin-top: 24px; color: #374151; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+    th, td { border: 1px solid #d1d5db; padding: 8px 12px; text-align: left; }
+    th { background: #f3f4f6; font-weight: 600; }
+    tr:nth-child(even) { background: #f9fafb; }
+    .pass { color: #16a34a; }
+    .fail { color: #dc2626; }
+    .advisory { color: #d97706; }
+    .na { color: #6b7280; }
+    code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+    .fix-section { background: #fef2f2; border-left: 4px solid #dc2626; padding: 16px; margin: 12px 0; border-radius: 0 8px 8px 0; }
+    .fix-section h4 { margin: 0 0 8px 0; color: #dc2626; }
+    pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 0.85em; }
+  </style>
+</head>
+<body>
+
+<h1>SEO &amp; Web Performance 검토 결과 &mdash; 2026-03-11</h1>
+
+<p><strong>검토 파일:</strong> <code>index.html</code></p>
+
+<h2>Technical SEO (11항목)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>코드</th>
+      <th>우선순위</th>
+      <th>항목</th>
+      <th>결과</th>
+      <th>발견된 문제</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SEO-01</td>
+      <td>Critical</td>
+      <td>noindex 없음</td>
+      <td class="pass">Pass</td>
+      <td>noindex 메타 태그가 없으므로 정상적으로 인덱싱됩니다.</td>
+    </tr>
+    <tr>
+      <td>SEO-02</td>
+      <td>Critical</td>
+      <td>title 태그 존재하고 고유</td>
+      <td class="fail">Fail</td>
+      <td>Line 6: <code>&lt;title&gt;Sample Page&lt;/title&gt;</code> &mdash; 11자로 50-60자 권장 범위에 크게 미달. 내용도 일반적이며 키워드가 포함되지 않음.</td>
+    </tr>
+    <tr>
+      <td>SEO-03</td>
+      <td>Critical</td>
+      <td>h1 하나</td>
+      <td class="pass">Pass</td>
+      <td>Line 21에 <code>&lt;h1&gt;</code> 1개만 존재합니다.</td>
+    </tr>
+    <tr>
+      <td>SEO-04</td>
+      <td>Critical</td>
+      <td>HTTPS 사용</td>
+      <td class="pass">Pass</td>
+      <td>외부 리소스 URL이 모두 HTTPS를 사용합니다. 로컬 리소스는 상대 경로입니다.</td>
+    </tr>
+    <tr>
+      <td>SEO-05</td>
+      <td>High</td>
+      <td>meta description</td>
+      <td class="fail">Fail</td>
+      <td><code>&lt;meta name="description"&gt;</code> 태그가 없습니다. 검색 결과에 스니펫이 자동 생성되어 의도하지 않은 내용이 노출될 수 있습니다.</td>
+    </tr>
+    <tr>
+      <td>SEO-06</td>
+      <td>High</td>
+      <td>canonical URL</td>
+      <td class="fail">Fail</td>
+      <td><code>&lt;link rel="canonical"&gt;</code> 태그가 없습니다. 중복 콘텐츠 문제가 발생할 수 있습니다.</td>
+    </tr>
+    <tr>
+      <td>SEO-07</td>
+      <td>High</td>
+      <td>구조화 데이터 (JSON-LD)</td>
+      <td class="fail">Fail</td>
+      <td><code>&lt;script type="application/ld+json"&gt;</code>이 없습니다. 리치 스니펫 기회를 놓치고 있습니다.</td>
+    </tr>
+    <tr>
+      <td>SEO-08</td>
+      <td>Medium</td>
+      <td>서술적 URL 구조</td>
+      <td class="pass">Pass</td>
+      <td>링크 URL들이 서술적이고 쿼리 파라미터 없이 깔끔합니다 (<code>/about</code>, <code>/deals</code>).</td>
+    </tr>
+    <tr>
+      <td>SEO-09</td>
+      <td>High</td>
+      <td>DOCTYPE html 선언</td>
+      <td class="pass">Pass</td>
+      <td>Line 1에 <code>&lt;!DOCTYPE html&gt;</code> 선언이 있습니다.</td>
+    </tr>
+    <tr>
+      <td>SEO-10</td>
+      <td>High</td>
+      <td>charset UTF-8 최상단</td>
+      <td class="pass">Pass</td>
+      <td>Line 4에 <code>&lt;meta charset="UTF-8"&gt;</code>가 <code>&lt;head&gt;</code> 최상단에 위치합니다.</td>
+    </tr>
+    <tr>
+      <td>SEO-11</td>
+      <td>High</td>
+      <td>viewport meta 태그</td>
+      <td class="pass">Pass</td>
+      <td>Line 5에 적절한 viewport 메타 태그가 설정되어 있습니다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Page Experience / Web Performance (18항목)</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>코드</th>
+      <th>영역</th>
+      <th>항목</th>
+      <th>결과</th>
+      <th>발견된 문제</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>WP-01</td>
+      <td>CRP</td>
+      <td>render-blocking script 없음</td>
+      <td class="fail">Fail</td>
+      <td>Lines 37-44: <code>&lt;script&gt;</code> 인라인 스크립트가 <code>defer</code>/<code>async</code> 없이 <code>&lt;body&gt;</code> 끝에 위치하지만, DOM 파싱을 차단합니다. <code>defer</code> 속성이 있는 외부 스크립트 또는 <code>DOMContentLoaded</code> 이벤트 활용을 권장합니다.</td>
+    </tr>
+    <tr>
+      <td>WP-02</td>
+      <td>CRP</td>
+      <td>LCP fetchpriority + preload</td>
+      <td class="fail">Fail</td>
+      <td>Line 27: 히어로 이미지 <code>/public/hero.png</code>에 <code>fetchpriority="high"</code>가 없고, <code>&lt;head&gt;</code>에 <code>&lt;link rel="preload" as="image"&gt;</code>도 없습니다. LCP 지연 원인.</td>
+    </tr>
+    <tr>
+      <td>WP-03</td>
+      <td>CRP</td>
+      <td>Critical CSS 처리</td>
+      <td class="fail">Fail</td>
+      <td>Line 10: <code>&lt;link rel="stylesheet" href="https://cdn.example.com/styles.css"&gt;</code>가 렌더링을 차단합니다. <code>media</code> 속성이 없고, critical CSS 인라인 처리도 없습니다.</td>
+    </tr>
+    <tr>
+      <td>WP-04</td>
+      <td>이미지</td>
+      <td>img width/height 또는 aspect-ratio</td>
+      <td class="fail">Fail</td>
+      <td>Line 33: <code>&lt;img src="/public/promo.png"&gt;</code>에 <code>width</code>/<code>height</code> 속성이 없습니다. CLS(레이아웃 시프트)를 유발합니다.</td>
+    </tr>
+    <tr>
+      <td>WP-05</td>
+      <td>이미지</td>
+      <td>loading="lazy"</td>
+      <td class="fail">Fail</td>
+      <td>Lines 30, 33: 비-LCP 이미지(<code>logo.png</code>, <code>promo.png</code>)에 <code>loading="lazy"</code>가 없습니다. 불필요한 초기 로드 발생.</td>
+    </tr>
+    <tr>
+      <td>WP-06</td>
+      <td>이미지</td>
+      <td>WebP/AVIF 포맷</td>
+      <td class="fail">Fail</td>
+      <td>모든 이미지가 <code>.png</code> 포맷입니다. <code>&lt;picture&gt;</code> 요소나 WebP/AVIF 포맷이 사용되지 않아 파일 크기가 비효율적입니다.</td>
+    </tr>
+    <tr>
+      <td>WP-07</td>
+      <td>JS</td>
+      <td>코드 스플리팅</td>
+      <td class="na">N/A</td>
+      <td>단순 HTML 페이지로 빌드 시스템이나 모듈 번들러가 없습니다. 코드 스플리팅 대상이 아닙니다.</td>
+    </tr>
+    <tr>
+      <td>WP-08</td>
+      <td>JS</td>
+      <td>트리 쉐이킹 패턴</td>
+      <td class="na">N/A</td>
+      <td>모듈 import 구문이 없습니다. 트리 쉐이킹 검사 대상이 아닙니다.</td>
+    </tr>
+    <tr>
+      <td>WP-09</td>
+      <td>JS</td>
+      <td>레이아웃 스래싱 없음</td>
+      <td class="pass">Pass</td>
+      <td>루프 내에서 레이아웃 속성 읽기/쓰기가 혼합되는 패턴이 없습니다.</td>
+    </tr>
+    <tr>
+      <td>WP-10</td>
+      <td>폰트</td>
+      <td>font-display 최적화</td>
+      <td class="fail">Fail</td>
+      <td>Lines 13-17: <code>@font-face</code> 선언에 <code>font-display</code> 속성이 없습니다. 폰트 로딩 동안 텍스트가 보이지 않는 FOIT(Flash of Invisible Text) 문제가 발생합니다. LCP에 악영향.</td>
+    </tr>
+    <tr>
+      <td>WP-11</td>
+      <td>폰트</td>
+      <td>중요 폰트 preload</td>
+      <td class="fail">Fail</td>
+      <td><code>&lt;link rel="preload" href="/fonts/custom.woff2" as="font" type="font/woff2" crossorigin&gt;</code>이 없습니다. 폰트 다운로드가 CSS 파싱 후에야 시작됩니다.</td>
+    </tr>
+    <tr>
+      <td>WP-12</td>
+      <td>LCP</td>
+      <td>LCP 요소 초기 HTML 존재</td>
+      <td class="pass">Pass</td>
+      <td>히어로 이미지가 초기 HTML에 직접 포함되어 있습니다 (Line 27). JavaScript 의존성이 없습니다.</td>
+    </tr>
+    <tr>
+      <td>WP-13</td>
+      <td>INP</td>
+      <td>이벤트 핸들러 즉각 피드백</td>
+      <td class="na">N/A</td>
+      <td>클릭 이벤트 핸들러가 없습니다.</td>
+    </tr>
+    <tr>
+      <td>WP-14</td>
+      <td>INP</td>
+      <td>무거운 연산 지연 처리</td>
+      <td class="na">N/A</td>
+      <td>인라인 스크립트가 단순 DOM 조작만 수행하며 무거운 동기 연산이 없습니다.</td>
+    </tr>
+    <tr>
+      <td>WP-15</td>
+      <td>INP</td>
+      <td>React memo 활용</td>
+      <td class="na">N/A</td>
+      <td>React 프로젝트가 아닙니다.</td>
+    </tr>
+    <tr>
+      <td>WP-16</td>
+      <td>CLS</td>
+      <td>뷰포트 위 동적 삽입 금지</td>
+      <td class="pass">Pass</td>
+      <td><code>prepend()</code>이나 <code>insertBefore()</code> 사용이 없습니다.</td>
+    </tr>
+    <tr>
+      <td>WP-17</td>
+      <td>CLS</td>
+      <td>애니메이션 transform/opacity</td>
+      <td class="pass">Pass</td>
+      <td>레이아웃 속성(height, width, top, left, margin, padding)에 대한 CSS transition이 없습니다.</td>
+    </tr>
+    <tr>
+      <td>WP-18</td>
+      <td>CLS</td>
+      <td>동적 콘텐츠 공간 예약</td>
+      <td class="na">N/A</td>
+      <td><code>&lt;iframe&gt;</code>, <code>&lt;video&gt;</code>, 광고 슬롯이 없습니다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>수정 가이드</h2>
+
+<div class="fix-section">
+  <h4>SEO-02: title 태그 (Line 6)</h4>
+  <p>현재 11자로 50-60자 권장에 크게 미달합니다. 페이지 핵심 키워드를 포함한 고유한 제목으로 변경하세요.</p>
+<pre>&lt;!-- Before --&gt;
+&lt;title&gt;Sample Page&lt;/title&gt;
+
+&lt;!-- After --&gt;
+&lt;title&gt;Premium Sample Products - Free Shipping &amp; 30-Day Returns | BrandName&lt;/title&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>SEO-05: meta description 누락</h4>
+  <p>150-160자의 매력적인 메타 설명을 추가하세요. 주요 키워드와 CTA를 포함합니다.</p>
+<pre>&lt;meta name="description" content="Premium quality sample products with free shipping.
+Browse our collection of 500+ items. Rated 4.9/5 by 10,000+ customers. Order today and save 20%."&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>SEO-06: canonical URL 누락</h4>
+  <p><code>&lt;head&gt;</code> 내에 canonical URL을 추가하여 중복 콘텐츠 문제를 방지하세요.</p>
+<pre>&lt;link rel="canonical" href="https://example.com/"&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>SEO-07: JSON-LD 구조화 데이터 누락</h4>
+  <p>페이지 유형에 맞는 JSON-LD 구조화 데이터를 추가하세요.</p>
+<pre>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Sample Page",
+  "url": "https://example.com/"
+}
+&lt;/script&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-01: render-blocking 인라인 스크립트 (Lines 37-44)</h4>
+  <p>인라인 스크립트를 외부 파일로 분리하고 <code>defer</code>를 적용하거나, <code>DOMContentLoaded</code> 이벤트를 사용하세요.</p>
+<pre>&lt;!-- Option 1: External script with defer --&gt;
+&lt;script defer src="/js/app.js"&gt;&lt;/script&gt;
+
+&lt;!-- Option 2: Wrap in DOMContentLoaded --&gt;
+&lt;script&gt;
+document.addEventListener('DOMContentLoaded', function() {
+  var label = document.getElementById("label");
+  var userInput = location.hash.slice(1);
+  if (label) {
+    label.textContent = "Hello, " + userInput;  // textContent for XSS safety
+  }
+});
+&lt;/script&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-02: LCP 이미지 fetchpriority + preload 누락 (Line 27)</h4>
+  <p>히어로 이미지에 <code>fetchpriority="high"</code>를 추가하고, <code>&lt;head&gt;</code>에 preload 링크를 추가하세요.</p>
+<pre>&lt;!-- head 내에 추가 --&gt;
+&lt;link rel="preload" href="/public/hero.png" as="image" fetchpriority="high"&gt;
+
+&lt;!-- img 태그 수정 --&gt;
+&lt;img src="/public/hero.png" alt="Hero banner" width="800" height="400" fetchpriority="high"&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-03: render-blocking CSS (Line 10)</h4>
+  <p>Critical CSS를 인라인 처리하고, 외부 CSS는 비동기로 로드하세요.</p>
+<pre>&lt;!-- Critical CSS inline --&gt;
+&lt;style&gt;/* Above-fold critical styles here */&lt;/style&gt;
+
+&lt;!-- Non-critical CSS deferred --&gt;
+&lt;link rel="preload" href="https://cdn.example.com/styles.css" as="style"
+      onload="this.onload=null;this.rel='stylesheet'"&gt;
+&lt;noscript&gt;&lt;link rel="stylesheet" href="https://cdn.example.com/styles.css"&gt;&lt;/noscript&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-04: promo.png width/height 누락 (Line 33)</h4>
+  <p>이미지에 <code>width</code>와 <code>height</code> 속성을 추가하여 CLS를 방지하세요.</p>
+<pre>&lt;img src="/public/promo.png" alt="Promotional banner" width="800" height="400"&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-05: loading="lazy" 누락 (Lines 30, 33)</h4>
+  <p>비-LCP 이미지에 <code>loading="lazy"</code>를 추가하여 초기 로드를 최적화하세요.</p>
+<pre>&lt;img src="/public/logo.png" width="120" height="40" loading="lazy" alt="Logo"&gt;
+&lt;img src="/public/promo.png" alt="Promotional banner" width="800" height="400" loading="lazy"&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-06: 현대 이미지 포맷 미사용</h4>
+  <p>WebP 또는 AVIF 포맷을 <code>&lt;picture&gt;</code> 요소와 함께 사용하여 파일 크기를 줄이세요.</p>
+<pre>&lt;picture&gt;
+  &lt;source type="image/avif" srcset="/public/hero.avif"&gt;
+  &lt;source type="image/webp" srcset="/public/hero.webp"&gt;
+  &lt;img src="/public/hero.png" alt="Hero banner" width="800" height="400" fetchpriority="high"&gt;
+&lt;/picture&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-10: font-display 누락 (Lines 13-17)</h4>
+  <p><code>@font-face</code>에 <code>font-display: swap</code>을 추가하여 FOIT를 방지하세요.</p>
+<pre>@font-face {
+  font-family: "CustomFont";
+  src: url("/fonts/custom.woff2") format("woff2");
+  font-display: swap;  /* or 'optional' for zero CLS */
+}</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-11: 중요 폰트 preload 누락</h4>
+  <p><code>&lt;head&gt;</code> 상단에 폰트 preload를 추가하여 다운로드를 앞당기세요.</p>
+<pre>&lt;link rel="preload" href="/fonts/custom.woff2" as="font" type="font/woff2" crossorigin&gt;</pre>
+</div>
+
+<h2>요약</h2>
+<ul>
+  <li><strong>Technical SEO:</strong> 7/11 Pass, 4 Fail (SEO-02, SEO-05, SEO-06, SEO-07)</li>
+  <li><strong>Page Experience:</strong> 5/18 Pass, 9 Fail (WP-01~06, WP-10, WP-11), 6 N/A (WP-07, WP-08, WP-13~15, WP-18), 4 Pass (WP-09, WP-12, WP-16, WP-17)</li>
+  <li><strong>총 결과:</strong> 29개 항목 중 11 Pass, 13 Fail, 6 N/A (해당 없음)</li>
+</ul>
+
+<p><strong>주요 성능 이슈:</strong> JavaScript 인라인 스크립트가 render-blocking이며, 폰트에 <code>font-display</code>가 없어 FOIT 발생, 폰트 preload 누락, LCP 이미지 최적화 미비, render-blocking CSS. 이 항목들은 Core Web Vitals (LCP, CLS)에 직접적으로 악영향을 미칩니다.</p>
+
+</body>
+</html>

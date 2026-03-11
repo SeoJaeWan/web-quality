@@ -1,0 +1,27 @@
+{
+  "eval_id": 5,
+  "eval_name": "full-seo-wp-review",
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "all-29-items-covered: 29개 항목(SEO-01~11, WP-01~18) 모두 포함",
+      "passed": true,
+      "evidence": "CSV에 SEO-01~SEO-11 (11개) + WP-01~WP-18 (18개) = 29개 항목 전부 포함"
+    },
+    {
+      "text": "standard-item-codes: SEO-XX, WP-XX 형식의 표준 코드 사용",
+      "passed": true,
+      "evidence": "첫 번째 컬럼이 SEO-01~SEO-11, WP-01~WP-18 표준 코드로 작성됨"
+    },
+    {
+      "text": "every-item-has-result: 모든 항목에 Pass/Fail/N/A 결과 표기",
+      "passed": true,
+      "evidence": "모든 29개 항목에 Pass/Fail/N/A/Advisory 결과가 명확히 표기됨"
+    },
+    {
+      "text": "file-line-references: 파일명과 라인 번호 참조 포함",
+      "passed": true,
+      "evidence": "File, Line 컬럼에 index.html, dashboard.tsx, Card.tsx 파일명과 구체적 라인 번호 포함"
+    }
+  ]
+}

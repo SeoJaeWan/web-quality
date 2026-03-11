@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEO + Web Performance Review Report</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f7fa; color: #1a1a2e; line-height: 1.6; padding: 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .subtitle { color: #666; margin-bottom: 2rem; }
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .summary-card { background: #fff; border-radius: 8px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
+    .summary-card .number { font-size: 2rem; font-weight: 700; }
+    .summary-card .label { font-size: 0.85rem; color: #666; }
+    .high .number { color: #d32f2f; }
+    .medium .number { color: #f57c00; }
+    .low .number { color: #1976d2; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+    th { background: #1a1a2e; color: #fff; text-align: left; padding: 0.75rem 1rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    td { padding: 0.75rem 1rem; border-bottom: 1px solid #eee; font-size: 0.9rem; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: #f0f4ff; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+    .badge-high { background: #ffebee; color: #c62828; }
+    .badge-medium { background: #fff3e0; color: #e65100; }
+    .badge-low { background: #e3f2fd; color: #1565c0; }
+    .badge-seo { background: #e8f5e9; color: #2e7d32; }
+    .badge-wp { background: #ede7f6; color: #4527a0; }
+    .section-title { font-size: 1.3rem; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #1a1a2e; }
+    .file-tag { font-family: monospace; background: #f0f0f0; padding: 1px 6px; border-radius: 3px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>SEO + Web Performance Comprehensive Review</h1>
+    <p class="subtitle">Files reviewed: index.html, dashboard.tsx, Card.tsx &mdash; Generated 2026-03-11</p>
+
+    <div class="summary">
+      <div class="summary-card">
+        <div class="number">29</div>
+        <div class="label">Total Issues</div>
+      </div>
+      <div class="summary-card high">
+        <div class="number">5</div>
+        <div class="label">High Severity</div>
+      </div>
+      <div class="summary-card medium">
+        <div class="number">13</div>
+        <div class="label">Medium Severity</div>
+      </div>
+      <div class="summary-card low">
+        <div class="number">11</div>
+        <div class="label">Low Severity</div>
+      </div>
+      <div class="summary-card">
+        <div class="number">11</div>
+        <div class="label">SEO Issues</div>
+      </div>
+      <div class="summary-card">
+        <div class="number">18</div>
+        <div class="label">Web Perf Issues</div>
+      </div>
+    </div>
+
+    <!-- SEO Section -->
+    <h2 class="section-title">SEO Issues (SEO-01 ~ SEO-11)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Severity</th>
+          <th>File</th>
+          <th>Line</th>
+          <th>Issue</th>
+          <th>Recommendation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SEO-01</td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>6</td>
+          <td>Page title is generic ("Sample Page") &mdash; not descriptive or keyword-rich. Search engines rely heavily on the <code>&lt;title&gt;</code> tag for ranking.</td>
+          <td>Use a descriptive, keyword-rich title under 60 characters that accurately reflects the page content and target keywords.</td>
+        </tr>
+        <tr>
+          <td>SEO-02</td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>7</td>
+          <td>Missing <code>&lt;meta name="description"&gt;</code> tag entirely. This is critical for search result snippets and click-through rates.</td>
+          <td>Add a meta description of 150-160 characters with a compelling summary that includes target keywords.</td>
+        </tr>
+        <tr>
+          <td>SEO-03</td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>8</td>
+          <td>No JSON-LD structured data present. Structured data enables rich snippets in search results (ratings, breadcrumbs, etc.).</td>
+          <td>Add JSON-LD structured data (e.g., WebPage, Organization, BreadcrumbList) in a <code>&lt;script type="application/ld+json"&gt;</code> block.</td>
+        </tr>
+        <tr>
+          <td>SEO-04</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>2</td>
+          <td>Missing Open Graph (og:title, og:description, og:image) and Twitter Card meta tags. Content shared on social media will lack proper previews.</td>
+          <td>Add Open Graph and Twitter Card meta tags in the <code>&lt;head&gt;</code> for optimized social sharing.</td>
+        </tr>
+        <tr>
+          <td>SEO-05</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>2</td>
+          <td>No canonical URL specified. Without a canonical tag, search engines may index duplicate versions of the page.</td>
+          <td>Add <code>&lt;link rel="canonical" href="https://example.com/"&gt;</code> to declare the preferred URL.</td>
+        </tr>
+        <tr>
+          <td>SEO-06</td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>2</td>
+          <td>No hreflang tags for internationalization. If the site serves multiple languages/regions, search engines need hreflang signals.</td>
+          <td>Add hreflang link tags if the site targets multiple languages or regions.</td>
+        </tr>
+        <tr>
+          <td>SEO-07</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>30</td>
+          <td>Image <code>logo.png</code> is missing the <code>alt</code> attribute. This hurts accessibility and prevents search engines from understanding the image.</td>
+          <td>Add a descriptive alt attribute to every <code>&lt;img&gt;</code> tag (e.g., <code>alt="Company logo"</code>).</td>
+        </tr>
+        <tr>
+          <td>SEO-08</td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>&mdash;</td>
+          <td>No reference to sitemap.xml or robots.txt. These are essential for search engine crawling and indexing control.</td>
+          <td>Create and reference a sitemap.xml; configure robots.txt to guide crawler behavior.</td>
+        </tr>
+        <tr>
+          <td>SEO-09</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">dashboard.tsx</span></td>
+          <td>50</td>
+          <td>Image alt text "Promo" is too vague. Descriptive alt text helps image SEO and accessibility.</td>
+          <td>Use alt text that describes the image content meaningfully (e.g., "Spring promotional sale banner").</td>
+        </tr>
+        <tr>
+          <td>SEO-10</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">Card.tsx</span></td>
+          <td>27</td>
+          <td>Duplicate <code>id="card-item"</code> when Card is rendered in a list. HTML requires unique IDs; duplicates harm accessibility and can confuse crawlers.</td>
+          <td>Generate unique IDs per Card instance (e.g., using a prop or index), or remove the static ID.</td>
+        </tr>
+        <tr>
+          <td>SEO-11</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">dashboard.tsx</span></td>
+          <td>25</td>
+          <td>Heading hierarchy should be verified. Each page should have a single H1, with properly nested H2-H6 sub-headings for content structure.</td>
+          <td>Ensure a single H1 per page with proper descending heading order (H1 &gt; H2 &gt; H3, etc.).</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Web Performance Section -->
+    <h2 class="section-title">Web Performance Issues (WP-01 ~ WP-18)</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Severity</th>
+          <th>File</th>
+          <th>Line</th>
+          <th>Issue</th>
+          <th>Recommendation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>WP-01</td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>10</td>
+          <td>Render-blocking external CSS loaded synchronously in <code>&lt;head&gt;</code>. This delays First Contentful Paint (FCP) until the stylesheet is downloaded and parsed.</td>
+          <td>Use <code>&lt;link rel="preload" as="style"&gt;</code> with an onload handler, or inline critical CSS and load the rest asynchronously.</td>
+        </tr>
+        <tr>
+          <td>WP-02</td>
+          <td><span class="badge badge-high">High</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>13-17</td>
+          <td><code>@font-face</code> declaration is missing <code>font-display: swap</code>. This causes Flash of Invisible Text (FOIT) where text is hidden until the font loads.</td>
+          <td>Add <code>font-display: swap;</code> to the @font-face rule so fallback text is visible during font loading.</td>
+        </tr>
+        <tr>
+          <td>WP-03</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>33</td>
+          <td>Image <code>promo.png</code> is missing <code>width</code> and <code>height</code> attributes. This causes Cumulative Layout Shift (CLS) as the browser doesn't know the image dimensions until it loads.</td>
+          <td>Always specify explicit <code>width</code> and <code>height</code> attributes on <code>&lt;img&gt;</code> tags to reserve layout space.</td>
+        </tr>
+        <tr>
+          <td>WP-04</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">dashboard.tsx</span></td>
+          <td>50</td>
+          <td>Below-the-fold image is missing <code>loading="lazy"</code>. Without lazy loading, offscreen images are fetched immediately, wasting bandwidth and delaying critical resources.</td>
+          <td>Add <code>loading="lazy"</code> to images that are not in the initial viewport.</td>
+        </tr>
+        <tr>
+          <td>WP-05</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">dashboard.tsx</span></td>
+          <td>10-14</td>
+          <td>Layout thrashing: <code>offsetHeight</code> is read (forcing reflow), then <code>style.minHeight</code> is written (triggering another reflow) in the same synchronous block.</td>
+          <td>Batch DOM reads and writes separately. Use <code>requestAnimationFrame</code> for write operations after reading.</td>
+        </tr>
+        <tr>
+          <td>WP-06</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">dashboard.tsx</span></td>
+          <td>17-19</td>
+          <td>Dynamic content inserted via <code>setTimeout</code> without any size reservation. When items appear after 500ms, the layout shifts, hurting CLS score.</td>
+          <td>Reserve space with a skeleton placeholder or <code>min-height</code> on the container before dynamic content loads.</td>
+        </tr>
+        <tr>
+          <td>WP-07</td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>37-44</td>
+          <td>Inline <code>&lt;script&gt;</code> in the body blocks HTML parsing. While at the end of body, it still runs synchronously and delays the DOMContentLoaded event.</td>
+          <td>Move scripts to external files with the <code>defer</code> attribute, or ensure minimal inline script size.</td>
+        </tr>
+        <tr>
+          <td>WP-08</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>27</td>
+          <td>Hero image uses PNG format without a modern format alternative. WebP and AVIF offer 25-50% smaller file sizes with similar quality.</td>
+          <td>Use a <code>&lt;picture&gt;</code> element with WebP/AVIF sources and PNG fallback.</td>
+        </tr>
+        <tr>
+          <td>WP-09</td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>27</td>
+          <td>Hero image lacks <code>srcset</code> and <code>sizes</code> attributes. All devices download the same large image regardless of screen size.</td>
+          <td>Add <code>srcset</code> with multiple image sizes and a <code>sizes</code> attribute for responsive image delivery.</td>
+        </tr>
+        <tr>
+          <td>WP-10</td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>10</td>
+          <td>External CSS loaded from <code>cdn.example.com</code> without <code>preconnect</code> resource hint. DNS lookup + TCP + TLS handshake adds latency.</td>
+          <td>Add <code>&lt;link rel="preconnect" href="https://cdn.example.com"&gt;</code> early in the <code>&lt;head&gt;</code>.</td>
+        </tr>
+        <tr>
+          <td>WP-11</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">Card.tsx</span></td>
+          <td>12</td>
+          <td><code>console.log</code> left in production code. While the performance impact is small, it leaks information and adds unnecessary overhead in hot paths.</td>
+          <td>Remove <code>console.log</code> from production code or use a configurable logger with environment-based levels.</td>
+        </tr>
+        <tr>
+          <td>WP-12</td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span class="file-tag">Card.tsx</span></td>
+          <td>17</td>
+          <td><code>document.querySelector</code> used inside a React event handler instead of a ref. This bypasses React's virtual DOM, is slower, and can select unintended elements.</td>
+          <td>Use <code>useRef</code> to reference the target element directly instead of querying the global DOM.</td>
+        </tr>
+        <tr>
+          <td>WP-13</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">dashboard.tsx</span></td>
+          <td>45-47</td>
+          <td>List items rendered without a <code>key</code> prop. React cannot efficiently reconcile the list, causing unnecessary re-renders and potential state bugs.</td>
+          <td>Add a stable, unique <code>key</code> prop to each item (avoid using array index if items can reorder).</td>
+        </tr>
+        <tr>
+          <td>WP-14</td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>&mdash;</td>
+          <td>No evidence of HTTP caching strategy for static assets (CSS, images, fonts). Repeat visitors re-download assets unnecessarily.</td>
+          <td>Configure <code>Cache-Control</code> headers with long max-age for hashed/versioned static assets.</td>
+        </tr>
+        <tr>
+          <td>WP-15</td>
+          <td><span class="badge badge-medium">Medium</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>42</td>
+          <td><code>innerHTML</code> used with user-controlled input (<code>location.hash</code>). This is a direct XSS vulnerability and bypasses any framework protections.</td>
+          <td>Use <code>textContent</code> instead of <code>innerHTML</code>, or sanitize user input with a library like DOMPurify.</td>
+        </tr>
+        <tr>
+          <td>WP-16</td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>14</td>
+          <td>Custom font file loaded without a <code>preload</code> hint. The browser discovers the font only when parsing CSS, adding delay to text rendering.</td>
+          <td>Add <code>&lt;link rel="preload" href="/fonts/custom.woff2" as="font" type="font/woff2" crossorigin&gt;</code> in <code>&lt;head&gt;</code>.</td>
+        </tr>
+        <tr>
+          <td>WP-17</td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span class="file-tag">dashboard.tsx</span></td>
+          <td>&mdash;</td>
+          <td>No evidence of code splitting or lazy loading for route-level components. The entire app bundle is loaded upfront.</td>
+          <td>Use <code>React.lazy()</code> with <code>Suspense</code> for route-level code splitting to reduce initial bundle size.</td>
+        </tr>
+        <tr>
+          <td>WP-18</td>
+          <td><span class="badge badge-low">Low</span></td>
+          <td><span class="file-tag">index.html</span></td>
+          <td>10</td>
+          <td>External CDN stylesheet loaded without Subresource Integrity (SRI). If the CDN is compromised, malicious CSS could be injected.</td>
+          <td>Add <code>integrity</code> and <code>crossorigin</code> attributes to external resource tags for tamper detection.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">File-by-File Summary</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>SEO Issues</th>
+          <th>WP Issues</th>
+          <th>Total</th>
+          <th>Key Concerns</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="file-tag">index.html</span></td>
+          <td>8</td>
+          <td>11</td>
+          <td>19</td>
+          <td>Missing meta description, no structured data, render-blocking CSS, missing font-display, CLS from unsized images, XSS via innerHTML</td>
+        </tr>
+        <tr>
+          <td><span class="file-tag">dashboard.tsx</span></td>
+          <td>2</td>
+          <td>5</td>
+          <td>7</td>
+          <td>Layout thrashing, CLS from dynamic content, missing lazy loading, missing list keys</td>
+        </tr>
+        <tr>
+          <td><span class="file-tag">Card.tsx</span></td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>Duplicate IDs, console.log in production, DOM query instead of ref</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</body>
+</html>

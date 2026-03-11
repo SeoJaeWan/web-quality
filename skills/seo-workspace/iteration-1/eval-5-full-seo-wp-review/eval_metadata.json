@@ -1,0 +1,11 @@
+{
+  "eval_id": 5,
+  "eval_name": "full-seo-wp-review",
+  "prompt": "변경된 파일 전체에 대해 SEO + 웹 성능 종합 리뷰해줘. SEO-01~11이랑 WP-01~18 전부 다 봐줘",
+  "assertions": [
+    "all-29-items-covered: 29개 항목(SEO-01~11, WP-01~18) 모두 포함",
+    "standard-item-codes: SEO-XX, WP-XX 형식의 표준 코드 사용",
+    "every-item-has-result: 모든 항목에 Pass/Fail/N/A 결과 표기",
+    "file-line-references: 파일명과 라인 번호 참조 포함"
+  ]
+}

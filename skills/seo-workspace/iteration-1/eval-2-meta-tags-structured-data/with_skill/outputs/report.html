@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEO &amp; Web Performance Review Report</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1a1a1a; max-width: 1100px; margin: 0 auto; padding: 24px; background: #f8f9fa; }
+    h1 { font-size: 1.6rem; margin-bottom: 8px; }
+    h2 { font-size: 1.3rem; margin: 32px 0 12px; border-bottom: 2px solid #dee2e6; padding-bottom: 6px; }
+    h3 { font-size: 1.1rem; margin: 24px 0 8px; }
+    .meta { color: #6c757d; margin-bottom: 24px; }
+    .summary { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    .summary-card { background: #fff; border-radius: 8px; padding: 16px 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; }
+    .summary-card .num { font-size: 2rem; font-weight: 700; }
+    .summary-card .label { font-size: 0.85rem; color: #6c757d; }
+    .pass .num { color: #198754; }
+    .fail .num { color: #dc3545; }
+    .advisory .num { color: #fd7e14; }
+    .na .num { color: #6c757d; }
+    table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
+    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #e9ecef; font-size: 0.9rem; }
+    th { background: #343a40; color: #fff; font-weight: 600; }
+    tr:last-child td { border-bottom: none; }
+    .result-pass { color: #198754; font-weight: 600; }
+    .result-fail { color: #dc3545; font-weight: 600; }
+    .result-advisory { color: #fd7e14; font-weight: 600; }
+    .result-na { color: #6c757d; font-weight: 600; }
+    .issue { color: #dc3545; }
+    .fix-section { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 16px; }
+    .fix-section h4 { color: #dc3545; margin-bottom: 8px; }
+    .fix-section p { margin-bottom: 6px; }
+    code { background: #f1f3f5; padding: 2px 6px; border-radius: 3px; font-size: 0.85em; }
+    pre { background: #f1f3f5; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.85em; margin: 8px 0; }
+  </style>
+</head>
+<body>
+
+<h1>SEO &amp; Web Performance Review Report &mdash; 2026-03-11</h1>
+<p class="meta">Review file: <code>features/web-sample/pages/index.html</code></p>
+
+<div class="summary">
+  <div class="summary-card pass"><div class="num">10</div><div class="label">Pass</div></div>
+  <div class="summary-card fail"><div class="num">12</div><div class="label">Fail</div></div>
+  <div class="summary-card advisory"><div class="num">0</div><div class="label">Advisory</div></div>
+  <div class="summary-card na"><div class="num">7</div><div class="label">N/A</div></div>
+</div>
+
+<h2>Technical SEO (11 items)</h2>
+<table>
+  <thead>
+    <tr><th>Code</th><th>Priority</th><th>Item</th><th>Result</th><th>Issue Found</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SEO-01</td><td>Critical</td><td>noindex absence</td>
+      <td class="result-pass">Pass</td>
+      <td>No <code>noindex</code> meta tag found. Page is indexable.</td>
+    </tr>
+    <tr>
+      <td>SEO-02</td><td>Critical</td><td>title tag present &amp; unique (50-60 chars)</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">Line 6: <code>&lt;title&gt;Sample Page&lt;/title&gt;</code> is only 11 characters. Too short and generic; should be 50-60 characters with a descriptive, keyword-rich title.</td>
+    </tr>
+    <tr>
+      <td>SEO-03</td><td>Critical</td><td>Single h1 per page</td>
+      <td class="result-pass">Pass</td>
+      <td>Exactly one <code>&lt;h1&gt;</code> tag found (line 21).</td>
+    </tr>
+    <tr>
+      <td>SEO-04</td><td>Critical</td><td>HTTPS usage</td>
+      <td class="result-pass">Pass</td>
+      <td>All external URLs use <code>https://</code>. Local resources use relative paths.</td>
+    </tr>
+    <tr>
+      <td>SEO-05</td><td>High</td><td>meta description (150-160 chars)</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">No <code>&lt;meta name="description"&gt;</code> tag found. A compelling, 150-160 character description is needed for SERP snippets.</td>
+    </tr>
+    <tr>
+      <td>SEO-06</td><td>High</td><td>canonical URL</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">No <code>&lt;link rel="canonical"&gt;</code> tag found. A self-referencing canonical URL should be set to prevent duplicate content issues.</td>
+    </tr>
+    <tr>
+      <td>SEO-07</td><td>High</td><td>Structured data (JSON-LD)</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">No <code>&lt;script type="application/ld+json"&gt;</code> found. At minimum, an Organization or WebPage schema should be added.</td>
+    </tr>
+    <tr>
+      <td>SEO-08</td><td>Medium</td><td>Descriptive URL structure</td>
+      <td class="result-pass">Pass</td>
+      <td>Internal links use descriptive paths (<code>/about</code>, <code>/deals</code>) without excessive query parameters.</td>
+    </tr>
+    <tr>
+      <td>SEO-09</td><td>High</td><td>DOCTYPE html declaration</td>
+      <td class="result-pass">Pass</td>
+      <td><code>&lt;!DOCTYPE html&gt;</code> present at line 1.</td>
+    </tr>
+    <tr>
+      <td>SEO-10</td><td>High</td><td>charset UTF-8 at top of head</td>
+      <td class="result-pass">Pass</td>
+      <td><code>&lt;meta charset="UTF-8"&gt;</code> is the first element inside <code>&lt;head&gt;</code> (line 4).</td>
+    </tr>
+    <tr>
+      <td>SEO-11</td><td>High</td><td>viewport meta tag</td>
+      <td class="result-pass">Pass</td>
+      <td><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code> present (line 5).</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Page Experience / Web Performance (18 items)</h2>
+<table>
+  <thead>
+    <tr><th>Code</th><th>Area</th><th>Item</th><th>Result</th><th>Issue Found</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>WP-01</td><td>CRP</td><td>No render-blocking scripts</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">Lines 37-44: Inline <code>&lt;script&gt;</code> without <code>defer</code>, <code>async</code>, or <code>type="module"</code>. This blocks HTML parsing and rendering.</td>
+    </tr>
+    <tr>
+      <td>WP-02</td><td>CRP</td><td>LCP image fetchpriority + preload</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">Line 27: Hero image <code>hero.png</code> lacks <code>fetchpriority="high"</code> attribute. No <code>&lt;link rel="preload" as="image"&gt;</code> in <code>&lt;head&gt;</code> for the LCP candidate.</td>
+    </tr>
+    <tr>
+      <td>WP-03</td><td>CRP</td><td>Critical CSS handling</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">Line 10: <code>&lt;link rel="stylesheet" href="https://cdn.example.com/styles.css"&gt;</code> is render-blocking with no <code>media</code> attribute or deferred loading strategy.</td>
+    </tr>
+    <tr>
+      <td>WP-04</td><td>Image</td><td>img width/height or aspect-ratio (CLS)</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">Line 33: <code>&lt;img src="/public/promo.png"&gt;</code> has no <code>width</code>/<code>height</code> attributes and no <code>aspect-ratio</code> CSS. This causes layout shift (CLS) when the image loads.</td>
+    </tr>
+    <tr>
+      <td>WP-05</td><td>Image</td><td>loading="lazy" for below-fold images</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">Lines 30, 33: Non-LCP images (<code>logo.png</code>, <code>promo.png</code>) lack <code>loading="lazy"</code>. Below-fold images should be lazily loaded to save bandwidth.</td>
+    </tr>
+    <tr>
+      <td>WP-06</td><td>Image</td><td>Modern image formats (WebP/AVIF)</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">All images use <code>.png</code> format. No <code>&lt;picture&gt;</code> element or <code>.webp</code>/<code>.avif</code> sources found. Modern formats can reduce image size by 25-50%.</td>
+    </tr>
+    <tr>
+      <td>WP-07</td><td>JS</td><td>Code splitting</td>
+      <td class="result-na">N/A</td>
+      <td>Plain HTML page with only an inline script. No JS module system to apply code splitting.</td>
+    </tr>
+    <tr>
+      <td>WP-08</td><td>JS</td><td>Tree shaking patterns</td>
+      <td class="result-na">N/A</td>
+      <td>No module imports present. Tree shaking is not applicable.</td>
+    </tr>
+    <tr>
+      <td>WP-09</td><td>JS</td><td>No layout thrashing</td>
+      <td class="result-pass">Pass</td>
+      <td>No interleaved layout property reads/writes in loops detected.</td>
+    </tr>
+    <tr>
+      <td>WP-10</td><td>Font</td><td>font-display optimization (no block)</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">Lines 13-17: <code>@font-face</code> for "CustomFont" has no <code>font-display</code> property. This defaults to <code>block</code>, causing invisible text (FOIT) until the font loads, which hurts LCP.</td>
+    </tr>
+    <tr>
+      <td>WP-11</td><td>Font</td><td>Critical font preload</td>
+      <td class="result-fail">Fail</td>
+      <td class="issue">No <code>&lt;link rel="preload" as="font"&gt;</code> found for <code>/fonts/custom.woff2</code>. Preloading the critical font improves load time.</td>
+    </tr>
+    <tr>
+      <td>WP-12</td><td>LCP</td><td>LCP element in initial HTML</td>
+      <td class="result-pass">Pass</td>
+      <td>Hero image (line 27) is present in the initial HTML, not loaded via JavaScript.</td>
+    </tr>
+    <tr>
+      <td>WP-13</td><td>INP</td><td>Event handler immediate visual feedback</td>
+      <td class="result-na">N/A</td>
+      <td>No interactive event handlers (click, input, etc.) found in the code.</td>
+    </tr>
+    <tr>
+      <td>WP-14</td><td>INP</td><td>Heavy computation deferred</td>
+      <td class="result-na">N/A</td>
+      <td>No heavy synchronous computations or loops detected in the inline script.</td>
+    </tr>
+    <tr>
+      <td>WP-15</td><td>INP</td><td>React memo usage</td>
+      <td class="result-na">N/A</td>
+      <td>Not a React application. React-specific optimizations do not apply.</td>
+    </tr>
+    <tr>
+      <td>WP-16</td><td>CLS</td><td>No dynamic insertion above viewport</td>
+      <td class="result-pass">Pass</td>
+      <td>No <code>prepend()</code> or <code>insertBefore()</code> calls found that could shift content above the viewport.</td>
+    </tr>
+    <tr>
+      <td>WP-17</td><td>CLS</td><td>Animations use transform/opacity only</td>
+      <td class="result-pass">Pass</td>
+      <td>No CSS transitions or animations on layout properties (<code>height</code>, <code>width</code>, <code>top</code>, <code>left</code>, <code>margin</code>, <code>padding</code>) found.</td>
+    </tr>
+    <tr>
+      <td>WP-18</td><td>CLS</td><td>Dynamic content space reservation</td>
+      <td class="result-na">N/A</td>
+      <td>No <code>&lt;iframe&gt;</code>, <code>&lt;video&gt;</code>, or ad slots present in the page.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Fix Guide</h2>
+
+<div class="fix-section">
+  <h4>SEO-02: title tag too short and generic</h4>
+  <p><strong>File:</strong> <code>index.html</code>, line 6</p>
+  <p><strong>Current:</strong> <code>&lt;title&gt;Sample Page&lt;/title&gt;</code> (11 chars)</p>
+  <p><strong>Fix:</strong> Replace with a descriptive, keyword-rich title of 50-60 characters.</p>
+  <pre>&lt;title&gt;Welcome to Example Store | Premium Products &amp; Free Shipping&lt;/title&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>SEO-05: Missing meta description</h4>
+  <p><strong>File:</strong> <code>index.html</code>, <code>&lt;head&gt;</code> section</p>
+  <p><strong>Fix:</strong> Add a compelling meta description of 150-160 characters.</p>
+  <pre>&lt;meta name="description" content="Discover premium products with free shipping and 30-day returns. Shop our latest deals and save up to 20%. Trusted by thousands of customers."&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>SEO-06: Missing canonical URL</h4>
+  <p><strong>File:</strong> <code>index.html</code>, <code>&lt;head&gt;</code> section</p>
+  <p><strong>Fix:</strong> Add a self-referencing canonical link.</p>
+  <pre>&lt;link rel="canonical" href="https://example.com/"&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>SEO-07: Missing structured data (JSON-LD)</h4>
+  <p><strong>File:</strong> <code>index.html</code>, <code>&lt;head&gt;</code> section</p>
+  <p><strong>Fix:</strong> Add JSON-LD structured data. For a homepage, use Organization or WebSite schema.</p>
+  <pre>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Example Store",
+  "url": "https://example.com",
+  "logo": "https://example.com/public/logo.png"
+}
+&lt;/script&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-01: Render-blocking inline script</h4>
+  <p><strong>File:</strong> <code>index.html</code>, lines 37-44</p>
+  <p><strong>Fix:</strong> Move the script to an external file and add <code>defer</code>, or wrap the logic in a <code>DOMContentLoaded</code> listener and place the script tag with <code>defer</code>.</p>
+  <pre>&lt;script defer src="/js/main.js"&gt;&lt;/script&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-02: LCP image missing fetchpriority and preload</h4>
+  <p><strong>File:</strong> <code>index.html</code>, line 27 and <code>&lt;head&gt;</code></p>
+  <p><strong>Fix:</strong> Add <code>fetchpriority="high"</code> to the hero image and a preload link in the head.</p>
+  <pre>&lt;!-- In &lt;head&gt; --&gt;
+&lt;link rel="preload" href="/public/hero.png" as="image" fetchpriority="high"&gt;
+
+&lt;!-- On the img tag --&gt;
+&lt;img src="/public/hero.png" alt="Hero banner" width="800" height="400" fetchpriority="high"&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-03: Render-blocking external stylesheet</h4>
+  <p><strong>File:</strong> <code>index.html</code>, line 10</p>
+  <p><strong>Fix:</strong> Inline critical above-fold CSS and defer the external stylesheet.</p>
+  <pre>&lt;style&gt;/* Inline critical above-fold CSS here */&lt;/style&gt;
+&lt;link rel="preload" href="https://cdn.example.com/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'"&gt;
+&lt;noscript&gt;&lt;link rel="stylesheet" href="https://cdn.example.com/styles.css"&gt;&lt;/noscript&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-04: Image missing width/height (CLS risk)</h4>
+  <p><strong>File:</strong> <code>index.html</code>, line 33</p>
+  <p><strong>Current:</strong> <code>&lt;img src="/public/promo.png" alt="Promotional banner"&gt;</code></p>
+  <p><strong>Fix:</strong> Add explicit <code>width</code> and <code>height</code> attributes.</p>
+  <pre>&lt;img src="/public/promo.png" alt="Promotional banner" width="600" height="300"&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-05: Below-fold images missing loading="lazy"</h4>
+  <p><strong>File:</strong> <code>index.html</code>, lines 30, 33</p>
+  <p><strong>Fix:</strong> Add <code>loading="lazy"</code> to non-LCP images.</p>
+  <pre>&lt;img src="/public/logo.png" width="120" height="40" loading="lazy"&gt;
+&lt;img src="/public/promo.png" alt="Promotional banner" width="600" height="300" loading="lazy"&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-06: No modern image formats</h4>
+  <p><strong>File:</strong> <code>index.html</code>, all <code>&lt;img&gt;</code> tags</p>
+  <p><strong>Fix:</strong> Use <code>&lt;picture&gt;</code> element with WebP/AVIF sources and PNG fallback.</p>
+  <pre>&lt;picture&gt;
+  &lt;source type="image/avif" srcset="/public/hero.avif"&gt;
+  &lt;source type="image/webp" srcset="/public/hero.webp"&gt;
+  &lt;img src="/public/hero.png" alt="Hero banner" width="800" height="400" fetchpriority="high"&gt;
+&lt;/picture&gt;</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-10: @font-face missing font-display</h4>
+  <p><strong>File:</strong> <code>index.html</code>, lines 13-17</p>
+  <p><strong>Fix:</strong> Add <code>font-display: swap</code> (or <code>optional</code> for minimal CLS).</p>
+  <pre>@font-face {
+  font-family: "CustomFont";
+  src: url("/fonts/custom.woff2") format("woff2");
+  font-display: swap;
+}</pre>
+</div>
+
+<div class="fix-section">
+  <h4>WP-11: Critical font not preloaded</h4>
+  <p><strong>File:</strong> <code>index.html</code>, <code>&lt;head&gt;</code> section</p>
+  <p><strong>Fix:</strong> Add a preload link for the font file.</p>
+  <pre>&lt;link rel="preload" href="/fonts/custom.woff2" as="font" type="font/woff2" crossorigin&gt;</pre>
+</div>
+
+</body>
+</html>

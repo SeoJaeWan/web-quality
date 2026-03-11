@@ -1,0 +1,13 @@
+id,file,line,severity,category,issue,recommendation
+1,dashboard.tsx,50,high,image-optimization,"img element missing width and height attributes, causing CLS","Add explicit width and height attributes to the <img> tag so the browser can reserve space before the image loads (e.g. <img width=""800"" height=""400"" .../>)"
+2,dashboard.tsx,50,high,image-optimization,"img element missing loading=""lazy"" for below-fold image","Add loading=""lazy"" to defer loading of off-screen images and reduce initial page weight"
+3,dashboard.tsx,50,medium,image-optimization,"Image served as PNG without modern format alternatives","Use <picture> with WebP/AVIF sources and PNG fallback, or use Next.js <Image> component for automatic format negotiation"
+4,dashboard.tsx,50,medium,image-optimization,"No srcset or sizes attributes for responsive images","Add srcset and sizes attributes to serve appropriately sized images for different viewports"
+5,dashboard.tsx,16-19,high,cls-prevention,"Dynamic content inserted via setTimeout without reserved space","Reserve layout space with min-height or CSS aspect-ratio on the container before async content arrives"
+6,dashboard.tsx,10-14,high,rendering-performance,"Layout thrashing in useEffect: offsetHeight read immediately followed by style.minHeight write","Batch DOM reads and writes separately, or use requestAnimationFrame to schedule the style write after the read"
+7,dashboard.tsx,45-47,medium,rendering-performance,"List items rendered without key prop, causing inefficient reconciliation","Add a stable unique key to each mapped element (e.g. key={item} or a unique id)"
+8,dashboard.tsx,41,medium,cls-prevention,"Grid container has no explicit min-height or aspect-ratio to hold space while items load","Set a CSS min-height or skeleton placeholder on the grid section to prevent layout shift when items appear"
+9,Card.tsx,17-20,low,rendering-performance,"Direct DOM manipulation via document.querySelector instead of React ref","Replace global DOM query with useRef to avoid unintended side effects and improve predictability"
+10,Card.tsx,27,medium,cls-prevention,"Duplicate id=""card-item"" when Card is rendered in a list","Use unique ids (e.g. based on title or index) to avoid DOM conflicts that can confuse assistive tech and cause unpredictable behavior"
+11,Card.tsx,13,low,rendering-performance,"console.log left in production code","Remove console.log statements or gate them behind a development-only flag to avoid minor performance overhead"
+12,dashboard.tsx,50,medium,image-optimization,"No fetchpriority attribute to hint browser about image importance","Add fetchpriority=""low"" for below-fold promotional images to let the browser prioritize critical resources first"

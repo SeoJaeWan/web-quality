@@ -1,0 +1,27 @@
+{
+  "eval_id": 3,
+  "eval_name": "image-cls-optimization",
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "img-dimensions-missing: 이미지 width/height 속성 누락 감지",
+      "passed": true,
+      "evidence": "WP-04: 'promo.png에 width/height 속성 누락. CLS 위험' - Fail로 감지"
+    },
+    {
+      "text": "lazy-loading-missing: loading=lazy 누락 감지",
+      "passed": true,
+      "evidence": "WP-05: 'below-fold 이미지에 loading=lazy 없음' - Fail로 감지"
+    },
+    {
+      "text": "layout-thrashing: 레이아웃 스래싱 패턴 감지",
+      "passed": true,
+      "evidence": "WP-09: 'offsetHeight 읽기 직후 style.minHeight 쓰기 - 강제 리플로우' - Fail로 감지"
+    },
+    {
+      "text": "dynamic-content-cls: 동적 콘텐츠 CLS 문제 감지",
+      "passed": true,
+      "evidence": "WP-18: 'setTimeout으로 동적 콘텐츠 삽입 시 min-height 등 공간 예약 없음' - Fail로 감지"
+    }
+  ]
+}
