@@ -1,6 +1,6 @@
 ---
 name: accessibility
-description: Web accessibility/web standards review. Reviews changed code against KWCAG2.2 and generates HTML + CSV reports. Invoked via web-quality orchestrator. Not directly triggerable.
+description: Web accessibility/web standards review. Reviews changed code against KWCAG2.2 and generates HTML + CSV reports. web-quality를 통해 실행됩니다. 직접 트리거 불가.
 model: opus
 ---
 
@@ -30,10 +30,10 @@ references/kwcag22.md
 
 ## Step 1. Review Scope
 
-When invoked via the quality orchestrator, use the file list passed from it as-is.
-Proceed to Step 2.
+이 스킬이 quality 오케스트레이터를 통해 실행된 경우,
+전달받은 파일 목록을 그대로 사용합니다. Step 2로 진행하세요.
 
-Standalone execution only:
+단독 실행 시에만 아래를 수행:
 
 ```bash
 git diff --name-only HEAD
@@ -135,130 +135,94 @@ Beyond KWCAG2.2, check whether HTML elements are used semantically.
 
 ---
 
-## Step 4. Lighthouse Accessibility Verification
+## Step 4. Playwright Automated Verification
 
-Lighthouse CLI uses the axe-core engine to quantitatively verify accessibility items.
-Use the environment context (`lighthouse_available`, `dev_server_url`) passed from the quality orchestrator.
-For standalone execution, detect the environment directly.
+### 4-1. Detect Playwright Environment
 
-### 4-1. Check Environment
+Check in 3 sequential steps. If any step fails, immediately mark items 8, 10, 33 as `🔵 판정불가` with the specific reason and proceed to Step 5.
 
-When invoked via the quality orchestrator, use the passed `lighthouse_available` value.
-
-Standalone execution:
+**① Check playwright.config exists**
 
 ```bash
-npx lighthouse --version 2>/dev/null || echo "LH_NOT_INSTALLED"
-curl -s --connect-timeout 5 "{dev_server_url}" -o /dev/null -w "%{http_code}"
+ls playwright.config.ts 2>/dev/null && echo "FOUND" || ls playwright.config.js 2>/dev/null && echo "FOUND" || echo "NOT_FOUND"
 ```
 
-- Lighthouse not installed or server not running → 10 Lighthouse-target items: keep static analysis result, verdict method = `정적분석`
-- Environment ready → proceed to Step 4-2
+- NOT_FOUND → items 8, 10, 33: `🔵 판정불가 — playwright.config.ts 없음`
 
-### 4-2. Run Lighthouse
+**② Check Playwright CLI and browser installation**
 
 ```bash
-npx lighthouse {dev_server_url}{route} \
-  --output json \
-  --output-path /tmp/lh-a11y-report.json \
-  --chrome-flags="--headless=new" \
-  --preset=desktop \
-  --only-categories=accessibility
-```
-
-Infer route from changed files:
-- `src/pages/Dashboard.tsx` → `/dashboard`
-- `src/app/about/page.tsx` → `/about`
-- Cannot infer → use baseURL only (homepage)
-
-### 4-3. Lighthouse Result Mapping
-
-Map Lighthouse audit IDs to KWCAG2.2 items (10 items):
-
-| KWCAG Item | Lighthouse audit ID | Item Name |
-| --- | --- | --- |
-| A-01 | `image-alt` | Alternative Text |
-| A-03 | `th-has-data-cells` | Table Structure |
-| A-08 | `color-contrast` | Color Contrast |
-| A-17 | `bypass` | Skip Navigation |
-| A-18 | `heading-order` | Page Title / Heading Hierarchy |
-| A-19 | `link-name` | Link Purpose |
-| A-23 | `button-name` | Label and Name |
-| A-25 | `html-has-lang` | Language of Page |
-| A-29 | `label` | Label in Name |
-| A-32 | `duplicate-id-active` | Parsing / Markup Errors |
-
-### 4-4. Interpret Lighthouse Results
-
-Extract `audits[audit_id]` from JSON:
-
-```
-score: 1 → ✅ Pass
-score: 0 → ❌ Fail (extract failingElements from details.items)
-score: null → ➖ N/A (element not present)
-```
-
-For ❌ results, extract the specific failing element's selector and snippet from `details.items` and include in the issue description.
-
-### 4-5. Cross-Validation (Lighthouse vs Static Analysis)
-
-**When Lighthouse and static analysis results differ → Lighthouse takes precedence.**
-Lighthouse analyzes the actual rendered DOM, making it more accurate than static analysis.
-
-- Lighthouse ❌ but static ✅ → **❌** (Lighthouse wins, verdict: `Lighthouse`)
-- Lighthouse ✅ but static ❌ → **✅** (Lighthouse wins, verdict: `Lighthouse`)
-- Both agree → use that result (verdict: `Lighthouse`)
-- Lighthouse not run → keep static analysis result (verdict: `정적분석`)
-
----
-
-## Step 5. Playwright Interaction Verification
-
-Playwright MCP verifies **interaction-based items** in a real browser — keyboard navigation,
-focus movement, ARIA state changes, etc. This complements Lighthouse by covering dynamic
-behaviors that Lighthouse cannot detect.
-
-### 5-1. Check Environment
-
-When invoked via the quality orchestrator, use the passed `playwright_available` value.
-
-Standalone execution:
-
-```bash
-ls playwright.config.ts 2>/dev/null || ls playwright.config.js 2>/dev/null || echo "NOT_FOUND"
 npx playwright --version 2>/dev/null || echo "PW_NOT_INSTALLED"
-curl -s --connect-timeout 5 "{dev_server_url}" -o /dev/null -w "%{http_code}"
 ```
 
-- Environment not ready → Playwright-target items: `🔵 판정불가` (state specific reason)
-- Environment ready → proceed to Step 5-2
+- PW_NOT_INSTALLED → items 8, 10, 33: `🔵 판정불가 — Playwright 미설치 (npx playwright --version 실패)`
+- If CLI is installed but browser binaries are missing: `🔵 판정불가 — 브라우저 미설치 (npx playwright install chromium 필요)`
 
-### 5-2. Determine Target URL
+**③ Check dev server is running**
 
-When invoked via the quality orchestrator, use the passed `dev_server_url`.
+Determine the baseURL using Step 4-2 resolution logic first, then run:
 
-Standalone resolution order:
-1. `baseURL` from `playwright.config.ts`
-2. `webServer.url` from `playwright.config.ts`
-3. Infer route from changed files
-4. Fallback: `http://localhost:3000`
+```bash
+curl -s --connect-timeout 5 "{baseURL}" -o /dev/null -w "%{http_code}"
+```
 
-### 5-3. Playwright Verification Targets
+- No HTTP response (exit code != 0) or returns 000 → items 8, 10, 33: `🔵 판정불가 — 개발 서버 미실행 ({baseURL} 응답 없음)`
+- The server is never auto-started. This step is check-only.
 
-| KWCAG Item | What to Verify | Playwright Technique |
-| --- | --- | --- |
-| A-10 | Keyboard operability | Tab key focus traversal (up to 10 times) |
-| A-11 | Focus visible | Check focus style changes after Tab |
-| A-12 | Focus order | Check focus moves to modal/popup on open |
-| A-26 | Change on request | Check select onChange auto-navigation |
-| A-28 | Error suggestion | Check error message + focus after form submit |
-| A-31 | Consistent navigation | Check persistent navigation after page transition |
-| A-33 | Web app accessibility | Check ARIA state changes after interaction |
+**④ All checks pass → run 4-2 through 4-5 (automated checks for items 8, 10, 33)**
 
-### 5-4. A-10: Keyboard Accessibility
+### 4-2. Determine Target URL
+
+```bash
+grep -E "baseURL|webServer" playwright.config.ts 2>/dev/null | head -5
+```
+
+Resolution order:
+
+1. Extract `baseURL` from `playwright.config.ts`
+2. If not found, extract `webServer.url`
+3. Infer route from changed files via `git diff --name-only HEAD`:
+   - `src/pages/Login.tsx` → `/login`
+   - `src/pages/Dashboard.tsx` → `/dashboard`
+   - `src/app/about/page.tsx` → `/about` (Next.js App Router)
+4. If route inference fails → use baseURL only (homepage)
+5. If no baseURL → fall back to `http://localhost:3000`
+
+### 4-3. Item 8: Color Contrast (Playwright)
+
+```javascript
+browser_navigate({determined URL})
+
+browser_evaluate(() => {
+  const elements = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, a, button, label, span, li, td, th');
+  return Array.from(elements).slice(0, 50).map(el => {
+    const style = getComputedStyle(el);
+    return {
+      tag: el.tagName,
+      text: el.textContent?.trim().slice(0, 30),
+      color: style.color,
+      background: style.backgroundColor,
+      fontSize: style.fontSize,
+      fontWeight: style.fontWeight
+    };
+  });
+})
+```
+
+Verdict criteria:
+
+- Normal text: foreground/background contrast ratio ≥ **4.5:1**
+- Large text (18pt+ or 14pt bold): ≥ **3:1**
+
+Results:
+
+- Element below threshold found → `❌` (specify which element)
+- All pass → `✅`
+- Color extraction failed (transparent background, etc.) → `⚠️`
+
+### 4-4. Item 10: Keyboard Accessibility (Playwright)
 
 ```
-browser_navigate({URL})
 browser_snapshot()              → record initial state
 
 browser_press_key('Tab')        → move focus (1st)
@@ -270,74 +234,59 @@ browser_snapshot()              → verify focus
 (repeat up to 10 times)
 ```
 
-- All interactive elements reachable → `✅`
-- No focus movement or focus trap → `❌`
+Verdict criteria:
+
+- Focus moves visually on Tab and all interactive elements are reachable → `✅`
+- No focus movement or focus trap detected → `❌`
 - Only some elements reachable → `⚠️`
 
-### 5-5. A-11: Focus Visible Check
-
-On each Tab navigation, evaluate via snapshot:
-
-```javascript
-browser_evaluate(() => {
-  const focused = document.activeElement;
-  const style = getComputedStyle(focused);
-  return {
-    tag: focused.tagName,
-    outline: style.outline,
-    boxShadow: style.boxShadow,
-    border: style.border
-  };
-})
-```
-
-- At least one of outline/boxShadow/border shows visual change → `✅`
-- No visual indicator on any focused element → `❌`
-
-### 5-6. A-33: Web App Accessibility (ARIA State)
+### 4-5. Item 33: Web App Accessibility (Playwright)
 
 ```
-browser_snapshot()              → record ARIA state before interaction
+browser_snapshot()              → snapshot before interaction (record ARIA state)
 
-browser_click({interactive element ref})
+browser_click({first interactive element ref})
 
-browser_snapshot()              → verify ARIA state after interaction
+browser_snapshot()              → snapshot after interaction (verify ARIA state change)
 ```
 
-- `aria-expanded`, `aria-selected`, `aria-checked`, `aria-pressed`, etc. change → `✅`
+Verdict criteria:
+
+- `aria-expanded`, `aria-selected`, `aria-checked`, `aria-pressed`, etc. change after interaction → `✅`
 - No state change (static ARIA) → `⚠️`
 - No interactive elements found → `➖`
 
-### 5-7. Cross-Validation
+### 4-6. Cross-Validation
 
-When Playwright and static analysis results differ → **Playwright result takes precedence**.
-Verdict method column: `Playwright`
-
----
-
-## Step 6. Classify Results
-
-| Result        | Meaning                                                                                                                                              |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `✅`          | Pass: no violation found                                                                                                                             |
-| `❌`          | Fail: violation found (include filename:line)                                                                                                        |
-| `⚠️`          | Advisory: no violation but improvement recommended                                                                                                   |
-| `➖`          | N/A: the relevant element does not exist                                                                                                             |
-| `🔵 판정불가` | Runtime verification not possible — must state specific reason: Lighthouse not installed / Playwright not installed / Browser not installed / Dev server not running |
+If Playwright result differs from static analysis → **Playwright result takes precedence**.
+Mark the verdict method column as `Playwright` in the report.
 
 ---
 
-## Step 7. Generate and Save Reports
+## Step 5. Classify Results
+
+| Result        | Meaning                                                                                                                                                       |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `✅`          | Pass: no violation found                                                                                                                                      |
+| `❌`          | Fail: violation found (include filename:line)                                                                                                                 |
+| `⚠️`          | Advisory: no violation but improvement recommended                                                                                                            |
+| `➖`          | N/A: the relevant element does not exist                                                                                                                      |
+| `🔵 판정불가` | Runtime verification not possible — must state specific reason (one of 4): playwright.config.ts 없음 / Playwright 미설치 / 브라우저 미설치 / 개발 서버 미실행 |
+
+---
+
+## Step 6. Generate and Save Reports
 
 Save the same review results in **2 formats**.
 
-> **Note:** When invoked via the quality orchestrator, skip this step.
-> Return result data only to the orchestrator.
-> The steps below apply to standalone execution only.
+> **Note:** 이 스킬이 quality 오케스트레이터를 통해 실행된 경우,
+> 이 단계는 건너뜁니다. 결과 데이터만 오케스트레이터에 전달합니다.
+> 아래는 단독 실행 시에만 사용됩니다.
 
 ### Output Files
 
 ```bash
+# 타임스탬프 계산
 TIMESTAMP=$(date +%Y%m%d-%H%M)
 REPORT_DIR="reports/accessibility/${TIMESTAMP}"
 mkdir -p "${REPORT_DIR}"
@@ -346,14 +295,14 @@ mkdir -p "${REPORT_DIR}"
 - `${REPORT_DIR}/report.html` — visual HTML report
 - `${REPORT_DIR}/report.csv` — CSV for documentation/spreadsheet use
 
-Reuse the same directory for re-runs within the same minute (no suffix needed).
+동일 분 내 재실행 시 폴더 재사용 허용 (suffix 불필요).
 
 ### HTML Report Requirements
 
 - Result colors: `✅` (green #28a745), `❌` (red #dc3545), `⚠️` (yellow #ffc107), `➖` (gray #6c757d), `🔵 판정불가` (blue #6c8ebf)
 - Structure: summary table → detailed results by principle → semantic HTML review → fix guide
 - Language: Korean / Style: inline CSS only (no external dependencies)
-- Verdict method column values: `정적분석` / `Lighthouse` / `Playwright` / `판정불가`
+- Verdict method column values: `정적분석` / `Playwright` / `판정불가`
 
 ### CSV Report Requirements
 
@@ -363,13 +312,13 @@ Reuse the same directory for re-runs within the same minute (no suffix needed).
 
 ---
 
-## Step 8. Verify Results
+## Step 7. Verify Results
 
 1. Confirm all 33 KWCAG2.2 items have been evaluated — none skipped.
 2. Confirm the Semantic HTML section (7 items) has been evaluated.
 3. Every ❌ result must include: KWCAG item number, filename + line number or pattern, concrete violation description.
 4. Every ⚠️ result must include a specific improvement recommendation.
-5. Items marked 🔵 판정불가 must state specific reason: Lighthouse not installed / Playwright not installed / Browser not installed / Dev server not running.
+5. Items marked 🔵 판정불가 must state one of the 4 specific reasons: playwright.config.ts 없음 / Playwright 미설치 / 브라우저 미설치 / 개발 서버 미실행.
 6. Confirm both `reports/accessibility/YYYYMMDD-HHmm/report.html` and `reports/accessibility/YYYYMMDD-HHmm/report.csv` have been written (standalone mode only).
 7. If any condition above is not met, do not claim completion — identify what is missing and resolve it.
 
@@ -384,7 +333,7 @@ Key requirements:
 - Result colors: `✅` (green #28a745), `❌` (red #dc3545), `⚠️` (yellow #ffc107), `➖` (gray #6c757d), `🔵 판정불가` (blue #6c8ebf)
 - Structure: summary table → detailed results by principle → semantic HTML review → fix guide
 - Language: Korean / Style: inline CSS only (no external dependencies)
-- Verdict method column: `정적분석` / `Lighthouse` / `Playwright` / `판정불가`
+- Verdict method column: `정적분석` / `Playwright` / `판정불가`
 - CSV header: `번호,항목명,원칙,결과,판정방식,발견된 문제,수정 가이드`
 - Include all 33 KWCAG items + all semantic HTML items
 

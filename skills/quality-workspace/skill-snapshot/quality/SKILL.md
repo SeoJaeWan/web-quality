@@ -18,12 +18,12 @@ delegates to the seo skill.
 
 <Instructions>
 
-## Internal Execution Order
+## 내부 실행 순서
 
-1. Run accessibility skill
-2. Run seo skill
+1. accessibility 스킬 실행
+2. seo 스킬 실행
 
-Entry point: always executed via the web-quality agent.
+진입점: 항상 web-quality 에이전트를 통해 실행
 
 ---
 
@@ -38,63 +38,7 @@ git diff --name-only HEAD
 - No changed files → AskUserQuestion: "검토할 파일이나 작업 내용을 알려주세요."
 - User specifies scope explicitly → use that instead
 
-**Pass the determined file list to sub-skills. Sub-skills must not re-determine scope.**
-
----
-
-## Step 1.5. Environment Detection (Lighthouse + Playwright)
-
-Detect whether Lighthouse CLI and Playwright MCP are available before delegating to sub-skills.
-Pass the detection results as environment context so each sub-skill skips redundant checks.
-
-### 1.5-1. Playwright Environment
-
-```bash
-# ① Check playwright.config exists
-ls playwright.config.ts 2>/dev/null || ls playwright.config.js 2>/dev/null || echo "PW_CONFIG_NOT_FOUND"
-
-# ② Check Playwright CLI installation
-npx playwright --version 2>/dev/null || echo "PW_NOT_INSTALLED"
-```
-
-### 1.5-2. Lighthouse CLI Environment
-
-```bash
-npx lighthouse --version 2>/dev/null || echo "LH_NOT_INSTALLED"
-```
-
-### 1.5-3. Determine Dev Server URL
-
-```bash
-# Extract baseURL from playwright.config.ts
-grep -E "baseURL|webServer" playwright.config.ts 2>/dev/null | head -5
-```
-
-Resolution order:
-1. `baseURL` from `playwright.config.ts`
-2. `webServer.url` from `playwright.config.ts`
-3. Fallback: `http://localhost:3000`
-
-Verify server responds at the determined URL:
-
-```bash
-curl -s --connect-timeout 5 "{baseURL}" -o /dev/null -w "%{http_code}"
-```
-
-- No HTTP response → `DEV_SERVER_NOT_RUNNING`
-
-### 1.5-4. Pass Environment Context
-
-Pass the following to both accessibility and seo sub-skills:
-
-| Key | Value |
-| --- | --- |
-| `playwright_available` | `true` / `false` (config exists + CLI installed + server responds) |
-| `lighthouse_available` | `true` / `false` (CLI installed + server responds) |
-| `dev_server_url` | Determined URL or `null` |
-| `unavailable_reason` | Specific reason when requirements not met |
-
-When requirements are not met: tool-dependent items fall back to static analysis only, verdict marked accordingly.
+**결정된 파일 목록을 서브 스킬에 전달합니다. 서브 스킬은 scope를 재결정하지 않습니다.**
 
 ---
 
@@ -106,9 +50,8 @@ Reference: `<plugin-root>/skills/accessibility/SKILL.md`
 
 Delegation instructions:
 - Step 1 (scope) is already determined — pass the same file set
-- Pass Step 1.5 environment context (lighthouse_available, playwright_available, dev_server_url)
-- Steps 2–5: KWCAG2.2 33-item code review + Lighthouse accessibility verification + Playwright interaction verification
-- Step 7 (individual report generation) is skipped — collect only result data (✅/❌/⚠️/➖/🔵 per item)
+- Steps 2–5: KWCAG2.2 33-item code review + Playwright automated checks (if `playwright.config.ts` exists)
+- Step 6 (individual report generation) is skipped — collect only result data (✅/❌/⚠️/➖/🔵 per item)
 
 Collected results → **Section A: Accessibility**
 
@@ -116,9 +59,7 @@ Collected results → **Section A: Accessibility**
 
 ## Step 3. SEO & Web Performance Review — Delegate to seo skill
 
-Execute the 'seo' skill against the same file set determined in Step 1.
-Pass the Step 1.5 environment context (lighthouse_available, dev_server_url).
-Steps 3–4: Static Analysis + Lighthouse SEO/Performance verification.
+Execute the 'seo' skill Step 3 (Static Analysis) against the same file set determined in Step 1.
 Collect the result row for each SEO-code and WP-code item.
 Collected results → **Section B: SEO & Web Performance**
 
@@ -129,6 +70,7 @@ Collected results → **Section B: SEO & Web Performance**
 Collect results from both sections (A–B) and generate a single HTML + CSV file.
 
 ```bash
+# 타임스탬프 계산
 TIMESTAMP=$(date +%Y%m%d-%H%M)
 REPORT_DIR="reports/web-quality/${TIMESTAMP}"
 mkdir -p "${REPORT_DIR}"
@@ -138,7 +80,7 @@ ${REPORT_DIR}/report.html
 ${REPORT_DIR}/report.csv
 ```
 
-Reuse the same directory for re-runs within the same minute (no suffix needed).
+동일 분 내 재실행 시 폴더 재사용 허용 (suffix 불필요).
 
 ---
 
@@ -161,7 +103,6 @@ Key requirements:
 - Badge classes: `badge-pass` (✅), `badge-fail` (❌), `badge-partial` (⚠️), `badge-na` (➖), `badge-unknown` (🔵)
 - Section headers color-coded: a11y=#6c8ebf, seo=#f0a830
 - Fix guide section: only ❌ items, with code examples
-- Verdict method values: `정적분석` / `Lighthouse` / `Playwright` / `판정불가`
 - CSV header: `영역,코드,항목명,결과,판정방식,발견된 문제,수정 가이드`
 - Language: Korean / Style: inline CSS only
 
