@@ -1,0 +1,70 @@
+{
+  "expectations": [
+    {
+      "text": "HTML report file (report.html) was generated",
+      "passed": true,
+      "evidence": "report.html exists and contains a complete 260-line HTML document with proper structure"
+    },
+    {
+      "text": "CSV report file (report.csv) was generated",
+      "passed": true,
+      "evidence": "report.csv exists with 70 data rows covering all evaluation items"
+    },
+    {
+      "text": "Report contains accessibility section (Section A / 접근성)",
+      "passed": true,
+      "evidence": "HTML contains 'A. 접근성 (KWCAG2.2 33항목 + 시맨틱 HTML 7항목)' section header with class header-a11y"
+    },
+    {
+      "text": "Report contains SEO & Web Performance section (Section B)",
+      "passed": true,
+      "evidence": "HTML contains 'B. SEO & Web Performance (Technical SEO 11항목 + Page Experience 18항목)' section header"
+    },
+    {
+      "text": "All 33 KWCAG2.2 items are evaluated (none skipped)",
+      "passed": true,
+      "evidence": "All items A-01 through A-33 are present in both HTML and CSV, each with a result (pass/fail/partial/NA/unknown)"
+    },
+    {
+      "text": "All SEO items (SEO-01 through SEO-11) are evaluated",
+      "passed": true,
+      "evidence": "SEO-01 through SEO-11 all present in HTML table and CSV rows 42-52"
+    },
+    {
+      "text": "All WP items (WP-01 through WP-18) are evaluated",
+      "passed": true,
+      "evidence": "WP-01 through WP-18 all present in HTML table and CSV rows 53-70"
+    },
+    {
+      "text": "Failed items include specific issue descriptions with file/line references",
+      "passed": true,
+      "evidence": "Failed items reference specific locations, e.g. A-17: 'dashboard.tsx:23-39', A-23: 'dashboard.tsx:29-36', A-32: 'dashboard.tsx:45-47', WP-04: 'dashboard.tsx:50', WP-09: 'dashboard.tsx:12-13'"
+    },
+    {
+      "text": "Fix guide section exists with concrete code-level recommendations",
+      "passed": true,
+      "evidence": "HTML contains '수정 가이드' section with 8 fix-items (A-17, A-23, A-32, WP-04, WP-05, WP-09, WP-12, WP-18), each with code snippets showing exact fixes"
+    },
+    {
+      "text": "Report is written in Korean",
+      "passed": true,
+      "evidence": "HTML lang='ko', title '웹 품질 종합 감사 리포트', all item names and descriptions in Korean (e.g. '적절한 대체 텍스트', '자막 제공', '반복 영역 건너뛰기')"
+    },
+    {
+      "text": "Accessibility findings include specific KWCAG item IDs and line references",
+      "passed": true,
+      "evidence": "Findings use KWCAG item IDs (A-01 through A-33) with line references like 'dashboard.tsx:50', 'dashboard.tsx:29-36', 'dashboard.tsx:45-47', 'dashboard.tsx:23-39'"
+    },
+    {
+      "text": "Performance findings include code-level analysis (layout thrashing, lazy loading, etc.)",
+      "passed": true,
+      "evidence": "WP-09 identifies layout thrashing: 'offsetHeight 읽기 후 즉시 style.minHeight 쓰기, 이중 reflow 발생' at dashboard.tsx:12-13. WP-05 flags missing loading='lazy' at dashboard.tsx:50. WP-12 identifies LCP delay from 'useEffect + setTimeout(500ms)' at dashboard.tsx:17-19. WP-18 identifies CLS risk from dynamic content insertion."
+    }
+  ],
+  "summary": {
+    "passed": 12,
+    "failed": 0,
+    "total": 12,
+    "pass_rate": 1.0
+  }
+}

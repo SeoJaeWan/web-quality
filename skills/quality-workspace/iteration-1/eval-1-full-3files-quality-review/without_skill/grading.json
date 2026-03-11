@@ -1,0 +1,60 @@
+{
+  "expectations": [
+    {
+      "text": "HTML report file (report.html) was generated",
+      "passed": true,
+      "evidence": "report.html exists with 255 lines of valid HTML containing a complete quality review report."
+    },
+    {
+      "text": "CSV report file (report.csv) was generated",
+      "passed": true,
+      "evidence": "report.csv exists with 23 lines (header + 22 data rows) in proper CSV format."
+    },
+    {
+      "text": "Report contains accessibility section (Section A / 접근성)",
+      "passed": false,
+      "evidence": "No 'Section A' or '접근성' heading exists. Accessibility issues appear as a category tag within file-based sections, not as a dedicated structured section."
+    },
+    {
+      "text": "Report contains SEO & Web Performance section (Section B)",
+      "passed": false,
+      "evidence": "No 'Section B' heading exists. SEO and Performance appear as category tags within file-based sections, not as a dedicated structured section."
+    },
+    {
+      "text": "All 33 KWCAG2.2 items are evaluated (none skipped)",
+      "passed": false,
+      "evidence": "No KWCAG2.2 checklist items are referenced. The report lists only 22 ad-hoc issues across Accessibility, SEO, Performance, Security, and Code Quality categories. No systematic evaluation of all 33 KWCAG items."
+    },
+    {
+      "text": "All SEO items (SEO-01 through SEO-11) are evaluated",
+      "passed": false,
+      "evidence": "No SEO-01 through SEO-11 identifiers appear anywhere in the report. Only 2 SEO-related issues are listed without standardized item IDs."
+    },
+    {
+      "text": "All WP items (WP-01 through WP-18) are evaluated",
+      "passed": false,
+      "evidence": "No WP-01 through WP-18 identifiers appear anywhere in the report. Performance issues are listed without standardized item IDs."
+    },
+    {
+      "text": "Failed items include specific issue descriptions with file/line references",
+      "passed": true,
+      "evidence": "All 22 issues include file path (e.g., 'pages/index.html'), line numbers (e.g., '37-44'), specific issue descriptions, and recommendations with code examples."
+    },
+    {
+      "text": "Fix guide section exists with concrete code-level recommendations",
+      "passed": false,
+      "evidence": "No dedicated 'Fix guide' section exists. Each issue row has a 'Recommendation' column with code-level suggestions, but these are inline per-issue rather than a separate consolidated fix guide section."
+    },
+    {
+      "text": "Report is written in Korean",
+      "passed": false,
+      "evidence": "The entire report is written in English. The HTML lang attribute is 'en', the title is 'Web Quality Review Report', and all issue descriptions and recommendations are in English."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 7,
+    "total": 10,
+    "pass_rate": 0.30
+  }
+}

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quality Review Report - dashboard.tsx</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card-bg: #fff;
+    --border: #dee2e6;
+    --text: #212529;
+    --text-muted: #6c757d;
+    --high: #dc3545;
+    --high-bg: #f8d7da;
+    --medium: #fd7e14;
+    --medium-bg: #fff3cd;
+    --low: #0d6efd;
+    --low-bg: #cfe2ff;
+    --a11y: #6f42c1;
+    --perf: #198754;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem; }
+  .container { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 1.75rem; margin-bottom: 0.25rem; }
+  .subtitle { color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; }
+  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .summary-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; text-align: center; }
+  .summary-card .number { font-size: 2rem; font-weight: 700; }
+  .summary-card .label { font-size: 0.85rem; color: var(--text-muted); }
+  .severity-high .number { color: var(--high); }
+  .severity-medium .number { color: var(--medium); }
+  .severity-low .number { color: var(--low); }
+
+  .section-title { font-size: 1.3rem; margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+  .section-title.a11y { border-color: var(--a11y); color: var(--a11y); }
+  .section-title.perf { border-color: var(--perf); color: var(--perf); }
+
+  .issue { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; margin-bottom: 1rem; border-left: 4px solid var(--border); }
+  .issue.high { border-left-color: var(--high); }
+  .issue.medium { border-left-color: var(--medium); }
+  .issue.low { border-left-color: var(--low); }
+  .issue-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
+  .issue-id { font-weight: 700; font-size: 0.9rem; }
+  .badge { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+  .badge-high { background: var(--high-bg); color: var(--high); }
+  .badge-medium { background: var(--medium-bg); color: var(--medium); }
+  .badge-low { background: var(--low-bg); color: var(--low); }
+  .issue-meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+  .issue-desc { margin-bottom: 0.75rem; }
+  .issue-fix { background: #e8f5e9; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+  .issue-fix strong { color: var(--perf); }
+  code { background: #e9ecef; padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.88em; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Web Quality Review Report</h1>
+  <p class="subtitle">File: <code>dashboard.tsx</code> &mdash; Reviewed: 2026-03-11</p>
+
+  <div class="summary">
+    <div class="summary-card">
+      <div class="number">13</div>
+      <div class="label">Total Issues</div>
+    </div>
+    <div class="summary-card severity-high">
+      <div class="number">4</div>
+      <div class="label">High Severity</div>
+    </div>
+    <div class="summary-card severity-medium">
+      <div class="number">5</div>
+      <div class="label">Medium Severity</div>
+    </div>
+    <div class="summary-card severity-low">
+      <div class="number">4</div>
+      <div class="label">Low Severity</div>
+    </div>
+  </div>
+
+  <!-- Accessibility Section -->
+  <h2 class="section-title a11y">Accessibility Issues (6)</h2>
+
+  <div class="issue high">
+    <div class="issue-header">
+      <span class="issue-id">A1 &mdash; Icon Button Missing Accessible Name</span>
+      <span class="badge badge-high">High</span>
+    </div>
+    <div class="issue-meta">Line 29-31 &middot; Rule: <code>aria-label-missing</code></div>
+    <div class="issue-desc">
+      The first icon button contains only an <code>&lt;svg&gt;</code> element with no text content or <code>aria-label</code>. Screen readers will announce this as an empty or unlabeled button, making it impossible for assistive technology users to understand the button's purpose.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Add <code>aria-label</code> describing the action, e.g. <code>&lt;button aria-label="Toggle grid view"&gt;</code>. Mark the SVG with <code>aria-hidden="true"</code> since the label is on the button.
+    </div>
+  </div>
+
+  <div class="issue high">
+    <div class="issue-header">
+      <span class="issue-id">A2 &mdash; Second Icon Button Missing Accessible Name</span>
+      <span class="badge badge-high">High</span>
+    </div>
+    <div class="issue-meta">Line 34-36 &middot; Rule: <code>aria-label-missing</code></div>
+    <div class="issue-desc">
+      Same issue as A1. The second <code>&lt;button&gt;</code> wraps an SVG without any accessible name. This violates WCAG 2.1 SC 4.1.2 (Name, Role, Value) and SC 1.1.1 (Non-text Content).
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Add <code>aria-label</code> to the button and <code>aria-hidden="true"</code> to the SVG.
+    </div>
+  </div>
+
+  <div class="issue medium">
+    <div class="issue-header">
+      <span class="issue-id">A3 &mdash; SVG Missing Role or aria-hidden (First Icon)</span>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="issue-meta">Line 30 &middot; Rule: <code>svg-missing-role</code></div>
+    <div class="issue-desc">
+      The SVG element lacks <code>role="img"</code> or <code>aria-hidden="true"</code>. Without these, some screen readers may attempt to traverse the SVG's internal elements (like <code>&lt;circle&gt;</code>), producing confusing output.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> For decorative SVGs, add <code>aria-hidden="true"</code>. For meaningful SVGs, add <code>role="img"</code> and a <code>&lt;title&gt;</code> element inside the SVG.
+    </div>
+  </div>
+
+  <div class="issue medium">
+    <div class="issue-header">
+      <span class="issue-id">A4 &mdash; SVG Missing Role or aria-hidden (Second Icon)</span>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="issue-meta">Line 35 &middot; Rule: <code>svg-missing-role</code></div>
+    <div class="issue-desc">
+      Same issue as A3, affecting the second SVG icon.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Add <code>aria-hidden="true"</code> to the SVG element.
+    </div>
+  </div>
+
+  <div class="issue low">
+    <div class="issue-header">
+      <span class="issue-id">A5 &mdash; Navigation Landmark Missing Label</span>
+      <span class="badge badge-low">Low</span>
+    </div>
+    <div class="issue-meta">Line 24 &middot; Rule: <code>nav-missing-label</code></div>
+    <div class="issue-desc">
+      The <code>&lt;nav&gt;</code> element lacks an <code>aria-label</code> or <code>aria-labelledby</code> attribute. When a page has multiple navigation landmarks, users of assistive technology cannot distinguish between them.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Add <code>aria-label="Main navigation"</code> or use <code>aria-labelledby</code> pointing to the heading.
+    </div>
+  </div>
+
+  <div class="issue low">
+    <div class="issue-header">
+      <span class="issue-id">A6 &mdash; Image Missing Explicit Dimensions</span>
+      <span class="badge badge-low">Low</span>
+    </div>
+    <div class="issue-meta">Line 50 &middot; Rule: <code>img-dimensions-missing</code></div>
+    <div class="issue-desc">
+      The <code>&lt;img&gt;</code> tag has an <code>alt</code> attribute (good), but lacks explicit <code>width</code> and <code>height</code>. While primarily a performance concern, missing dimensions also affect assistive tech users who may experience disorienting layout shifts.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Add <code>width</code> and <code>height</code> attributes to the <code>&lt;img&gt;</code> element.
+    </div>
+  </div>
+
+  <!-- Performance Section -->
+  <h2 class="section-title perf">Performance Issues (7)</h2>
+
+  <div class="issue high">
+    <div class="issue-header">
+      <span class="issue-id">P1 &mdash; Layout Thrashing in useEffect</span>
+      <span class="badge badge-high">High</span>
+    </div>
+    <div class="issue-meta">Line 12-13 &middot; Rule: <code>layout-thrashing</code></div>
+    <div class="issue-desc">
+      The code reads <code>offsetHeight</code> (forcing the browser to calculate layout) and then immediately writes to <code>style.minHeight</code> (invalidating that layout). This is a classic forced synchronous reflow pattern. In a more complex component or in a loop, this can severely degrade frame rate and responsiveness.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Separate reads and writes. Use <code>requestAnimationFrame</code> to batch the write, or use <code>ResizeObserver</code> to react to size changes without forcing reflow. If the measurement must happen before paint, use <code>useLayoutEffect</code> instead.
+    </div>
+  </div>
+
+  <div class="issue high">
+    <div class="issue-header">
+      <span class="issue-id">P2 &mdash; Cumulative Layout Shift (CLS) from Delayed Content</span>
+      <span class="badge badge-high">High</span>
+    </div>
+    <div class="issue-meta">Line 17-19 &middot; Rule: <code>cls-risk</code></div>
+    <div class="issue-desc">
+      A <code>setTimeout</code> injects new list items after 500ms without any space reservation. When the items render, all content below shifts downward. This directly harms the CLS Core Web Vital metric and creates a jarring user experience.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Reserve space with a skeleton placeholder or <code>min-height</code> on the container. Better yet, load data before initial render (SSR/SSG) or show a loading state with fixed dimensions.
+    </div>
+  </div>
+
+  <div class="issue medium">
+    <div class="issue-header">
+      <span class="issue-id">P3 &mdash; Image Missing <code>loading="lazy"</code></span>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="issue-meta">Line 50 &middot; Rule: <code>img-lazy-loading</code></div>
+    <div class="issue-desc">
+      The image at the bottom of the page (below the fold) is loaded eagerly by default. This wastes bandwidth on initial page load and can delay Largest Contentful Paint (LCP) for above-the-fold content by competing for network resources.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Add <code>loading="lazy"</code> to the image: <code>&lt;img loading="lazy" src="..." alt="..." /&gt;</code>
+    </div>
+  </div>
+
+  <div class="issue medium">
+    <div class="issue-header">
+      <span class="issue-id">P4 &mdash; Image Missing Width/Height (CLS Contributor)</span>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="issue-meta">Line 50 &middot; Rule: <code>img-no-dimensions</code></div>
+    <div class="issue-desc">
+      Without explicit <code>width</code> and <code>height</code>, the browser cannot calculate the image's aspect ratio before it loads. Once loaded, the image expands and pushes content below it, contributing to CLS.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Add <code>width</code> and <code>height</code> attributes matching the image's intrinsic dimensions, or use CSS <code>aspect-ratio</code>.
+    </div>
+  </div>
+
+  <div class="issue medium">
+    <div class="issue-header">
+      <span class="issue-id">P7 &mdash; useEffect Instead of useLayoutEffect for DOM Measurement</span>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="issue-meta">Line 9-20 &middot; Rule: <code>useEffect-side-effects</code></div>
+    <div class="issue-desc">
+      <code>useEffect</code> runs after the browser paints. Since lines 12-13 measure and mutate the DOM, the user will see the initial render, then a flash/shift when the <code>minHeight</code> is applied. This creates a visible layout jump.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Use <code>useLayoutEffect</code> for DOM measurements that affect visual layout. It fires synchronously after DOM mutations but before the browser paints, preventing the flash.
+    </div>
+  </div>
+
+  <div class="issue low">
+    <div class="issue-header">
+      <span class="issue-id">P5 &mdash; Missing Key Prop on List Items</span>
+      <span class="badge badge-low">Low</span>
+    </div>
+    <div class="issue-meta">Line 45-47 &middot; Rule: <code>missing-key-prop</code></div>
+    <div class="issue-desc">
+      The <code>.map()</code> call renders <code>&lt;div&gt;</code> elements without a <code>key</code> prop. React will fall back to index-based reconciliation, which can cause unnecessary DOM mutations and re-renders when items change, reducing rendering performance.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Add a stable, unique key: <code>items.map((item) =&gt; &lt;div key={item} ...&gt;)</code>. If items may not be unique, use a unique identifier from your data.
+    </div>
+  </div>
+
+  <div class="issue low">
+    <div class="issue-header">
+      <span class="issue-id">P6 &mdash; Image Lacks Responsive srcSet</span>
+      <span class="badge badge-low">Low</span>
+    </div>
+    <div class="issue-meta">Line 50 &middot; Rule: <code>img-no-srcset</code></div>
+    <div class="issue-desc">
+      The image uses a single <code>src</code> with no <code>srcSet</code> or <code>&lt;picture&gt;</code> element. On high-DPI displays, this may serve a blurry image; on mobile, it may serve an unnecessarily large image, wasting bandwidth.
+    </div>
+    <div class="issue-fix">
+      <strong>Fix:</strong> Use <code>srcSet</code> and <code>sizes</code> attributes, or wrap in a <code>&lt;picture&gt;</code> element to serve appropriately sized images per viewport.
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

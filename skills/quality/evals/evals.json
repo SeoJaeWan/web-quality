@@ -6,15 +6,17 @@
       "prompt": "변경된 코드에 대해 종합 웹 품질 검토를 실행해줘",
       "expected_output": "2개 영역(접근성 + SEO&웹성능) 순차 실행, 통합 HTML+CSV 리포트 생성",
       "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/pages/dashboard.tsx", "../../features/web-sample/components/Card.tsx"],
-      "expectations": [
-        "Reads skills/quality/SKILL.md via Read tool",
-        "Delegates to accessibility skill (KWCAG2.2 33항목 + 시맨틱 HTML)",
-        "Delegates to seo skill (SEO-01~11 + WP-01~18)",
-        "Analyzes actual target files in both areas",
-        "Identifies specific issues per area with item IDs",
-        "Generates unified HTML report in reports/web-quality/YYYYMMDD-HHmm/report.html",
-        "Generates unified CSV report in reports/web-quality/YYYYMMDD-HHmm/report.csv",
-        "Report contains both Section A (접근성) and Section B (SEO & Web Performance)"
+      "assertions": [
+        {"id": "html_report_exists", "text": "HTML report file (report.html) was generated"},
+        {"id": "csv_report_exists", "text": "CSV report file (report.csv) was generated"},
+        {"id": "a11y_section_present", "text": "Report contains accessibility section (Section A / 접근성)"},
+        {"id": "seo_section_present", "text": "Report contains SEO & Web Performance section (Section B)"},
+        {"id": "kwcag_coverage", "text": "All 33 KWCAG2.2 items are evaluated (none skipped)"},
+        {"id": "seo_item_coverage", "text": "All SEO items (SEO-01 through SEO-11) are evaluated"},
+        {"id": "wp_item_coverage", "text": "All WP items (WP-01 through WP-18) are evaluated"},
+        {"id": "fail_items_have_details", "text": "Failed items include specific issue descriptions with file/line references"},
+        {"id": "fix_guide_present", "text": "Fix guide section exists with concrete code-level recommendations"},
+        {"id": "korean_language", "text": "Report is written in Korean"}
       ]
     },
     {
@@ -22,14 +24,18 @@
       "prompt": "index.html이랑 Card.tsx만 대상으로 웹 품질 전체 감사해줘",
       "expected_output": "지정된 2개 파일에 대해 접근성 + SEO&웹성능 전체 검토, 통합 리포트 생성",
       "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/components/Card.tsx"],
-      "expectations": [
-        "Reads skills/quality/SKILL.md via Read tool",
-        "Uses only the specified files (index.html, Card.tsx) as review targets",
-        "Does not run git diff to find additional files",
-        "Delegates to accessibility skill with the specified file set",
-        "Delegates to seo skill with the specified file set",
-        "Generates unified HTML + CSV report combining both areas",
-        "Report covers KWCAG2.2 items, semantic HTML, SEO-01~11, WP-01~18"
+      "assertions": [
+        {"id": "html_report_exists", "text": "HTML report file (report.html) was generated"},
+        {"id": "csv_report_exists", "text": "CSV report file (report.csv) was generated"},
+        {"id": "a11y_section_present", "text": "Report contains accessibility section (Section A / 접근성)"},
+        {"id": "seo_section_present", "text": "Report contains SEO & Web Performance section (Section B)"},
+        {"id": "kwcag_coverage", "text": "All 33 KWCAG2.2 items are evaluated (none skipped)"},
+        {"id": "seo_item_coverage", "text": "All SEO items (SEO-01 through SEO-11) are evaluated"},
+        {"id": "wp_item_coverage", "text": "All WP items (WP-01 through WP-18) are evaluated"},
+        {"id": "fail_items_have_details", "text": "Failed items include specific issue descriptions with file/line references"},
+        {"id": "fix_guide_present", "text": "Fix guide section exists with concrete code-level recommendations"},
+        {"id": "korean_language", "text": "Report is written in Korean"},
+        {"id": "correct_file_scope", "text": "Only index.html and Card.tsx are reviewed (no dashboard.tsx)"}
       ]
     },
     {
@@ -37,14 +43,19 @@
       "prompt": "dashboard.tsx 하나만 종합 품질 검토해줘. 접근성이랑 성능 이슈 위주로 자세히 봐줘",
       "expected_output": "단일 파일 대상 접근성 + SEO&웹성능 검토, 접근성/성능 이슈 상세 분석",
       "files": ["../../features/web-sample/pages/dashboard.tsx"],
-      "expectations": [
-        "Reads skills/quality/SKILL.md via Read tool",
-        "Delegates to accessibility skill for dashboard.tsx",
-        "Delegates to seo skill for dashboard.tsx",
-        "Accessibility findings include specific KWCAG item IDs and line references",
-        "WP findings include image optimization (WP-04~06) and JS performance (WP-07~09) checks",
-        "Generates unified HTML + CSV report",
-        "Fix guide section contains concrete code-level recommendations"
+      "assertions": [
+        {"id": "html_report_exists", "text": "HTML report file (report.html) was generated"},
+        {"id": "csv_report_exists", "text": "CSV report file (report.csv) was generated"},
+        {"id": "a11y_section_present", "text": "Report contains accessibility section (Section A / 접근성)"},
+        {"id": "seo_section_present", "text": "Report contains SEO & Web Performance section (Section B)"},
+        {"id": "kwcag_coverage", "text": "All 33 KWCAG2.2 items are evaluated (none skipped)"},
+        {"id": "seo_item_coverage", "text": "All SEO items (SEO-01 through SEO-11) are evaluated"},
+        {"id": "wp_item_coverage", "text": "All WP items (WP-01 through WP-18) are evaluated"},
+        {"id": "fail_items_have_details", "text": "Failed items include specific issue descriptions with file/line references"},
+        {"id": "fix_guide_present", "text": "Fix guide section exists with concrete code-level recommendations"},
+        {"id": "korean_language", "text": "Report is written in Korean"},
+        {"id": "a11y_detail_depth", "text": "Accessibility findings include specific KWCAG item IDs and line references"},
+        {"id": "performance_detail_depth", "text": "Performance findings include code-level analysis (layout thrashing, lazy loading, etc.)"}
       ]
     }
   ]
