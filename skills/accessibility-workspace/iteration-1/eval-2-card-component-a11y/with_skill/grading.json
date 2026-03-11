@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "card-component-a11y",
+  "configuration": "with_skill",
+  "expectations": [
+    {"text": "All 33 KWCAG2.2 items are evaluated", "passed": true, "evidence": "CSV contains all 33 KWCAG items + 7 semantic HTML items. Each item has a result classification."},
+    {"text": "Detected div onClick without keyboard accessibility", "passed": true, "evidence": "Items 10/11: 'div onClick에 키보드 이벤트 핸들러(onKeyDown), tabIndex, role 미제공' and '클릭 가능한 div에 tabIndex 없어 키보드 초점 불가'"},
+    {"text": "Detected duplicate id='card-item' when rendered in a list", "passed": true, "evidence": "Item 32: 'Card.tsx:27 — id=\"card-item\" 하드코딩, 리스트 렌더링 시 동일 id 중복'"},
+    {"text": "Each issue is mapped to a specific KWCAG item number", "passed": true, "evidence": "All issues mapped to numbered items (1-33) and semantic items (시맨틱-1 through 시맨틱-7)"},
+    {"text": "Fix recommendations are provided for each found issue", "passed": true, "evidence": "Every ❌ and ⚠️ item includes specific fix guide with code examples"}
+  ]
+}

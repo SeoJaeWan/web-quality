@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "semantic-html-review",
+  "prompt": "index.html 페이지의 시맨틱 HTML 준수 여부와 접근성을 검토해줘",
+  "assertions": [
+    {"id": "landmark-absence-detected", "text": "Detected absence of landmark elements (header/nav/main/footer) in index.html", "type": "content_check"},
+    {"id": "img-alt-missing-detected", "text": "Detected missing alt attribute on logo img (line 30)", "type": "content_check"},
+    {"id": "lang-attribute-checked", "text": "Checked html lang attribute (noted lang='en' for Korean page or verified its presence)", "type": "content_check"},
+    {"id": "semantic-html-section-present", "text": "Report includes a dedicated semantic HTML review section", "type": "content_check"},
+    {"id": "result-classification-used", "text": "Uses the standard classification system (✅/❌/⚠️/➖/🔵)", "type": "content_check"}
+  ]
+}

@@ -1,0 +1,13 @@
+ID,카테고리,이슈,심각도,라인,KWCAG 2.2 항목,설명,개선 방안
+S-01,시맨틱 HTML,시맨틱 랜드마크 요소 미사용,주요(Major),20-45,"4.1.2, 2.4.1","header/nav/main/footer 등 시맨틱 랜드마크 요소가 전혀 사용되지 않아 스크린 리더 사용자가 페이지 구조를 파악하기 어려움",콘텐츠를 header/nav/main/footer 등으로 구조화
+S-02,시맨틱 HTML,네비게이션 영역 미구분,주요(Major),24,"2.4.1, 1.3.1","About Us 링크가 nav 요소 없이 단독 존재하여 보조 기술에서 탐색 영역으로 인식 불가","<nav aria-label=""메인 네비게이션""> 요소로 링크를 감싸기"
+S-03,시맨틱 HTML,콘텐츠 섹션 미구분,경미(Minor),21-35,1.3.1,"다양한 콘텐츠가 섹션 구분 없이 나열되어 있어 논리적 구조 파악이 어려움",관련 콘텐츠를 section으로 그룹화하고 적절한 헤딩 부여
+S-04,시맨틱 HTML,문서 언어와 실제 콘텐츠 불일치 가능성,정보(Info),2,3.1.1,"html lang=""en""으로 선언되어 있으나 실제 콘텐츠 언어와 불일치할 수 있음",실제 콘텐츠 언어에 맞게 lang 속성 설정
+A-01,접근성,이미지 alt 속성 누락,심각(Critical),30,1.1.1,"logo.png 이미지에 alt 속성이 없어 스크린 리더 사용자가 이미지 내용을 알 수 없음","alt=""회사 로고"" 등 대체 텍스트 추가. 장식용이면 alt="""" 사용"
+A-02,접근성,건너뛰기 링크(Skip Navigation) 미제공,심각(Critical),20,2.4.1,키보드 사용자가 반복 영역을 건너뛰고 주요 콘텐츠로 이동할 수 있는 링크 없음,"body 바로 뒤에 <a href=""#main-content"">본문 바로가기</a> 추가"
+A-03,접근성,링크 텍스트 맥락 부족,경미(Minor),35,2.4.4,"latest deals 링크가 독립적으로 읽었을 때 목적이 불명확할 수 있음",링크 텍스트를 구체적으로 변경하거나 aria-label 활용
+A-04,접근성,innerHTML을 통한 XSS 취약점 및 접근성 문제,심각(Critical),37-44,4.1.2,"innerHTML로 사용자 입력을 직접 삽입하여 XSS 취약점 존재. 동적 콘텐츠가 스크린 리더에 전달 안 될 수 있음","textContent 사용 및 aria-live=""polite"" 영역 활용"
+A-05,접근성,meta description 누락,주요(Major),7,-,"meta description이 없어 검색 엔진과 보조 기술이 페이지 내용을 요약할 수 없음","<meta name=""description"" content=""...""> 추가"
+A-06,접근성,이미지 width/height 누락 (CLS 위험),경미(Minor),33,-,"promo.png에 width/height 속성이 없어 레이아웃 시프트(CLS) 발생 가능. 인지 장애 사용자에게 혼란 유발 가능",이미지에 width와 height 속성 명시 또는 CSS aspect-ratio 사용
+A-07,접근성,font-display 미설정,주요(Major),13-17,-,"@font-face에 font-display: swap이 없어 폰트 로딩 중 텍스트가 보이지 않을 수 있음(FOIT)",font-display: swap 추가
+A-08,접근성,페이지 제목 구체성 부족,정보(Info),6,2.4.2,"Sample Page라는 제목이 페이지 목적을 구체적으로 설명하지 못함",페이지의 실제 목적을 반영하는 구체적인 제목 사용
