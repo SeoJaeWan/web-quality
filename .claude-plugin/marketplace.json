@@ -1,5 +1,5 @@
 {
-  "name": "web-quality-reviewer",
+  "name": "web-quality",
   "owner": {
     "name": "seojaewan"
   },
@@ -9,7 +9,7 @@
   },
   "plugins": [
     {
-      "name": "web-quality-reviewer",
+      "name": "web-quality",
       "source": "./",
       "description": "AI-assisted web quality audit skills covering KWCAG 2.2 accessibility (33+7 items), Technical SEO (11 items), and Core Web Vitals (18 items) with integrated HTML/CSV reporting",
       "version": "0.1.0",
@@ -20,9 +20,9 @@
       "keywords": ["accessibility", "seo", "web-performance", "kwcag", "core-web-vitals", "audit"],
       "category": "quality",
       "strict": false,
-      "agents": ["./agents/web-quality-reviewer.md"],
+      "agents": ["./agents/web-quality.md"],
       "skills": [
-        "./skills/web-quality-audit",
+        "./skills/quality",
         "./skills/accessibility",
         "./skills/seo"
       ]

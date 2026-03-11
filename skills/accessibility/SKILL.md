@@ -1,6 +1,6 @@
 ---
 name: accessibility
-description: Web accessibility/web standards review. Reviews changed code against KWCAG2.2 and generates HTML + CSV reports. web-quality-reviewer를 통해 실행됩니다. 직접 트리거 불가.
+description: Web accessibility/web standards review. Reviews changed code against KWCAG2.2 and generates HTML + CSV reports. web-quality를 통해 실행됩니다. 직접 트리거 불가.
 model: opus
 ---
 
@@ -30,7 +30,7 @@ references/kwcag22.md
 
 ## Step 1. Review Scope
 
-이 스킬이 web-quality-audit 오케스트레이터를 통해 실행된 경우,
+이 스킬이 quality 오케스트레이터를 통해 실행된 경우,
 전달받은 파일 목록을 그대로 사용합니다. Step 2로 진행하세요.
 
 단독 실행 시에만 아래를 수행:
@@ -279,7 +279,7 @@ Mark the verdict method column as `Playwright` in the report.
 
 Save the same review results in **2 formats**.
 
-> **Note:** 이 스킬이 web-quality-audit 오케스트레이터를 통해 실행된 경우,
+> **Note:** 이 스킬이 quality 오케스트레이터를 통해 실행된 경우,
 > 이 단계는 건너뜁니다. 결과 데이터만 오케스트레이터에 전달합니다.
 > 아래는 단독 실행 시에만 사용됩니다.
 

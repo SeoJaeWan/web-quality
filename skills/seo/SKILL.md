@@ -1,6 +1,6 @@
 ---
 name: seo
-description: SEO + Web Performance review covering Technical SEO (11 items) and Page Experience/Core Web Vitals (18 items). web-quality-reviewer를 통해 실행됩니다. 직접 트리거 불가.
+description: SEO + Web Performance review covering Technical SEO (11 items) and Page Experience/Core Web Vitals (18 items). web-quality를 통해 실행됩니다. 직접 트리거 불가.
 model: sonnet
 ---
 
@@ -30,7 +30,7 @@ Core Web Vitals (LCP, INP, CLS) patterns, Framework quick fixes.
 
 ## Step 1. Review Scope
 
-이 스킬이 web-quality-audit 오케스트레이터를 통해 실행된 경우,
+이 스킬이 quality 오케스트레이터를 통해 실행된 경우,
 전달받은 파일 목록을 그대로 사용합니다. Step 2로 진행하세요.
 
 단독 실행 시에만 아래를 수행:

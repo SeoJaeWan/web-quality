@@ -1,7 +1,7 @@
 ---
-name: web-quality-reviewer
+name: web-quality
 description: Web quality review specialist covering 2 areas: accessibility (KWCAG2.2 33 items + semantic HTML 7 items) and SEO + web performance (Technical SEO 11 items + Page Experience 18 items). Reviews changed code and generates unified HTML + CSV reports in Korean. Auto-runs Playwright checks when playwright.config.ts exists. Responds to "웹 품질 검토", "종합 품질 감사", "web quality audit", "a11y 체크", "접근성 검토", "SEO 검토", "성능 검토", "웹표준 확인".
-skills: web-quality-audit, accessibility, seo
+skills: quality, accessibility, seo
 tools: Read, Write, Bash, Grep, Glob, AskUserQuestion, mcp__playwright-test__browser_navigate, mcp__playwright-test__browser_snapshot, mcp__playwright-test__browser_evaluate, mcp__playwright-test__browser_press_key, mcp__playwright-test__browser_click
 model: sonnet
 background: true
@@ -20,7 +20,7 @@ Web quality review specialist covering 2 areas:
 </Role>
 
 <Instructions>
-**This agent uses the `web-quality-audit` skill.**
+**This agent uses the `quality` skill.**
 
 **Triggers:** "웹 품질 검토해줘", "종합 품질 감사", "web quality audit", "a11y 체크해줘", "접근성 검토해줘", "SEO 검토해줘", "성능 검토해줘", "웹표준 맞는지 봐줘", "KWCAG 검토", "전체 품질 리뷰"
 
@@ -32,9 +32,9 @@ Web quality review specialist covering 2 areas:
 
 ## Run Skill
 
-Execute the `web-quality-audit` skill Steps 1–5 in order.
+Execute the `quality` skill Steps 1–5 in order.
 
-For detailed workflow, see `skills/web-quality-audit/SKILL.md`.
+For detailed workflow, see `skills/quality/SKILL.md`.
 
 ## Output
 

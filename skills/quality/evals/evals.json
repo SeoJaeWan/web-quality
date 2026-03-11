@@ -1,5 +1,5 @@
 {
-  "skill_name": "web-quality-audit",
+  "skill_name": "quality",
   "evals": [
     {
       "id": 1,
@@ -7,7 +7,7 @@
       "expected_output": "2개 영역(접근성 + SEO&웹성능) 순차 실행, 통합 HTML+CSV 리포트 생성",
       "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/pages/dashboard.tsx", "../../features/web-sample/components/Card.tsx"],
       "expectations": [
-        "Reads skills/web-quality-audit/SKILL.md via Read tool",
+        "Reads skills/quality/SKILL.md via Read tool",
         "Delegates to accessibility skill (KWCAG2.2 33항목 + 시맨틱 HTML)",
         "Delegates to seo skill (SEO-01~11 + WP-01~18)",
         "Analyzes actual target files in both areas",
@@ -23,7 +23,7 @@
       "expected_output": "지정된 2개 파일에 대해 접근성 + SEO&웹성능 전체 검토, 통합 리포트 생성",
       "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/components/Card.tsx"],
       "expectations": [
-        "Reads skills/web-quality-audit/SKILL.md via Read tool",
+        "Reads skills/quality/SKILL.md via Read tool",
         "Uses only the specified files (index.html, Card.tsx) as review targets",
         "Does not run git diff to find additional files",
         "Delegates to accessibility skill with the specified file set",
@@ -38,7 +38,7 @@
       "expected_output": "단일 파일 대상 접근성 + SEO&웹성능 검토, 접근성/성능 이슈 상세 분석",
       "files": ["../../features/web-sample/pages/dashboard.tsx"],
       "expectations": [
-        "Reads skills/web-quality-audit/SKILL.md via Read tool",
+        "Reads skills/quality/SKILL.md via Read tool",
         "Delegates to accessibility skill for dashboard.tsx",
         "Delegates to seo skill for dashboard.tsx",
         "Accessibility findings include specific KWCAG item IDs and line references",

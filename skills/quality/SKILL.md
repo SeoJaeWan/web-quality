@@ -1,9 +1,9 @@
 ---
-name: web-quality-audit
+name: quality
 description: Comprehensive web quality review across 2 areas: accessibility (KWCAG2.2 + semantic HTML, 40 items) and SEO & web performance (Technical SEO + Page Experience, 29 items). Generates unified HTML + CSV reports. Use when asked to "web quality audit", "종합 품질 검토", "웹 품질 감사", "전체 품질 리뷰", "접근성 검토", "a11y 체크", "웹표준 확인", "SEO 검토", "성능 검토".
 model: sonnet
 context: fork
-agent: web-quality-reviewer
+agent: web-quality
 ---
 
 <Skill_Guide>
@@ -23,7 +23,7 @@ delegates to the seo skill.
 1. accessibility 스킬 실행
 2. seo 스킬 실행
 
-진입점: 항상 web-quality-reviewer 에이전트를 통해 실행
+진입점: 항상 web-quality 에이전트를 통해 실행
 
 ---
 

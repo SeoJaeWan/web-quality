@@ -1,4 +1,4 @@
-# web-quality-reviewer
+# web-quality
 
 AI agent + skill set for Claude Code — comprehensive web quality audit covering 2 areas in a single run.
 
@@ -12,7 +12,7 @@ Claude Code용 AI 에이전트 + 스킬 세트 — 2개 영역 웹 품질 감사
 
 ## 개요
 
-`web-quality-reviewer`는 Claude Code용 AI 에이전트 및 스킬 세트로, 한 번의 실행으로 웹 품질 종합 감사를 수행합니다. 접근성과 SEO & Web Performance 2개 영역을 커버하며, 한국어로 작성된 통합 HTML 리포트와 CSV 파일을 생성합니다.
+`web-quality`는 Claude Code용 AI 에이전트 및 스킬 세트로, 한 번의 실행으로 웹 품질 종합 감사를 수행합니다. 접근성과 SEO & Web Performance 2개 영역을 커버하며, 한국어로 작성된 통합 HTML 리포트와 CSV 파일을 생성합니다.
 
 프로젝트에 `playwright.config.ts`가 존재하면, 에이전트가 자동으로 Playwright 브라우저 검사를 실행하여 명도 대비, 키보드 내비게이션, 동적 ARIA 상태 변화 등 정적 코드 분석만으로는 신뢰할 수 없는 항목들을 자동 검증합니다.
 
@@ -77,9 +77,9 @@ cp -r skills/ your-project/.claude/skills/
 your-project/
 └── .claude/
     ├── agents/
-    │   └── web-quality-reviewer.md
+    │   └── web-quality.md
     └── skills/
-        ├── web-quality-audit/
+        ├── quality/
         │   ├── SKILL.md
         │   └── references/
         │       └── output-format.md
@@ -128,12 +128,12 @@ HTML 리포트 구성:
 ## 파일 구조
 
 ```
-web-quality-reviewer/
+web-quality/
 ├── README.md
 ├── agents/
-│   └── web-quality-reviewer.md          ← 에이전트 정의 (트리거, 도구, 모델)
+│   └── web-quality.md          ← 에이전트 정의 (트리거, 도구, 모델)
 ├── skills/
-│   ├── web-quality-audit/
+│   ├── quality/
 │   │   ├── SKILL.md                     ← 오케스트레이션 스킬 (2개 서브 스킬에 위임)
 │   │   └── references/
 │   │       └── output-format.md         ← 통합 HTML + CSV 리포트 템플릿
