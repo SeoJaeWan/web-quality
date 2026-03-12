@@ -47,41 +47,42 @@ git diff --name-only HEAD
 Detect whether Lighthouse CLI and Playwright MCP are available before delegating to sub-skills.
 Pass the detection results as environment context so each sub-skill skips redundant checks.
 
-### 1.5-1. Playwright Environment
+### 1.5-1. Determine Dev Server URL
+
+Find `playwright.config.ts` in the repository and extract the base URL:
 
 ```bash
-# ① Check playwright.config exists
-ls playwright.config.ts 2>/dev/null || ls playwright.config.js 2>/dev/null || echo "PW_CONFIG_NOT_FOUND"
-
-# ② Check Playwright CLI installation
-npx playwright --version 2>/dev/null || echo "PW_NOT_INSTALLED"
+# Find playwright.config.ts (may not be at repo root)
+find . -name "playwright.config.ts" -not -path "*/node_modules/*" 2>/dev/null | head -1
 ```
 
-### 1.5-2. Lighthouse CLI Environment
-
-```bash
-npx lighthouse --version 2>/dev/null || echo "LH_NOT_INSTALLED"
-```
-
-### 1.5-3. Determine Dev Server URL
-
-```bash
-# Extract baseURL from playwright.config.ts
-grep -E "baseURL|webServer" playwright.config.ts 2>/dev/null | head -5
-```
+If found, read it and extract `baseURL` and `webServer` settings.
 
 Resolution order:
 1. `baseURL` from `playwright.config.ts`
 2. `webServer.url` from `playwright.config.ts`
 3. Fallback: `http://localhost:3000`
 
-Verify server responds at the determined URL:
+Verify the server responds:
 
 ```bash
 curl -s --connect-timeout 5 "{baseURL}" -o /dev/null -w "%{http_code}"
 ```
 
-- No HTTP response → `DEV_SERVER_NOT_RUNNING`
+- HTTP 200 → `DEV_SERVER_RUNNING`
+- No response → `DEV_SERVER_NOT_RUNNING`
+
+### 1.5-2. Lighthouse CLI
+
+```bash
+npx lighthouse --version 2>/dev/null || echo "LH_NOT_INSTALLED"
+```
+
+### 1.5-3. Playwright MCP
+
+Check whether Playwright MCP tools are available in the current session
+by attempting a no-op call. If `mcp__playwright__browser_snapshot` or similar
+tools exist in the tool list, Playwright MCP is available.
 
 ### 1.5-4. Pass Environment Context
 
@@ -89,9 +90,10 @@ Pass the following to both accessibility and seo sub-skills:
 
 | Key | Value |
 | --- | --- |
-| `playwright_available` | `true` / `false` (config exists + CLI installed + server responds) |
-| `lighthouse_available` | `true` / `false` (CLI installed + server responds) |
 | `dev_server_url` | Determined URL or `null` |
+| `dev_server_running` | `true` / `false` (curl response) |
+| `lighthouse_available` | `true` / `false` (CLI installed + server responds) |
+| `playwright_available` | `true` / `false` (MCP tools exist + server responds) |
 | `unavailable_reason` | Specific reason when requirements not met |
 
 When requirements are not met: tool-dependent items fall back to static analysis only, verdict marked accordingly.

@@ -11,7 +11,8 @@
         {"id": "standard-codes-used", "text": "SEO-XX, WP-XX 형식의 표준 코드 사용"},
         {"id": "title-too-short-detected", "text": "title 태그가 너무 짧거나 일반적임을 지적 (TestApp)"},
         {"id": "reports-generated", "text": "report.csv와 report.html 모두 생성"},
-        {"id": "korean-language", "text": "리포트가 한국어로 작성됨"}
+        {"id": "korean-language", "text": "리포트가 한국어로 작성됨"},
+        {"id": "verdict-method-lighthouse-used", "text": "Lighthouse 매핑 항목(SEO-01,02,04,05,06,09,10,11 / WP-01,02,03,04,05,06,10,12,17)에 verdict=Lighthouse 표기"}
       ]
     },
     {
@@ -23,7 +24,8 @@
         {"id": "json-ld-missing-detected", "text": "JSON-LD 구조화 데이터 누락 감지"},
         {"id": "canonical-missing-detected", "text": "canonical URL 누락 감지"},
         {"id": "title-too-short-detected", "text": "title 태그가 너무 짧거나 일반적임을 지적"},
-        {"id": "description-quality-checked", "text": "meta description 품질 평가 (짧거나 비서술적)"}
+        {"id": "description-quality-checked", "text": "meta description 품질 평가 (짧거나 비서술적)"},
+        {"id": "verdict-method-lighthouse-used", "text": "SEO-02(title), SEO-05(description), SEO-06(canonical) 등에 verdict=Lighthouse 표기"}
       ]
     },
     {
@@ -35,7 +37,8 @@
         {"id": "img-width-height-missing", "text": "이미지 width/height 속성 누락 감지"},
         {"id": "loading-lazy-missing", "text": "loading=lazy 누락 감지"},
         {"id": "layout-thrashing-detected", "text": "레이아웃 스래싱 패턴 감지"},
-        {"id": "dynamic-cls-detected", "text": "동적 콘텐츠 CLS 문제 감지"}
+        {"id": "dynamic-cls-detected", "text": "동적 콘텐츠 CLS 문제 감지"},
+        {"id": "verdict-method-lighthouse-used", "text": "WP-04(unsized-images), WP-05(offscreen-images) 등에 verdict=Lighthouse 표기"}
       ]
     },
     {
@@ -47,7 +50,8 @@
         {"id": "font-display-missing", "text": "font-display 속성 누락 감지"},
         {"id": "font-preload-missing", "text": "폰트 preload 누락 감지"},
         {"id": "render-blocking-css-detected", "text": "render-blocking CSS 또는 font-face 이슈 감지"},
-        {"id": "wp-codes-referenced", "text": "WP 항목 코드가 결과에 포함됨"}
+        {"id": "wp-codes-referenced", "text": "WP 항목 코드가 결과에 포함됨"},
+        {"id": "verdict-method-lighthouse-used", "text": "WP-10(font-display) 등에 verdict=Lighthouse 표기"}
       ]
     },
     {
@@ -59,7 +63,9 @@
         {"id": "all-29-items-evaluated", "text": "29개 항목(SEO-01~11, WP-01~18) 모두 포함"},
         {"id": "standard-codes-used", "text": "SEO-XX, WP-XX 형식의 표준 코드 사용"},
         {"id": "all-items-have-result", "text": "모든 항목에 Pass/Fail/N/A 결과 표기"},
-        {"id": "file-line-refs-included", "text": "파일명과 라인 번호 참조 포함"}
+        {"id": "file-line-refs-included", "text": "파일명과 라인 번호 참조 포함"},
+        {"id": "verdict-method-lighthouse-used", "text": "Lighthouse 매핑 항목에 verdict=Lighthouse 표기"},
+        {"id": "lighthouse-metrics-summary", "text": "Lighthouse 메트릭 요약 (Performance Score, SEO Score, LCP, CLS, TBT) 포함"}
       ]
     }
   ]

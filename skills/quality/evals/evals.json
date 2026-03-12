@@ -16,7 +16,10 @@
         {"id": "wp_item_coverage", "text": "All WP items (WP-01 through WP-18) are evaluated"},
         {"id": "fail_items_have_details", "text": "Failed items include specific issue descriptions with file/line references"},
         {"id": "fix_guide_present", "text": "Fix guide section exists with concrete code-level recommendations"},
-        {"id": "korean_language", "text": "Report is written in Korean"}
+        {"id": "korean_language", "text": "Report is written in Korean"},
+        {"id": "verdict-lighthouse-in-a11y", "text": "Section A (접근성)에서 Lighthouse 매핑 항목에 verdict=Lighthouse 표기"},
+        {"id": "verdict-lighthouse-in-seo", "text": "Section B (SEO)에서 Lighthouse 매핑 항목에 verdict=Lighthouse 표기"},
+        {"id": "verdict-playwright-in-a11y", "text": "Section A (접근성)에서 Playwright 대상 항목에 verdict=Playwright 표기"}
       ]
     },
     {
@@ -35,7 +38,9 @@
         {"id": "fail_items_have_details", "text": "Failed items include specific issue descriptions with file/line references"},
         {"id": "fix_guide_present", "text": "Fix guide section exists with concrete code-level recommendations"},
         {"id": "korean_language", "text": "Report is written in Korean"},
-        {"id": "correct_file_scope", "text": "Only dashboard/page.tsx and StatsCard.tsx are reviewed (no other files)"}
+        {"id": "correct_file_scope", "text": "Only dashboard/page.tsx and StatsCard.tsx are reviewed (no other files)"},
+        {"id": "verdict-lighthouse-in-a11y", "text": "Section A에서 Lighthouse 매핑 항목에 verdict=Lighthouse 표기"},
+        {"id": "verdict-lighthouse-in-seo", "text": "Section B에서 Lighthouse 매핑 항목에 verdict=Lighthouse 표기"}
       ]
     },
     {
@@ -55,7 +60,9 @@
         {"id": "fix_guide_present", "text": "Fix guide section exists with concrete code-level recommendations"},
         {"id": "korean_language", "text": "Report is written in Korean"},
         {"id": "a11y_detail_depth", "text": "Accessibility findings include specific KWCAG item IDs and line references"},
-        {"id": "aria-expanded-missing-detected", "text": "Detected missing aria-expanded on hamburger menu button"}
+        {"id": "aria-expanded-missing-detected", "text": "Detected missing aria-expanded on hamburger menu button"},
+        {"id": "verdict-lighthouse-in-a11y", "text": "Section A에서 Lighthouse 매핑 항목에 verdict=Lighthouse 표기"},
+        {"id": "verdict-playwright-in-a11y", "text": "Section A에서 Playwright 대상 항목(A-33 등)에 verdict=Playwright 표기"}
       ]
     }
   ]

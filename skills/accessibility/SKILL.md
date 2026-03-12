@@ -138,17 +138,21 @@ Beyond KWCAG2.2, check whether HTML elements are used semantically.
 ## Step 4. Lighthouse Accessibility Verification
 
 Lighthouse CLI uses the axe-core engine to quantitatively verify accessibility items.
-Use the environment context (`lighthouse_available`, `dev_server_url`) passed from the quality orchestrator.
-For standalone execution, detect the environment directly.
 
-### 4-1. Check Environment
+### 4-1. Resolve Environment
 
-When invoked via the quality orchestrator, use the passed `lighthouse_available` value.
+When invoked via the quality orchestrator, use the passed `lighthouse_available` and `dev_server_url` values.
 
-Standalone execution:
+Standalone execution — detect directly:
 
 ```bash
+# ① Check Lighthouse CLI
 npx lighthouse --version 2>/dev/null || echo "LH_NOT_INSTALLED"
+
+# ② Find playwright.config.ts for baseURL (may not be at repo root)
+find . -name "playwright.config.ts" -not -path "*/node_modules/*" 2>/dev/null | head -1
+
+# ③ Verify dev server responds
 curl -s --connect-timeout 5 "{dev_server_url}" -o /dev/null -w "%{http_code}"
 ```
 
@@ -218,20 +222,18 @@ Playwright MCP verifies **interaction-based items** in a real browser — keyboa
 focus movement, ARIA state changes, etc. This complements Lighthouse by covering dynamic
 behaviors that Lighthouse cannot detect.
 
-### 5-1. Check Environment
+### 5-1. Resolve Environment
 
-When invoked via the quality orchestrator, use the passed `playwright_available` value.
+When invoked via the quality orchestrator, use the passed `playwright_available` and `dev_server_url` values.
 
-Standalone execution:
+Standalone execution — detect directly:
 
-```bash
-ls playwright.config.ts 2>/dev/null || ls playwright.config.js 2>/dev/null || echo "NOT_FOUND"
-npx playwright --version 2>/dev/null || echo "PW_NOT_INSTALLED"
-curl -s --connect-timeout 5 "{dev_server_url}" -o /dev/null -w "%{http_code}"
-```
+Playwright MCP verification requires two things:
+1. **Playwright MCP tools available** — check if `mcp__playwright__browser_navigate` and similar tools exist
+2. **Dev server responding** — use the URL resolved in Step 4-1
 
-- Environment not ready → Playwright-target items: `🔵 판정불가` (state specific reason)
-- Environment ready → proceed to Step 5-2
+- Either condition not met → Playwright-target items: `🔵 판정불가` (state specific reason)
+- Both conditions met → proceed to Step 5-2
 
 ### 5-2. Determine Target URL
 
