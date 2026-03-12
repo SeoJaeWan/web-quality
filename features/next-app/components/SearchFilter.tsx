@@ -27,6 +27,7 @@ export default function SearchFilter({ search, onSearchChange, filter, onFilterC
         data-testid="search-input"
       />
       <div className="flex gap-1 rounded-lg border border-zinc-200 p-1 dark:border-zinc-800">
+        {/* BAD: missing aria-pressed to indicate selected filter state (A-33) */}
         {filters.map((f) => (
           <button
             key={f.value}

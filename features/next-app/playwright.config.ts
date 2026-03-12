@@ -8,7 +8,7 @@ export default defineConfig({
   },
   timeout: 30000,
   webServer: {
-    command: "npm run dev -- --port 3000",
+    command: "npx next dev --port 3000 --webpack",
     port: 3000,
     reuseExistingServer: true,
     timeout: 60000,

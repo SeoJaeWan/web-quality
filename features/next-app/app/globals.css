@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* BAD: @font-face without font-display — causes FOIT (WP-10) */
+@font-face {
+  font-family: "CustomDisplay";
+  src: url("/fonts/custom-display.woff2") format("woff2");
+  /* missing: font-display: swap */
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

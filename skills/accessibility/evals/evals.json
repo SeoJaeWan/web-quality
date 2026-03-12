@@ -5,42 +5,42 @@
       "id": 1,
       "prompt": "변경된 웹 코드의 접근성을 KWCAG2.2 기준으로 검토해줘",
       "expected_output": "kwcag22.md 참조하여 33개 항목 평가, O/X/△/N/A 분류표 생성, HTML+CSV 리포트 출력",
-      "files": ["../../features/web-sample/pages/index.html", "../../features/web-sample/pages/dashboard.tsx", "../../features/web-sample/components/Card.tsx"],
+      "files": ["../../features/next-app/app/dashboard/page.tsx", "../../features/next-app/components/StatsCard.tsx", "../../features/next-app/components/Navbar.tsx"],
       "assertions": [
         {"id": "all-33-items-evaluated", "text": "All 33 KWCAG2.2 items are evaluated in the report"},
         {"id": "semantic-html-section-present", "text": "Semantic HTML review section is included in the report"},
         {"id": "specific-issues-with-line-refs", "text": "Found issues include filename:line references"},
         {"id": "html-report-generated", "text": "report.html file is generated in outputs directory"},
         {"id": "csv-report-generated", "text": "report.csv file is generated in outputs directory"},
-        {"id": "img-alt-missing-detected", "text": "Detected missing alt attribute on img in index.html (line 30)"},
-        {"id": "icon-button-a11y-detected", "text": "Detected icon buttons without aria-label in dashboard.tsx"},
-        {"id": "duplicate-id-detected", "text": "Detected duplicate id='card-item' issue in Card.tsx"}
+        {"id": "img-alt-missing-detected", "text": "Detected missing alt attribute on img in dashboard/page.tsx"},
+        {"id": "icon-button-a11y-detected", "text": "Detected icon buttons without aria-label in dashboard/page.tsx"},
+        {"id": "duplicate-id-detected", "text": "Detected duplicate id='stat-card' issue in StatsCard.tsx"}
       ]
     },
     {
       "id": 2,
-      "prompt": "Card.tsx 컴포넌트의 접근성 문제를 KWCAG2.2 기준으로 찾아줘",
-      "expected_output": "Card.tsx에서 img alt 누락, 키보드 접근성, 색상 대비 등 구체적 이슈 식별",
-      "files": ["../../features/web-sample/components/Card.tsx"],
+      "prompt": "StatsCard.tsx 컴포넌트의 접근성 문제를 KWCAG2.2 기준으로 찾아줘",
+      "expected_output": "StatsCard.tsx에서 키보드 접근성, 중복 id, ARIA 관련 이슈 식별",
+      "files": ["../../features/next-app/components/StatsCard.tsx"],
       "assertions": [
         {"id": "all-33-items-evaluated", "text": "All 33 KWCAG2.2 items are evaluated"},
         {"id": "div-onclick-keyboard-issue", "text": "Detected div onClick without keyboard accessibility"},
-        {"id": "duplicate-id-detected", "text": "Detected duplicate id='card-item' when rendered in a list"},
+        {"id": "duplicate-id-detected", "text": "Detected duplicate id='stat-card' when rendered in a list"},
         {"id": "kwcag-item-id-mapped", "text": "Each issue is mapped to a specific KWCAG item number"},
         {"id": "fix-recommendations-provided", "text": "Fix recommendations are provided for each found issue"}
       ]
     },
     {
       "id": 3,
-      "prompt": "index.html 페이지의 시맨틱 HTML 준수 여부와 접근성을 검토해줘",
-      "expected_output": "시맨틱 태그 사용 평가, ARIA 속성 검토, 폼 라벨링 확인",
-      "files": ["../../features/web-sample/pages/index.html"],
+      "prompt": "Navbar.tsx와 SearchFilter.tsx 컴포넌트의 접근성과 시맨틱 HTML 준수 여부를 검토해줘",
+      "expected_output": "모바일 메뉴 접근성, 필터 버튼 ARIA 상태, 시맨틱 구조 평가",
+      "files": ["../../features/next-app/components/Navbar.tsx", "../../features/next-app/components/SearchFilter.tsx"],
       "assertions": [
-        {"id": "landmark-absence-detected", "text": "Detected absence of landmark elements (header/nav/main/footer)"},
-        {"id": "img-alt-missing-detected", "text": "Detected missing alt attribute on logo img"},
-        {"id": "lang-attribute-checked", "text": "Checked html lang attribute"},
+        {"id": "aria-expanded-missing-detected", "text": "Detected missing aria-expanded on hamburger menu button"},
+        {"id": "aria-pressed-missing-detected", "text": "Detected missing aria-pressed on filter toggle buttons"},
         {"id": "semantic-html-section-present", "text": "Report includes a dedicated semantic HTML review section"},
-        {"id": "result-classification-used", "text": "Uses the standard classification system (✅/❌/⚠️/➖/🔵)"}
+        {"id": "result-classification-used", "text": "Uses the standard classification system"},
+        {"id": "fix-recommendations-provided", "text": "Fix recommendations are provided for each found issue"}
       ]
     }
   ]

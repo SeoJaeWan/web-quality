@@ -55,6 +55,7 @@ export default function Navbar() {
               </div>
 
               {/* Mobile hamburger */}
+              {/* BAD: missing aria-expanded to indicate menu state */}
               <button
                 className="md:hidden p-2"
                 onClick={() => setMenuOpen(!menuOpen)}
