@@ -148,16 +148,17 @@ Run Lighthouse CLI on the SEO and Performance categories to augment static analy
 
 ### 4-1. Check Environment
 
-When invoked via the quality orchestrator, use the passed `lighthouse_available` and `dev_server_url` values.
+When invoked via the quality orchestrator, use the passed `lighthouse_available`, `dev_server_url`, and `runtime_probe_reason` values.
 
 Standalone execution:
 
 ```bash
+node scripts/resolve-dev-server.mjs
 npx lighthouse --version 2>/dev/null || echo "LH_NOT_INSTALLED"
-curl -s --connect-timeout 5 "{dev_server_url}" -o /dev/null -w "%{http_code}"
 ```
 
-- Lighthouse not installed or server not running → Lighthouse-target items: keep static analysis result, verdict = `정적분석`
+- Parse the resolver JSON and use its final `reachable`, `dev_server_url`, and `reason` values.
+- Lighthouse not installed or resolver says server unreachable → Lighthouse-target items: keep static analysis result, verdict = `정적분석`
 - Environment ready → proceed to Step 4-2
 
 ### 4-2. Run Lighthouse

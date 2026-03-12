@@ -46,31 +46,25 @@ git diff --name-only HEAD
 
 Detect whether Lighthouse CLI and Playwright MCP are available before delegating to sub-skills.
 Pass the detection results as environment context so each sub-skill skips redundant checks.
+Do not use ad-hoc `curl localhost:3000` probes here.
 
 ### 1.5-1. Determine Dev Server URL
 
-Find `playwright.config.ts` in the repository and extract the base URL:
+Run the shared resolver:
 
 ```bash
-# Find playwright.config.ts (may not be at repo root)
-find . -name "playwright.config.ts" -not -path "*/node_modules/*" 2>/dev/null | head -1
+node scripts/resolve-dev-server.mjs
 ```
 
-If found, read it and extract `baseURL` and `webServer` settings.
+Parse the JSON output and use:
+- `reachable`
+- `dev_server_url`
+- `reason`
+- `shell_environment`
+- `candidates_tried`
 
-Resolution order:
-1. `baseURL` from `playwright.config.ts`
-2. `webServer.url` from `playwright.config.ts`
-3. Fallback: `http://localhost:3000`
-
-Verify the server responds:
-
-```bash
-curl -s --connect-timeout 5 "{baseURL}" -o /dev/null -w "%{http_code}"
-```
-
-- HTTP 200 → `DEV_SERVER_RUNNING`
-- No response → `DEV_SERVER_NOT_RUNNING`
+The resolver handles the platform differences for Windows, macOS, Linux, and WSL.
+Use its final result as the only source of truth for dev-server reachability.
 
 ### 1.5-2. Lighthouse CLI
 
@@ -91,10 +85,10 @@ Pass the following to both accessibility and seo sub-skills:
 | Key | Value |
 | --- | --- |
 | `dev_server_url` | Determined URL or `null` |
-| `dev_server_running` | `true` / `false` (curl response) |
-| `lighthouse_available` | `true` / `false` (CLI installed + server responds) |
-| `playwright_available` | `true` / `false` (MCP tools exist + server responds) |
-| `unavailable_reason` | Specific reason when requirements not met |
+| `dev_server_running` | `true` / `false` (shared resolver result) |
+| `lighthouse_available` | `true` / `false` (CLI installed + resolver found reachable URL) |
+| `playwright_available` | `true` / `false` (MCP tools exist + resolver found reachable URL) |
+| `runtime_probe_reason` | Shared resolver reason or tool availability reason |
 
 When requirements are not met: tool-dependent items fall back to static analysis only, verdict marked accordingly.
 
@@ -108,7 +102,7 @@ Reference: `<plugin-root>/skills/accessibility/SKILL.md`
 
 Delegation instructions:
 - Step 1 (scope) is already determined — pass the same file set
-- Pass Step 1.5 environment context (lighthouse_available, playwright_available, dev_server_url)
+- Pass Step 1.5 environment context (`lighthouse_available`, `playwright_available`, `dev_server_url`, `runtime_probe_reason`)
 - Steps 2–5: KWCAG2.2 33-item code review + Lighthouse accessibility verification + Playwright interaction verification
 - Step 7 (individual report generation) is skipped — collect only result data (✅/❌/⚠️/➖/🔵 per item)
 
@@ -119,7 +113,7 @@ Collected results → **Section A: Accessibility**
 ## Step 3. SEO & Web Performance Review — Delegate to seo skill
 
 Execute the 'seo' skill against the same file set determined in Step 1.
-Pass the Step 1.5 environment context (lighthouse_available, dev_server_url).
+Pass the Step 1.5 environment context (`lighthouse_available`, `dev_server_url`, `runtime_probe_reason`).
 Steps 3–4: Static Analysis + Lighthouse SEO/Performance verification.
 Collect the result row for each SEO-code and WP-code item.
 Collected results → **Section B: SEO & Web Performance**

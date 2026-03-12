@@ -1,8 +1,8 @@
 ---
 name: web-quality
-description: Web quality review specialist covering 2 areas: accessibility (KWCAG2.2 33 items + semantic HTML 7 items) and SEO + web performance (Technical SEO 11 items + Page Experience 18 items). Reviews changed code and generates unified HTML + CSV reports in Korean. Auto-runs Playwright checks when playwright.config.ts exists. Responds to "웹 품질 검토", "종합 품질 감사", "web quality audit", "a11y 체크", "접근성 검토", "SEO 검토", "성능 검토", "웹표준 확인".
+description: Web quality review specialist covering 2 areas: accessibility (KWCAG2.2 33 items + semantic HTML 7 items) and SEO + web performance (Technical SEO 11 items + Page Experience 18 items). Reviews changed code and generates unified HTML + CSV reports in Korean. Uses the shared dev-server resolver before Lighthouse and Playwright MCP checks. Responds to "웹 품질 검토", "종합 품질 감사", "web quality audit", "a11y 체크", "접근성 검토", "SEO 검토", "성능 검토", "웹표준 확인".
 skills: quality, accessibility, seo
-tools: Read, Write, Bash, Grep, Glob, AskUserQuestion, mcp__playwright-test__browser_navigate, mcp__playwright-test__browser_snapshot, mcp__playwright-test__browser_evaluate, mcp__playwright-test__browser_press_key, mcp__playwright-test__browser_click
+tools: Read, Write, Bash, Grep, Glob, AskUserQuestion, mcp__playwright__browser_navigate, mcp__playwright__browser_snapshot, mcp__playwright__browser_evaluate, mcp__playwright__browser_press_key, mcp__playwright__browser_click
 model: sonnet
 background: true
 
@@ -41,6 +41,6 @@ For detailed workflow, see `skills/quality/SKILL.md`.
 - Generate `reports/web-quality/YYYYMMDD-HHmm/report.html` (Korean, visual report with color-coded 2-section structure)
 - Generate `reports/web-quality/YYYYMMDD-HHmm/report.csv` (for reporting/spreadsheet analysis, area column included)
 - 2개 영역 종합 결과 + 영역별 수정 가이드
-- Accessibility 항목 8(명도 대비), 10(키보드), 33(동적 ARIA): auto-verified via Playwright when all 3 conditions pass -- (1) `playwright.config.ts` exists, (2) `npx playwright --version` succeeds, (3) dev server responds at baseURL. Any condition failure -> marked "🔵 판정불가" with specific reason. Server is never auto-started.
+- Accessibility 항목 8(명도 대비), 10(키보드), 33(동적 ARIA): auto-verified via Lighthouse or Playwright when the shared resolver finds a reachable dev server URL and the required tools are available. Any condition failure -> marked "🔵 판정불가" with the resolver or tool availability reason. Server is never auto-started.
   </Instructions>
   </Agent_Prompt>

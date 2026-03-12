@@ -141,22 +141,20 @@ Lighthouse CLI uses the axe-core engine to quantitatively verify accessibility i
 
 ### 4-1. Resolve Environment
 
-When invoked via the quality orchestrator, use the passed `lighthouse_available` and `dev_server_url` values.
+When invoked via the quality orchestrator, use the passed `lighthouse_available`, `dev_server_url`, and `runtime_probe_reason` values.
 
 Standalone execution — detect directly:
 
 ```bash
-# ① Check Lighthouse CLI
+# ① Resolve dev server URL with the shared resolver
+node scripts/resolve-dev-server.mjs
+
+# ② Check Lighthouse CLI
 npx lighthouse --version 2>/dev/null || echo "LH_NOT_INSTALLED"
-
-# ② Find playwright.config.ts for baseURL (may not be at repo root)
-find . -name "playwright.config.ts" -not -path "*/node_modules/*" 2>/dev/null | head -1
-
-# ③ Verify dev server responds
-curl -s --connect-timeout 5 "{dev_server_url}" -o /dev/null -w "%{http_code}"
 ```
 
-- Lighthouse not installed or server not running → 10 Lighthouse-target items: keep static analysis result, verdict method = `정적분석`
+- Parse the resolver JSON and use its final `reachable`, `dev_server_url`, and `reason` values.
+- Lighthouse not installed or resolver says server unreachable → 10 Lighthouse-target items: keep static analysis result, verdict method = `정적분석`
 - Environment ready → proceed to Step 4-2
 
 ### 4-2. Run Lighthouse
@@ -224,15 +222,15 @@ behaviors that Lighthouse cannot detect.
 
 ### 5-1. Resolve Environment
 
-When invoked via the quality orchestrator, use the passed `playwright_available` and `dev_server_url` values.
+When invoked via the quality orchestrator, use the passed `playwright_available`, `dev_server_url`, and `runtime_probe_reason` values.
 
 Standalone execution — detect directly:
 
 Playwright MCP verification requires two things:
 1. **Playwright MCP tools available** — check if `mcp__playwright__browser_navigate` and similar tools exist
-2. **Dev server responding** — use the URL resolved in Step 4-1
+2. **Dev server responding** — use the URL resolved by `node scripts/resolve-dev-server.mjs`
 
-- Either condition not met → Playwright-target items: `🔵 판정불가` (state specific reason)
+- Either condition not met → Playwright-target items: `🔵 판정불가` (state the resolver reason or tool availability reason)
 - Both conditions met → proceed to Step 5-2
 
 ### 5-2. Determine Target URL
@@ -240,10 +238,9 @@ Playwright MCP verification requires two things:
 When invoked via the quality orchestrator, use the passed `dev_server_url`.
 
 Standalone resolution order:
-1. `baseURL` from `playwright.config.ts`
-2. `webServer.url` from `playwright.config.ts`
-3. Infer route from changed files
-4. Fallback: `http://localhost:3000`
+1. Use the `dev_server_url` returned by `node scripts/resolve-dev-server.mjs`
+2. Infer route from changed files
+3. If route inference fails, use the base URL returned by the resolver as-is
 
 ### 5-3. Playwright Verification Targets
 
@@ -325,7 +322,7 @@ Verdict method column: `Playwright`
 | `❌`          | Fail: violation found (include filename:line)                                                                                                        |
 | `⚠️`          | Advisory: no violation but improvement recommended                                                                                                   |
 | `➖`          | N/A: the relevant element does not exist                                                                                                             |
-| `🔵 판정불가` | Runtime verification not possible — must state specific reason: Lighthouse not installed / Playwright not installed / Browser not installed / Dev server not running |
+| `🔵 판정불가` | Runtime verification not possible — must state specific reason: Lighthouse not installed / Playwright not available / Browser not installed / resolver could not reach the dev server |
 
 ---
 
@@ -371,7 +368,7 @@ Reuse the same directory for re-runs within the same minute (no suffix needed).
 2. Confirm the Semantic HTML section (7 items) has been evaluated.
 3. Every ❌ result must include: KWCAG item number, filename + line number or pattern, concrete violation description.
 4. Every ⚠️ result must include a specific improvement recommendation.
-5. Items marked 🔵 판정불가 must state specific reason: Lighthouse not installed / Playwright not installed / Browser not installed / Dev server not running.
+5. Items marked 🔵 판정불가 must state specific reason: Lighthouse not installed / Playwright not available / Browser not installed / resolver could not reach the dev server.
 6. Confirm both `reports/accessibility/YYYYMMDD-HHmm/report.html` and `reports/accessibility/YYYYMMDD-HHmm/report.csv` have been written (standalone mode only).
 7. If any condition above is not met, do not claim completion — identify what is missing and resolve it.
 
