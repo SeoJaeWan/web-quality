@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "config": "old_skill",
+  "expectations": [
+    {"text": "Detected missing aria-expanded on hamburger menu button", "passed": true, "evidence": "A-33: ❌ Playwright — Navbar.tsx:59 햄버거 버튼 aria-expanded 누락"},
+    {"text": "Detected missing aria-pressed on filter toggle buttons", "passed": true, "evidence": "A-33: SearchFilter.tsx:32 — 필터 버튼 aria-pressed 누락"},
+    {"text": "Report includes a dedicated semantic HTML review section", "passed": true, "evidence": "시맨틱-1 through 시맨틱-7 present"},
+    {"text": "Uses the standard classification system", "passed": true, "evidence": "✅❌⚠️➖ used consistently"},
+    {"text": "Fix recommendations are provided for each found issue", "passed": true, "evidence": "수정 가이드 populated for all findings"},
+    {"text": "Playwright-target items (A-33) show verdict method as Playwright", "passed": true, "evidence": "A-33: Playwright ✓"}
+  ]
+}

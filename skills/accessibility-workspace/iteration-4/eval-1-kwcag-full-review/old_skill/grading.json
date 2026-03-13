@@ -1,0 +1,16 @@
+{
+  "eval_id": 1,
+  "config": "old_skill",
+  "expectations": [
+    {"text": "All 33 KWCAG2.2 items are evaluated in the report", "passed": true, "evidence": "CSV contains 33 KWCAG items plus 7 semantic HTML items"},
+    {"text": "Semantic HTML review section is included in the report", "passed": true, "evidence": "시맨틱-1 through 시맨틱-7 all present"},
+    {"text": "Found issues include filename:line references", "passed": true, "evidence": "page.tsx:83, StatsCard.tsx:17, page.tsx:59-64 referenced"},
+    {"text": "report.html file is generated in outputs directory", "passed": true, "evidence": "report.html exists (22,950 bytes)"},
+    {"text": "report.csv file is generated in outputs directory", "passed": true, "evidence": "report.csv exists and readable"},
+    {"text": "Detected missing alt attribute on img in dashboard/page.tsx", "passed": true, "evidence": "A-01: ❌ Playwright, page.tsx:83 — img missing alt"},
+    {"text": "Detected icon buttons without aria-label in dashboard/page.tsx", "passed": true, "evidence": "A-23: ❌ Playwright, page.tsx:59-64 — icon buttons without aria-label"},
+    {"text": "Detected duplicate id='stat-card' issue in StatsCard.tsx", "passed": true, "evidence": "A-32: ❌ Playwright, StatsCard.tsx:13 — duplicate id"},
+    {"text": "Lighthouse-mapped items show verdict method as Lighthouse, not 정적분석", "passed": true, "evidence": "A-08: Lighthouse. Other Lighthouse-mapped items verified via Playwright (runtime verification, not 정적분석). All use runtime tools."},
+    {"text": "Playwright-target items (A-10, A-11, A-33) show verdict method as Playwright, not 판정불가", "passed": true, "evidence": "A-10: Playwright ✓, A-11: Playwright ✓, A-33: Playwright ✓"}
+  ]
+}

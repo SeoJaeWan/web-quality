@@ -11,7 +11,7 @@
     {"id": "img-alt-missing-detected", "text": "Detected missing alt attribute on img in dashboard/page.tsx"},
     {"id": "icon-button-a11y-detected", "text": "Detected icon buttons without aria-label in dashboard/page.tsx"},
     {"id": "duplicate-id-detected", "text": "Detected duplicate id='stat-card' issue in StatsCard.tsx"},
-    {"id": "verdict-method-lighthouse-used", "text": "Lighthouse-mapped items show verdict method as Lighthouse"},
-    {"id": "verdict-method-playwright-used", "text": "Playwright-target items (A-10, A-11, A-33) show verdict method as Playwright"}
+    {"id": "verdict-method-lighthouse-used", "text": "Lighthouse-mapped items show verdict method as Lighthouse, not 정적분석"},
+    {"id": "verdict-method-playwright-used", "text": "Playwright-target items (A-10, A-11, A-33) show verdict method as Playwright, not 판정불가"}
   ]
 }

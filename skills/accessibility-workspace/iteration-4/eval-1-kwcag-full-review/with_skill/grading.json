@@ -1,0 +1,16 @@
+{
+  "eval_id": 1,
+  "config": "with_skill",
+  "expectations": [
+    {"text": "All 33 KWCAG2.2 items are evaluated in the report", "passed": true, "evidence": "CSV contains 33 KWCAG items (rows 1-33) plus 7 semantic HTML items"},
+    {"text": "Semantic HTML review section is included in the report", "passed": true, "evidence": "시맨틱-1 through 시맨틱-7 all present in CSV"},
+    {"text": "Found issues include filename:line references", "passed": true, "evidence": "page.tsx:83, StatsCard.tsx:17, page.tsx:59-64, StatsCard.tsx:13 all referenced"},
+    {"text": "report.html file is generated in outputs directory", "passed": true, "evidence": "report.html exists in outputs/"},
+    {"text": "report.csv file is generated in outputs directory", "passed": true, "evidence": "report.csv exists and readable"},
+    {"text": "Detected missing alt attribute on img in dashboard/page.tsx", "passed": true, "evidence": "A-01: ❌ page.tsx:83 — img missing alt"},
+    {"text": "Detected icon buttons without aria-label in dashboard/page.tsx", "passed": true, "evidence": "A-23: ❌ page.tsx:59-64 — icon buttons without aria-label"},
+    {"text": "Detected duplicate id='stat-card' issue in StatsCard.tsx", "passed": true, "evidence": "A-32: ❌ StatsCard.tsx:13 — id='stat-card' 3개 인스턴스 중복"},
+    {"text": "Lighthouse-mapped items show verdict method as Lighthouse, not 정적분석", "passed": false, "evidence": "A-01: 정적분석, A-17: 정적분석, A-23: 정적분석, A-32: 정적분석. Only A-08, A-18, A-19, A-25, A-29 show Lighthouse. Dashboard auth redirect limited Lighthouse coverage."},
+    {"text": "Playwright-target items (A-10, A-11, A-33) show verdict method as Playwright, not 판정불가", "passed": false, "evidence": "A-11: Playwright ✓. But A-10: 정적분석, A-33: 정적분석. agent-browser ran but dashboard auth prevented StatsCard verification."}
+  ]
+}

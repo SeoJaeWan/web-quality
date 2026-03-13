@@ -1,0 +1,13 @@
+{
+  "eval_id": 2,
+  "config": "with_skill",
+  "expectations": [
+    {"text": "All 33 KWCAG2.2 items are evaluated", "passed": true, "evidence": "33 KWCAG items + 7 semantic HTML items all present in CSV"},
+    {"text": "Detected div onClick without keyboard accessibility", "passed": true, "evidence": "A-10: ❌ StatsCard.tsx:10-17 — div onClick without tabIndex/role/onKeyDown"},
+    {"text": "Detected duplicate id='stat-card' when rendered in a list", "passed": true, "evidence": "A-32: ❌ StatsCard.tsx:12 — id='stat-card' 하드코딩, 3회 렌더링 시 중복"},
+    {"text": "Each issue is mapped to a specific KWCAG item number", "passed": true, "evidence": "All items numbered 1-33 plus semantic items"},
+    {"text": "Fix recommendations are provided for each found issue", "passed": true, "evidence": "수정 가이드 column populated for all fail/advisory items"},
+    {"text": "Lighthouse-mapped items show verdict method as Lighthouse", "passed": false, "evidence": "Most items show 정적분석. A-25: Lighthouse via reference. Dashboard auth redirect prevented direct Lighthouse verification of StatsCard."},
+    {"text": "Playwright-target items (A-10) show verdict method as Playwright", "passed": false, "evidence": "A-10: 정적분석 (not Playwright). Dashboard auth prevented browser access to StatsCard component."}
+  ]
+}

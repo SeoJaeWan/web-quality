@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "config": "with_skill",
+  "expectations": [
+    {"text": "Detected missing aria-expanded on hamburger menu button", "passed": true, "evidence": "A-33: ⚠️ Navbar.tsx:59 — 햄버거 버튼에 aria-expanded 누락"},
+    {"text": "Detected missing aria-pressed on filter toggle buttons", "passed": true, "evidence": "A-33: SearchFilter.tsx:32 — 필터 버튼에 aria-pressed 누락"},
+    {"text": "Report includes a dedicated semantic HTML review section", "passed": true, "evidence": "시맨틱-1 through 시맨틱-7 present with detailed findings"},
+    {"text": "Uses the standard classification system", "passed": true, "evidence": "✅❌⚠️➖ all used appropriately"},
+    {"text": "Fix recommendations are provided for each found issue", "passed": true, "evidence": "수정 가이드 column populated for all issues"},
+    {"text": "Playwright-target items (A-33) show verdict method as Playwright", "passed": false, "evidence": "A-33: 정적분석 (not Playwright). However A-10: Playwright, A-11: Playwright — agent-browser worked for keyboard tests but A-33 ARIA check fell back to static."}
+  ]
+}

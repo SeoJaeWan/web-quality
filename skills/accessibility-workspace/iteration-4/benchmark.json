@@ -1,0 +1,122 @@
+{
+  "skill_name": "accessibility",
+  "iteration": 4,
+  "note": "Sequential execution (no parallel runs) to avoid agent-browser daemon conflicts. with_skill=agent-browser CLI, old_skill=Playwright MCP.",
+  "configs": [
+    {
+      "name": "with_skill",
+      "label": "agent-browser CLI (current)",
+      "evals": [
+        {
+          "eval_id": 1,
+          "eval_name": "kwcag-full-review",
+          "passed": 8,
+          "total": 10,
+          "pass_rate": 0.80,
+          "total_tokens": 63644,
+          "duration_seconds": 322.2,
+          "tool_uses": 27,
+          "failed_assertions": ["verdict-method-lighthouse-used", "verdict-method-playwright-used"]
+        },
+        {
+          "eval_id": 2,
+          "eval_name": "card-component-a11y",
+          "passed": 5,
+          "total": 7,
+          "pass_rate": 0.71,
+          "total_tokens": 57731,
+          "duration_seconds": 311.8,
+          "tool_uses": 24,
+          "failed_assertions": ["verdict-method-lighthouse-used", "verdict-method-playwright-used"]
+        },
+        {
+          "eval_id": 3,
+          "eval_name": "semantic-html-review",
+          "passed": 5,
+          "total": 6,
+          "pass_rate": 0.83,
+          "total_tokens": 58760,
+          "duration_seconds": 270.8,
+          "tool_uses": 20,
+          "failed_assertions": ["verdict-method-playwright-used"]
+        }
+      ],
+      "aggregate": {
+        "mean_pass_rate": 0.78,
+        "stddev_pass_rate": 0.05,
+        "mean_tokens": 60045,
+        "stddev_tokens": 2547,
+        "mean_duration_seconds": 301.6,
+        "stddev_duration_seconds": 22.3,
+        "mean_tool_uses": 23.7,
+        "stddev_tool_uses": 2.9
+      }
+    },
+    {
+      "name": "old_skill",
+      "label": "Playwright MCP (baseline)",
+      "evals": [
+        {
+          "eval_id": 1,
+          "eval_name": "kwcag-full-review",
+          "passed": 10,
+          "total": 10,
+          "pass_rate": 1.0,
+          "total_tokens": 66413,
+          "duration_seconds": 331.3,
+          "tool_uses": 30,
+          "failed_assertions": []
+        },
+        {
+          "eval_id": 2,
+          "eval_name": "card-component-a11y",
+          "passed": 7,
+          "total": 7,
+          "pass_rate": 1.0,
+          "total_tokens": 59331,
+          "duration_seconds": 255.5,
+          "tool_uses": 27,
+          "failed_assertions": []
+        },
+        {
+          "eval_id": 3,
+          "eval_name": "semantic-html-review",
+          "passed": 6,
+          "total": 6,
+          "pass_rate": 1.0,
+          "total_tokens": 77105,
+          "duration_seconds": 435.2,
+          "tool_uses": 60,
+          "failed_assertions": []
+        }
+      ],
+      "aggregate": {
+        "mean_pass_rate": 1.0,
+        "stddev_pass_rate": 0.0,
+        "mean_tokens": 67616,
+        "stddev_tokens": 7310,
+        "mean_duration_seconds": 340.7,
+        "stddev_duration_seconds": 73.5,
+        "mean_tool_uses": 39.0,
+        "stddev_tool_uses": 14.8
+      }
+    }
+  ],
+  "delta": {
+    "pass_rate": -0.22,
+    "tokens": -7571,
+    "tokens_pct": "-11.2%",
+    "duration_seconds": -39.1,
+    "duration_pct": "-11.5%",
+    "tool_uses": -15.3,
+    "tool_uses_pct": "-39.2%"
+  },
+  "analyst_notes": [
+    "agent-browser npx issue is FIXED: all 3 with_skill runs successfully invoked agent-browser (no MODULE_NOT_FOUND errors). Sequential execution eliminated daemon conflicts.",
+    "Pass rate gap (78% vs 100%) is entirely from verdict-method assertions: dashboard auth redirect prevents Lighthouse/agent-browser from verifying StatsCard-specific items.",
+    "Content detection assertions (detecting actual a11y issues) pass at 100% for both versions - quality of the review itself is equivalent.",
+    "Token savings of 11.2% and tool call reduction of 39.2% confirm agent-browser CLI is more token-efficient than Playwright MCP.",
+    "Eval-3 (Navbar/SearchFilter) shows agent-browser working well for Playwright verdicts on pages that don't require auth - A-10 and A-11 both verified via Playwright.",
+    "The auth redirect issue affects both versions equally for Lighthouse, but Playwright MCP navigates around it better by using the browser to verify elements on the login page that also contains the Navbar."
+  ]
+}
