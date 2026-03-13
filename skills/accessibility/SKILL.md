@@ -1,7 +1,7 @@
 ---
 name: accessibility
 description: Web accessibility/web standards review. Reviews changed code against KWCAG2.2 and generates HTML + CSV reports. Invoked via web-quality orchestrator. Not directly triggerable.
-model: opus
+model: sonnet
 ---
 
 <Skill_Guide>
@@ -169,6 +169,7 @@ npx lighthouse {dev_server_url}{route} \
 ```
 
 Infer route from changed files:
+
 - `src/pages/Dashboard.tsx` → `/dashboard`
 - `src/app/about/page.tsx` → `/about`
 - Cannot infer → use baseURL only (homepage)
@@ -177,18 +178,18 @@ Infer route from changed files:
 
 Map Lighthouse audit IDs to KWCAG2.2 items (10 items):
 
-| KWCAG Item | Lighthouse audit ID | Item Name |
-| --- | --- | --- |
-| A-01 | `image-alt` | Alternative Text |
-| A-03 | `th-has-data-cells` | Table Structure |
-| A-08 | `color-contrast` | Color Contrast |
-| A-17 | `bypass` | Skip Navigation |
-| A-18 | `heading-order` | Page Title / Heading Hierarchy |
-| A-19 | `link-name` | Link Purpose |
-| A-23 | `button-name` | Label and Name |
-| A-25 | `html-has-lang` | Language of Page |
-| A-29 | `label` | Label in Name |
-| A-32 | `duplicate-id-active` | Parsing / Markup Errors |
+| KWCAG Item | Lighthouse audit ID   | Item Name                      |
+| ---------- | --------------------- | ------------------------------ |
+| A-01       | `image-alt`           | Alternative Text               |
+| A-03       | `th-has-data-cells`   | Table Structure                |
+| A-08       | `color-contrast`      | Color Contrast                 |
+| A-17       | `bypass`              | Skip Navigation                |
+| A-18       | `heading-order`       | Page Title / Heading Hierarchy |
+| A-19       | `link-name`           | Link Purpose                   |
+| A-23       | `button-name`         | Label and Name                 |
+| A-25       | `html-has-lang`       | Language of Page               |
+| A-29       | `label`               | Label in Name                  |
+| A-32       | `duplicate-id-active` | Parsing / Markup Errors        |
 
 ### 4-4. Interpret Lighthouse Results
 
@@ -214,114 +215,117 @@ Lighthouse analyzes the actual rendered DOM, making it more accurate than static
 
 ---
 
-## Step 5. Playwright Interaction Verification
+## Step 5. Browser Interaction Verification (agent-browser)
 
-Playwright MCP verifies **interaction-based items** in a real browser — keyboard navigation,
-focus movement, ARIA state changes, etc. This complements Lighthouse by covering dynamic
-behaviors that Lighthouse cannot detect.
+agent-browser CLI verifies **interaction-based items** in a real browser — keyboard navigation,
+focus movement, ARIA state changes, duplicate IDs, etc. It complements Lighthouse by covering
+dynamic behaviors that Lighthouse cannot detect.
+
+Why agent-browser over Playwright MCP: each Playwright MCP tool call returns the full
+accessibility tree (~2-5K tokens per snapshot), and keyboard testing requires ~10 round-trips.
+agent-browser chains all commands in a single Bash call, drastically reducing token usage.
 
 ### 5-1. Resolve Environment
 
-When invoked via the quality orchestrator, use the passed `playwright_available`, `dev_server_url`, and `runtime_probe_reason` values.
+When invoked via the quality orchestrator, use the passed `browser_available`, `dev_server_url`, and `runtime_probe_reason` values.
 
 Standalone execution — detect directly:
 
-Playwright MCP verification requires two things:
-1. **Playwright MCP tools available** — check if `mcp__playwright__browser_navigate` and similar tools exist
-2. **Dev server responding** — use the URL resolved by `node scripts/resolve-dev-server.mjs`
+```bash
+# ① Dev server check
+node scripts/resolve-dev-server.mjs
 
-- Either condition not met → Playwright-target items: `🔵 판정불가` (state the resolver reason or tool availability reason)
-- Both conditions met → proceed to Step 5-2
+# ② agent-browser availability (npx handles install automatically)
+npx agent-browser --version 2>/dev/null || echo "AB_NOT_AVAILABLE"
+```
+
+- Dev server unreachable or agent-browser unavailable → browser-target items: `🔵 판정불가` (state reason)
+- Both ready → proceed to Step 5-2
 
 ### 5-2. Determine Target URL
 
 When invoked via the quality orchestrator, use the passed `dev_server_url`.
 
 Standalone resolution order:
+
 1. Use the `dev_server_url` returned by `node scripts/resolve-dev-server.mjs`
 2. Infer route from changed files
 3. If route inference fails, use the base URL returned by the resolver as-is
 
-### 5-3. Playwright Verification Targets
+### 5-3. Browser Verification Targets
 
-| KWCAG Item | What to Verify | Playwright Technique |
-| --- | --- | --- |
-| A-10 | Keyboard operability | Tab key focus traversal (up to 10 times) |
-| A-11 | Focus visible | Check focus style changes after Tab |
-| A-12 | Focus order | Check focus moves to modal/popup on open |
-| A-26 | Change on request | Check select onChange auto-navigation |
-| A-28 | Error suggestion | Check error message + focus after form submit |
-| A-31 | Consistent navigation | Check persistent navigation after page transition |
-| A-33 | Web app accessibility | Check ARIA state changes after interaction |
+| KWCAG Item | What to Verify        | Verification Technique                            |
+| ---------- | --------------------- | ------------------------------------------------- |
+| A-10       | Keyboard operability  | Tab key focus traversal (up to 5 times)           |
+| A-11       | Focus visible         | Check focus style via JS eval after Tab           |
+| A-12       | Focus order           | Check focus moves to modal/popup on open          |
+| A-26       | Change on request     | Check select onChange auto-navigation             |
+| A-28       | Error suggestion      | Check error message + focus after form submit     |
+| A-31       | Consistent navigation | Check persistent navigation after page transition |
+| A-33       | Web app accessibility | Check ARIA state changes after interaction        |
 
-### 5-4. A-10: Keyboard Accessibility
+### 5-4. A-10 + A-11: Keyboard Accessibility & Focus Visible
 
-```
-browser_navigate({URL})
-browser_snapshot()              → record initial state
+Run keyboard traversal and focus style check in a **single chained command**.
+The `-i -c` flags produce a compact, interactive-elements-only snapshot — this keeps
+output small and token-efficient.
 
-browser_press_key('Tab')        → move focus (1st)
-browser_snapshot()              → verify focus
-
-browser_press_key('Tab')        → move focus (2nd)
-browser_snapshot()              → verify focus
-
-(repeat up to 10 times)
-```
-
-- All interactive elements reachable → `✅`
-- No focus movement or focus trap → `❌`
-- Only some elements reachable → `⚠️`
-
-### 5-5. A-11: Focus Visible Check
-
-On each Tab navigation, evaluate via snapshot:
-
-```javascript
-browser_evaluate(() => {
-  const focused = document.activeElement;
-  const style = getComputedStyle(focused);
-  return {
-    tag: focused.tagName,
-    outline: style.outline,
-    boxShadow: style.boxShadow,
-    border: style.border
-  };
-})
+```bash
+npx agent-browser open {URL} \
+  && npx agent-browser snapshot -i -c \
+  && npx agent-browser press Tab && npx agent-browser snapshot -i -c \
+  && npx agent-browser press Tab && npx agent-browser snapshot -i -c \
+  && npx agent-browser press Tab && npx agent-browser snapshot -i -c \
+  && npx agent-browser press Tab && npx agent-browser snapshot -i -c \
+  && npx agent-browser press Tab && npx agent-browser snapshot -i -c \
+  && npx agent-browser eval "(() => { const f = document.activeElement; const s = getComputedStyle(f); return JSON.stringify({tag:f.tagName,outline:s.outline,boxShadow:s.boxShadow,border:s.border}); })()"
 ```
 
-- At least one of outline/boxShadow/border shows visual change → `✅`
-- No visual indicator on any focused element → `❌`
+Compare snapshots to see which elements received focus:
+
+- A-10: All interactive elements reachable via Tab → `✅` / No focus movement or trap → `❌` / Partial → `⚠️`
+- A-11: outline/boxShadow/border shows visual change → `✅` / No visual indicator → `❌`
+
+### 5-5. A-32: Duplicate ID Verification
+
+Static analysis suspects duplicate IDs → confirm with actual DOM count:
+
+```bash
+npx agent-browser eval "document.querySelectorAll('[id]').length + ' total, duplicates: ' + JSON.stringify([...new Set([...document.querySelectorAll('[id]')].map(e=>e.id).filter((id,i,a)=>a.indexOf(id)!==i))])"
+```
 
 ### 5-6. A-33: Web App Accessibility (ARIA State)
 
+Check ARIA state changes before/after interaction in a single chain:
+
+```bash
+npx agent-browser snapshot -i -c \
+  && npx agent-browser click "@eN" \
+  && npx agent-browser snapshot -i -c
 ```
-browser_snapshot()              → record ARIA state before interaction
 
-browser_click({interactive element ref})
+Replace `@eN` with the element reference from the first snapshot (e.g., hamburger button, filter toggle).
+Compare the two snapshots for ARIA attribute changes:
 
-browser_snapshot()              → verify ARIA state after interaction
-```
-
-- `aria-expanded`, `aria-selected`, `aria-checked`, `aria-pressed`, etc. change → `✅`
+- `aria-expanded`, `aria-selected`, `aria-checked`, `aria-pressed` changes → `✅`
 - No state change (static ARIA) → `⚠️`
 - No interactive elements found → `➖`
 
 ### 5-7. Cross-Validation
 
-When Playwright and static analysis results differ → **Playwright result takes precedence**.
-Verdict method column: `Playwright`
+When browser verification and static analysis results differ → **browser result takes precedence**.
+Verdict method column: `Playwright` (keep this label for report consistency with KWCAG standards)
 
 ---
 
 ## Step 6. Classify Results
 
-| Result        | Meaning                                                                                                                                              |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `✅`          | Pass: no violation found                                                                                                                             |
-| `❌`          | Fail: violation found (include filename:line)                                                                                                        |
-| `⚠️`          | Advisory: no violation but improvement recommended                                                                                                   |
-| `➖`          | N/A: the relevant element does not exist                                                                                                             |
+| Result        | Meaning                                                                                                                                                                               |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `✅`          | Pass: no violation found                                                                                                                                                              |
+| `❌`          | Fail: violation found (include filename:line)                                                                                                                                         |
+| `⚠️`          | Advisory: no violation but improvement recommended                                                                                                                                    |
+| `➖`          | N/A: the relevant element does not exist                                                                                                                                              |
 | `🔵 판정불가` | Runtime verification not possible — must state specific reason: Lighthouse not installed / Playwright not available / Browser not installed / resolver could not reach the dev server |
 
 ---
