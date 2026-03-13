@@ -1,0 +1,34 @@
+{
+  "skill_name": "a11y",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "변경된 웹 코드의 접근성을 KWCAG2.2 기준으로 검토해줘",
+      "expected_output": "a11y-static과 a11y-browser 두 sub-skill을 모두 실행하고 결과를 merge하여 HTML+CSV 리포트 생성",
+      "files": ["../../features/next-app/app/dashboard/page.tsx", "../../features/next-app/components/StatsCard.tsx", "../../features/next-app/components/Navbar.tsx"],
+      "assertions": [
+        {"id": "static-analysis-executed", "text": "a11y-static 스킬의 정적분석이 실행되어 verdict_method='정적분석' 항목이 존재"},
+        {"id": "browser-verification-attempted", "text": "a11y-browser 스킬의 브라우저 검증이 시도됨 (성공 또는 판정불가)"},
+        {"id": "all-33-items-evaluated", "text": "33개 KWCAG2.2 항목이 모두 평가됨 (누락 없음)"},
+        {"id": "semantic-html-section-present", "text": "시맨틱 HTML 섹션이 리포트에 포함됨"},
+        {"id": "merge-browser-wins", "text": "브라우저 검증 항목(A-08,A-10,A-11,A-32,A-33 등)은 verdict_method='Playwright'로 표시됨 (브라우저 실행 성공 시)"},
+        {"id": "merge-pandingbulga-fallback", "text": "브라우저 판정불가 항목은 정적분석 결과로 fallback됨"},
+        {"id": "html-report-generated", "text": "report.html 파일이 reports/accessibility/ 디렉토리에 생성됨"},
+        {"id": "csv-report-generated", "text": "report.csv 파일이 reports/accessibility/ 디렉토리에 생성됨"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Navbar.tsx와 StatsCard.tsx의 접근성을 KWCAG2.2 기준으로 검토하고 리포트 생성해줘",
+      "expected_output": "두 컴포넌트에 대한 통합 접근성 검토, 정적분석+브라우저 결과 merge",
+      "files": ["../../features/next-app/components/Navbar.tsx", "../../features/next-app/components/StatsCard.tsx"],
+      "assertions": [
+        {"id": "both-files-analyzed", "text": "Navbar.tsx와 StatsCard.tsx 모두 분석 대상에 포함됨"},
+        {"id": "two-verdict-methods-present", "text": "정적분석과 Playwright 두 가지 verdict_method가 리포트에 존재 (브라우저 성공 시)"},
+        {"id": "fix-guides-provided", "text": "❌ 항목에 구체적인 수정 가이드가 포함됨"},
+        {"id": "report-in-korean", "text": "리포트가 한국어로 작성됨"},
+        {"id": "result-classification-correct", "text": "✅/❌/⚠️/➖/🔵 분류 체계가 올바르게 사용됨"}
+      ]
+    }
+  ]
+}

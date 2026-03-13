@@ -1,7 +1,9 @@
 ---
 name: seo
-description: SEO + Web Performance review covering Technical SEO (11 items) and Page Experience/Core Web Vitals (18 items). Invoked via web-quality orchestrator. Not directly triggerable.
+description: SEO + Web Performance review covering Technical SEO (11 items) and Page Experience/Core Web Vitals (18 items). Use when asked to review SEO, 검색엔진 최적화, SEO 검토, 성능 검토, Core Web Vitals, 웹 성능, or any SEO/performance audit.
 model: sonnet
+context: fork
+agent: general-purpose
 ---
 
 <Skill_Guide>
@@ -30,10 +32,7 @@ Core Web Vitals (LCP, INP, CLS) patterns, Framework quick fixes.
 
 ## Step 1. Review Scope
 
-When invoked via the quality orchestrator, use the file list passed from it as-is.
-Proceed to Step 2.
-
-Standalone execution only:
+Determine the files to review:
 
 ```bash
 git diff --name-only HEAD
@@ -148,18 +147,14 @@ Run Lighthouse CLI on the SEO and Performance categories to augment static analy
 
 ### 4-1. Check Environment
 
-When invoked via the quality orchestrator, use the passed `lighthouse_available`, `dev_server_url`, and `runtime_probe_reason` values.
-
-Standalone execution:
+Check Lighthouse availability:
 
 ```bash
-node scripts/resolve-dev-server.mjs
 npx lighthouse --version 2>/dev/null || echo "LH_NOT_INSTALLED"
 ```
 
-- Parse the resolver JSON and use its final `reachable`, `dev_server_url`, and `reason` values.
-- Lighthouse not installed or resolver says server unreachable → Lighthouse-target items: keep static analysis result, verdict = `정적분석`
-- Environment ready → proceed to Step 4-2
+- Lighthouse not installed → Lighthouse-target items: keep static analysis result, verdict = `정적분석`
+- Lighthouse available → proceed to Step 4-2
 
 ### 4-2. Run Lighthouse
 
