@@ -1,0 +1,47 @@
+{
+  "skill_name": "seo-static",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "layout.tsx, page.tsx, dashboard/page.tsx의 SEO와 웹 성능을 정적분석으로 검토해줘",
+      "expected_output": "29개 항목(SEO-01~11, WP-01~18)을 정적분석으로 평가, JSON 배열 반환",
+      "files": ["../../features/next-app/app/layout.tsx", "../../features/next-app/app/page.tsx", "../../features/next-app/app/dashboard/page.tsx"],
+      "assertions": [
+        {"id": "all-29-items-evaluated", "text": "29개 항목(SEO-01~11, WP-01~18)이 모두 평가됨"},
+        {"id": "all-verdict-static", "text": "모든 항목의 verdict_method가 '정적분석'임"},
+        {"id": "title-too-short-detected", "text": "title 태그가 너무 짧거나 일반적임을 지적"},
+        {"id": "json-ld-missing-detected", "text": "JSON-LD 구조화 데이터 누락 감지"},
+        {"id": "canonical-missing-detected", "text": "canonical URL 누락 감지"},
+        {"id": "file-line-references", "text": "발견된 이슈에 파일명:라인번호 참조 포함"},
+        {"id": "fix-guides-provided", "text": "❌/⚠️ 항목에 수정 가이드 포함"},
+        {"id": "guide-reference-read", "text": "guide.md 참조 문서를 읽고 기준에 따라 평가"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "dashboard/page.tsx에서 이미지 최적화와 렌더링 성능 문제를 정적분석해줘",
+      "expected_output": "WP 항목 중심 이미지/렌더링/CLS 패턴 분석",
+      "files": ["../../features/next-app/app/dashboard/page.tsx", "../../features/next-app/components/StatsCard.tsx"],
+      "assertions": [
+        {"id": "all-29-items-evaluated", "text": "29개 항목이 모두 평가됨 (해당 없는 항목은 ➖)"},
+        {"id": "img-width-height-missing", "text": "WP-04: 이미지 width/height 속성 누락 감지"},
+        {"id": "loading-lazy-missing", "text": "WP-05: loading=lazy 누락 감지"},
+        {"id": "standard-codes-used", "text": "SEO-XX, WP-XX 형식의 표준 코드 사용"},
+        {"id": "no-browser-dependency", "text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "globals.css와 layout.tsx의 폰트 최적화와 Core Web Vitals 관련 이슈를 정적분석해줘",
+      "expected_output": "WP 항목 중심, 폰트/LCP/CLS 코드 패턴 분석",
+      "files": ["../../features/next-app/app/globals.css", "../../features/next-app/app/layout.tsx"],
+      "assertions": [
+        {"id": "font-display-missing", "text": "WP-10: font-display 속성 누락 감지"},
+        {"id": "font-preload-missing", "text": "WP-11: 폰트 preload 누락 감지"},
+        {"id": "render-blocking-css-detected", "text": "WP-03: render-blocking CSS 이슈 감지"},
+        {"id": "wp-codes-referenced", "text": "WP 항목 코드가 결과에 포함됨"},
+        {"id": "json-array-format", "text": "결과가 JSON 배열 형식으로 반환됨"}
+      ]
+    }
+  ]
+}

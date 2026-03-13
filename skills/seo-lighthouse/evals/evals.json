@@ -1,0 +1,49 @@
+{
+  "skill_name": "seo-lighthouse",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "dashboard 페이지의 SEO와 성능을 Lighthouse로 실측 검증해줘",
+      "expected_output": "Lighthouse CLI로 17개 항목 검증 + CWV 메트릭 수집",
+      "files": ["../../features/next-app/app/dashboard/page.tsx"],
+      "assertions": [
+        {"id": "dev-server-started", "text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인"},
+        {"id": "lighthouse-cli-executed", "text": "npx lighthouse 명령어가 실행됨"},
+        {"id": "json-output-parsed", "text": "Lighthouse JSON 결과가 파싱되어 항목별로 매핑됨"},
+        {"id": "seo-items-mapped", "text": "SEO 항목 8개(SEO-01,02,04,05,06,09,10,11)가 Lighthouse audit에서 매핑됨"},
+        {"id": "wp-items-mapped", "text": "WP 항목 9개(WP-01~06,10,12,17)가 Lighthouse audit에서 매핑됨"},
+        {"id": "cwv-metrics-collected", "text": "LCP, CLS, TBT, Performance Score, SEO Score 메트릭이 수집됨"},
+        {"id": "verdict-method-lighthouse", "text": "모든 검증 항목의 verdict_method가 'Lighthouse'"},
+        {"id": "json-array-format", "text": "결과가 JSON 배열 형식으로 반환됨"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "홈페이지의 Core Web Vitals를 Lighthouse로 측정해줘",
+      "expected_output": "홈페이지 LCP, CLS, TBT 실측 + Performance/SEO Score",
+      "files": ["../../features/next-app/app/page.tsx"],
+      "assertions": [
+        {"id": "dev-server-auto-start", "text": "package.json에서 dev script를 찾아 서버 자동 시작"},
+        {"id": "homepage-targeted", "text": "홈페이지(/) URL로 Lighthouse 실행"},
+        {"id": "lcp-measured", "text": "LCP 측정값이 ms 단위로 포함됨"},
+        {"id": "cls-measured", "text": "CLS 측정값이 포함됨"},
+        {"id": "tbt-measured", "text": "TBT 측정값이 ms 단위로 포함됨"},
+        {"id": "threshold-comparison", "text": "각 메트릭이 기준값(LCP<=2500, CLS<=0.1, TBT<=200)과 비교됨"},
+        {"id": "pandingbulga-with-reason", "text": "검증 불가 시 구체적 사유 명시"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "layout.tsx와 globals.css 변경 후 Lighthouse SEO 점수가 어떤지 확인해줘",
+      "expected_output": "Lighthouse SEO/Performance 카테고리 실행, 점수 + 항목별 결과",
+      "files": ["../../features/next-app/app/layout.tsx", "../../features/next-app/app/globals.css"],
+      "assertions": [
+        {"id": "seo-score-reported", "text": "Lighthouse SEO Score가 0-100 범위로 보고됨"},
+        {"id": "performance-score-reported", "text": "Lighthouse Performance Score가 0-100 범위로 보고됨"},
+        {"id": "font-display-checked", "text": "WP-10: font-display audit 결과가 포함됨"},
+        {"id": "meta-tags-checked", "text": "SEO-02(title), SEO-05(description) audit 결과가 포함됨"},
+        {"id": "failing-details-included", "text": "❌ 항목에 failing element의 selector/snippet 포함"}
+      ]
+    }
+  ]
+}

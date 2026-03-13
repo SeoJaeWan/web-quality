@@ -4,68 +4,30 @@
     {
       "id": 1,
       "prompt": "변경된 페이지의 SEO 최적화 상태를 검토해줘",
-      "expected_output": "SEO-01~11 기준 분석, 우선순위별 이슈 식별",
+      "expected_output": "seo-static과 seo-lighthouse 두 sub-skill을 모두 실행하고 결과를 merge하여 HTML+CSV 리포트 생성",
       "files": ["../../features/next-app/app/layout.tsx", "../../features/next-app/app/page.tsx", "../../features/next-app/app/dashboard/page.tsx"],
       "assertions": [
-        {"id": "all-29-items-evaluated", "text": "리포트가 29개 항목(SEO-01~11, WP-01~18)을 모두 포함"},
-        {"id": "standard-codes-used", "text": "SEO-XX, WP-XX 형식의 표준 코드 사용"},
-        {"id": "title-too-short-detected", "text": "title 태그가 너무 짧거나 일반적임을 지적 (TestApp)"},
-        {"id": "reports-generated", "text": "report.csv와 report.html 모두 생성"},
-        {"id": "korean-language", "text": "리포트가 한국어로 작성됨"},
-        {"id": "verdict-method-lighthouse-used", "text": "Lighthouse 매핑 항목(SEO-01,02,04,05,06,09,10,11 / WP-01,02,03,04,05,06,10,12,17)에 verdict=Lighthouse 표기"}
+        {"id": "static-analysis-executed", "text": "seo-static 스킬의 정적분석이 실행되어 verdict_method='정적분석' 항목이 존재"},
+        {"id": "lighthouse-verification-attempted", "text": "seo-lighthouse 스킬의 Lighthouse 검증이 시도됨 (성공 또는 판정불가)"},
+        {"id": "all-29-items-evaluated", "text": "29개 항목(SEO-01~11, WP-01~18)이 모두 평가됨"},
+        {"id": "merge-lighthouse-wins", "text": "Lighthouse 검증 항목은 verdict_method='Lighthouse'로 표시됨 (Lighthouse 실행 성공 시)"},
+        {"id": "merge-pandingbulga-fallback", "text": "Lighthouse 판정불가 항목은 정적분석 결과로 fallback됨"},
+        {"id": "html-report-generated", "text": "report.html 파일이 reports/seo/ 디렉토리에 생성됨"},
+        {"id": "csv-report-generated", "text": "report.csv 파일이 reports/seo/ 디렉토리에 생성됨"},
+        {"id": "korean-language", "text": "리포트가 한국어로 작성됨"}
       ]
     },
     {
       "id": 2,
-      "prompt": "layout.tsx와 page.tsx의 메타 태그와 구조화 데이터를 SEO 관점에서 점검해줘",
-      "expected_output": "Critical SEO 항목 중심 메타태그, 구조화 데이터 분석",
-      "files": ["../../features/next-app/app/layout.tsx", "../../features/next-app/app/page.tsx"],
-      "assertions": [
-        {"id": "json-ld-missing-detected", "text": "JSON-LD 구조화 데이터 누락 감지"},
-        {"id": "canonical-missing-detected", "text": "canonical URL 누락 감지"},
-        {"id": "title-too-short-detected", "text": "title 태그가 너무 짧거나 일반적임을 지적"},
-        {"id": "description-quality-checked", "text": "meta description 품질 평가 (짧거나 비서술적)"},
-        {"id": "verdict-method-lighthouse-used", "text": "SEO-02(title), SEO-05(description), SEO-06(canonical) 등에 verdict=Lighthouse 표기"}
-      ]
-    },
-    {
-      "id": 3,
-      "prompt": "dashboard/page.tsx에서 이미지 최적화와 렌더링 성능 문제를 점검해줘. 특히 CLS 방지랑 로딩 최적화 위주로",
-      "expected_output": "WP 항목 중심 이미지/렌더링 최적화 분석, CLS 관련 항목 강조",
-      "files": ["../../features/next-app/app/dashboard/page.tsx", "../../features/next-app/components/StatsCard.tsx"],
-      "assertions": [
-        {"id": "img-width-height-missing", "text": "이미지 width/height 속성 누락 감지"},
-        {"id": "loading-lazy-missing", "text": "loading=lazy 누락 감지"},
-        {"id": "layout-thrashing-detected", "text": "레이아웃 스래싱 패턴 감지"},
-        {"id": "dynamic-cls-detected", "text": "동적 콘텐츠 CLS 문제 감지"},
-        {"id": "verdict-method-lighthouse-used", "text": "WP-04(unsized-images), WP-05(offscreen-images) 등에 verdict=Lighthouse 표기"}
-      ]
-    },
-    {
-      "id": 4,
-      "prompt": "globals.css와 layout.tsx의 폰트 최적화와 Core Web Vitals 관련 이슈를 분석해줘",
-      "expected_output": "WP 항목 중심, 폰트/LCP/CLS 분석",
-      "files": ["../../features/next-app/app/globals.css", "../../features/next-app/app/layout.tsx"],
-      "assertions": [
-        {"id": "font-display-missing", "text": "font-display 속성 누락 감지"},
-        {"id": "font-preload-missing", "text": "폰트 preload 누락 감지"},
-        {"id": "render-blocking-css-detected", "text": "render-blocking CSS 또는 font-face 이슈 감지"},
-        {"id": "wp-codes-referenced", "text": "WP 항목 코드가 결과에 포함됨"},
-        {"id": "verdict-method-lighthouse-used", "text": "WP-10(font-display) 등에 verdict=Lighthouse 표기"}
-      ]
-    },
-    {
-      "id": 5,
       "prompt": "변경된 파일 전체에 대해 SEO + 웹 성능 종합 리뷰해줘. SEO-01~11이랑 WP-01~18 전부 다 봐줘",
-      "expected_output": "SEO 11항목 + WP 18항목 전체 평가, 통합 결과표 출력",
+      "expected_output": "29개 항목 전체 평가, Lighthouse 메트릭 포함, 통합 리포트",
       "files": ["../../features/next-app/app/layout.tsx", "../../features/next-app/app/page.tsx", "../../features/next-app/app/dashboard/page.tsx", "../../features/next-app/app/globals.css"],
       "assertions": [
-        {"id": "all-29-items-evaluated", "text": "29개 항목(SEO-01~11, WP-01~18) 모두 포함"},
-        {"id": "standard-codes-used", "text": "SEO-XX, WP-XX 형식의 표준 코드 사용"},
-        {"id": "all-items-have-result", "text": "모든 항목에 Pass/Fail/N/A 결과 표기"},
-        {"id": "file-line-refs-included", "text": "파일명과 라인 번호 참조 포함"},
-        {"id": "verdict-method-lighthouse-used", "text": "Lighthouse 매핑 항목에 verdict=Lighthouse 표기"},
-        {"id": "lighthouse-metrics-summary", "text": "Lighthouse 메트릭 요약 (Performance Score, SEO Score, LCP, CLS, TBT) 포함"}
+        {"id": "all-29-items-evaluated", "text": "29개 항목 모두 포함"},
+        {"id": "two-verdict-methods-present", "text": "정적분석과 Lighthouse 두 가지 verdict_method가 리포트에 존재 (Lighthouse 성공 시)"},
+        {"id": "lighthouse-metrics-summary", "text": "Lighthouse 메트릭 요약 (Performance Score, SEO Score, LCP, CLS, TBT) 포함 (Lighthouse 성공 시)"},
+        {"id": "fix-guides-provided", "text": "❌ 항목에 구체적인 수정 가이드가 포함됨"},
+        {"id": "result-classification-correct", "text": "✅/❌/⚠️/➖/🔵 분류 체계가 올바르게 사용됨"}
       ]
     }
   ]
