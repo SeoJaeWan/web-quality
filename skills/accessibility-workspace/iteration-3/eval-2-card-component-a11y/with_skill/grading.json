@@ -1,0 +1,48 @@
+{
+  "eval_id": 2,
+  "eval_name": "card-component-a11y",
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "All 33 KWCAG2.2 items are evaluated",
+      "passed": true,
+      "evidence": "The CSV report contains all 33 KWCAG2.2 items numbered 1-33, each with a verdict (pass/fail/NA). The HTML summary table confirms '전체 (33항목)' with 15 pass, 4 fail, 14 NA."
+    },
+    {
+      "text": "Detected div onClick without keyboard accessibility",
+      "passed": true,
+      "evidence": "Item 10 (키보드 사용 보장) marked ❌ with description: 'StatsCard.tsx:10,17 — <div onClick> 에 tabIndex·role·onKeyDown 없음. 키보드 접근 불가'. Detailed fix recommendations include button replacement or role/tabIndex/onKeyDown addition."
+    },
+    {
+      "text": "Detected duplicate id='stat-card' when rendered in a list",
+      "passed": true,
+      "evidence": "Item 32 (마크업 오류 방지) marked ❌ with description: 'StatsCard.tsx:13 — id=\"stat-card\" 하드코딩. 복수 렌더링 시 ID 중복 위반'. Fix suggests removing id or using dynamic id like id={`stat-card-${testId}`}."
+    },
+    {
+      "text": "Each issue is mapped to a specific KWCAG item number",
+      "passed": true,
+      "evidence": "All detected issues are mapped to specific KWCAG item numbers: A-10 (키보드 사용 보장), A-23 (레이블과 네임), A-32 (마크업 오류 방지), A-33 (웹 애플리케이션 접근성 준수). The CSV and HTML both reference items by number."
+    },
+    {
+      "text": "Fix recommendations are provided for each found issue",
+      "passed": true,
+      "evidence": "All 4 failed items (10, 23, 32, 33) have detailed fix recommendations in both CSV (수정 가이드 column) and HTML (수정 필요 항목 section with code examples). Item 10 includes two fix methods with full code snippets."
+    },
+    {
+      "text": "Lighthouse-mapped items show verdict method as Lighthouse when dev server is running",
+      "passed": true,
+      "evidence": "Multiple items use Lighthouse as verdict method: items 1, 3, 8, 17, 18, 19, 25, 29 all show '판정방식: Lighthouse' in the CSV. HTML meta confirms 'Lighthouse: 사용됨 — http://localhost:3000 (점수: 100/100)'."
+    },
+    {
+      "text": "Browser-target items (A-10) show verdict method as Playwright when dev server is running",
+      "passed": false,
+      "evidence": "Item A-10 (키보드 사용 보장) shows verdict method as '정적분석' (static analysis), not 'Playwright'. The HTML meta section explicitly states 'Browser 검증: 미사용 — agent-browser 모듈 로딩 오류 (npx 캐시 불일치)', indicating Playwright/browser verification was not used due to a module loading error."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 1,
+    "total": 7,
+    "pass_rate": 0.86
+  }
+}

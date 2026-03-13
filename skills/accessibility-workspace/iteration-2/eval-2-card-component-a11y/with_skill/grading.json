@@ -1,0 +1,48 @@
+{
+  "eval_id": 2,
+  "eval_name": "card-component-a11y",
+  "configuration": "with_skill",
+  "expectations": [
+    {
+      "text": "All 33 KWCAG2.2 items are evaluated",
+      "passed": true,
+      "evidence": "CSV contains rows numbered 1-33, each with an item name, principle, result verdict, and verdict method. All 33 KWCAG2.2 items are present (plus 7 additional semantic HTML items)."
+    },
+    {
+      "text": "Detected div onClick without keyboard accessibility",
+      "passed": true,
+      "evidence": "Item 10 (키보드 사용 보장) marked ❌ with: 'StatsCard.tsx:10–21 — <div onClick>이 키보드 접근 불가. Playwright 확인: tabIndex=-1, role 없음, onKeyDown 없음. Tab 탐색 시 완전히 건너뜀.'"
+    },
+    {
+      "text": "Detected duplicate id='stat-card' when rendered in a list",
+      "passed": true,
+      "evidence": "Item 32 (마크업 오류 방지) marked ❌ with: 'id=\"stat-card\" 하드코딩으로 동일 ID 중복. Playwright 확인: DOM에 동일 id 3개 존재.'"
+    },
+    {
+      "text": "Each issue is mapped to a specific KWCAG item number",
+      "passed": true,
+      "evidence": "All items are numbered 1-33 in the CSV and HTML report. Failed items explicitly reference their KWCAG numbers: A-10, A-23, A-32, A-33 in the fix section."
+    },
+    {
+      "text": "Fix recommendations are provided for each found issue",
+      "passed": true,
+      "evidence": "All four failed items (10, 23, 32, 33) have detailed fix guides in both CSV and HTML. Item 10: button replacement or role+tabIndex+onKeyDown. Item 23: aria-label addition. Item 32: remove hardcoded id, use testId. Item 33: button replacement or role+aria-label. The semantic HTML issue also includes a fix recommendation."
+    },
+    {
+      "text": "Lighthouse-mapped items show verdict method as Lighthouse when dev server is running",
+      "passed": true,
+      "evidence": "Items 1 (적절한 대체 텍스트), 3 (표의 구성), 8 (명도 대비), 17 (반복 영역 건너뛰기), 18 (제목 제공), 19 (링크 텍스트), 25 (기본 언어), 29 (레이블 제공) all show 'Lighthouse' as 판정방식."
+    },
+    {
+      "text": "Playwright-target items (A-10) show verdict method as Playwright when dev server is running",
+      "passed": true,
+      "evidence": "Item 10 (키보드 사용 보장) shows 'Playwright' as 판정방식. Additionally items 11, 23, 32, 33 also show Playwright as verdict method."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "skill_name": "accessibility",
+    "timestamp": "2026-03-13",
+    "evals_run": ["kwcag-full-review", "card-component-a11y", "semantic-html-review"],
+    "runs_per_configuration": 1,
+    "model": "sonnet",
+    "notes": "iteration-2: model changed from opus to sonnet"
+  },
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.957, "stddev": 0.047},
+      "time_seconds": {"mean": 349.3, "stddev": 57.0},
+      "tokens": {"mean": 67909, "stddev": 5580}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.557, "stddev": 0.042},
+      "time_seconds": {"mean": 203.3, "stddev": 100.2},
+      "tokens": {"mean": 26704, "stddev": 9659}
+    },
+    "delta": {
+      "pass_rate": "+40.0%",
+      "time_seconds": "+146.0",
+      "tokens": "+41205"
+    }
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "kwcag-full-review",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 0.9, "passed": 9, "total": 10, "time_seconds": 429.4, "tokens": 75760},
+      "expectations": [
+        {"text": "All 33 KWCAG2.2 items are evaluated in the report", "passed": true, "evidence": "CSV contains rows numbered 1-33, all with result and verdict method"},
+        {"text": "Semantic HTML review section is included in the report", "passed": true, "evidence": "HTML report contains 시맨틱 HTML 검토 section with 7 items"},
+        {"text": "Found issues include filename:line references", "passed": true, "evidence": "page.tsx:83, StatsCard.tsx:10-21, Navbar.tsx:59-72 etc."},
+        {"text": "report.html file is generated", "passed": true, "evidence": "File exists (512 lines)"},
+        {"text": "report.csv file is generated", "passed": true, "evidence": "File exists (41 lines)"},
+        {"text": "Detected missing alt attribute on img", "passed": true, "evidence": "Item 1: page.tsx:83 img alt 속성 누락"},
+        {"text": "Detected icon buttons without aria-label", "passed": true, "evidence": "Item 23: page.tsx:59,62 SVG icon buttons"},
+        {"text": "Detected duplicate id='stat-card'", "passed": true, "evidence": "Item 32: StatsCard.tsx:13 중복 3개"},
+        {"text": "Lighthouse-mapped items show Lighthouse verdict", "passed": false, "evidence": "A-01 shows 정적분석, A-17/A-32 show Playwright instead of Lighthouse"},
+        {"text": "Playwright-target items show Playwright verdict", "passed": true, "evidence": "A-10, A-11, A-33 all show Playwright"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "kwcag-full-review",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 0.6, "passed": 6, "total": 10, "time_seconds": 343.0, "tokens": 40050},
+      "expectations": [
+        {"text": "All 33 KWCAG2.2 items are evaluated in the report", "passed": false, "evidence": "Only 13 items evaluated"},
+        {"text": "Semantic HTML review section is included in the report", "passed": false, "evidence": "No dedicated semantic HTML section"},
+        {"text": "Found issues include filename:line references", "passed": true, "evidence": "File:line references present"},
+        {"text": "report.html file is generated", "passed": true, "evidence": "File exists (678 lines)"},
+        {"text": "report.csv file is generated", "passed": true, "evidence": "File exists (14 lines)"},
+        {"text": "Detected missing alt attribute on img", "passed": true, "evidence": "Finding #1: page.tsx:83 alt 누락"},
+        {"text": "Detected icon buttons without aria-label", "passed": true, "evidence": "Finding #2: page.tsx:59-65 SVG icon buttons"},
+        {"text": "Detected duplicate id='stat-card'", "passed": true, "evidence": "Finding #6: StatsCard.tsx:13 중복"},
+        {"text": "Lighthouse-mapped items show Lighthouse verdict", "passed": false, "evidence": "Uses 자동/수동 only, never Lighthouse"},
+        {"text": "Playwright-target items show Playwright verdict", "passed": false, "evidence": "No Playwright verdicts, uses 자동/수동 only"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "card-component-a11y",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 7, "total": 7, "time_seconds": 317.3, "tokens": 64717},
+      "expectations": [
+        {"text": "All 33 KWCAG2.2 items are evaluated", "passed": true, "evidence": "CSV rows 1-33 plus 7 semantic HTML items"},
+        {"text": "Detected div onClick without keyboard accessibility", "passed": true, "evidence": "Item 10: StatsCard.tsx:10-21 div onClick keyboard inaccessible"},
+        {"text": "Detected duplicate id='stat-card'", "passed": true, "evidence": "Item 32: id=stat-card 중복 3개 (Playwright confirmed)"},
+        {"text": "Each issue mapped to KWCAG item number", "passed": true, "evidence": "Standard 1-33 numbering, A-10/A-23/A-32/A-33 in fix section"},
+        {"text": "Fix recommendations provided", "passed": true, "evidence": "All 4 failed items have detailed fix guides with code examples"},
+        {"text": "Lighthouse verdict method used", "passed": true, "evidence": "Items 1,3,8,17,18,19,25,29 show Lighthouse"},
+        {"text": "Playwright verdict method for A-10", "passed": true, "evidence": "Items 10,11,23,32,33 show Playwright"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "card-component-a11y",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 0.571, "passed": 4, "total": 7, "time_seconds": 113.2, "tokens": 17513},
+      "expectations": [
+        {"text": "All 33 KWCAG2.2 items are evaluated", "passed": false, "evidence": "Only 5 items reviewed"},
+        {"text": "Detected div onClick without keyboard accessibility", "passed": true, "evidence": "Item 1 (KWCAG 2.1.1): div onClick keyboard inaccessible"},
+        {"text": "Detected duplicate id='stat-card'", "passed": true, "evidence": "Item 4 (KWCAG 4.1.1): id=stat-card 중복"},
+        {"text": "Each issue mapped to KWCAG item number", "passed": true, "evidence": "Uses KWCAG 2.1.1 style numbering"},
+        {"text": "Fix recommendations provided", "passed": true, "evidence": "All 5 items have fix guides"},
+        {"text": "Lighthouse verdict method used", "passed": false, "evidence": "All items use 코드 검토, no Lighthouse"},
+        {"text": "Playwright verdict method for A-10", "passed": false, "evidence": "No Playwright verdicts, all use 코드 검토"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "semantic-html-review",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 6, "total": 6, "time_seconds": 301.2, "tokens": 63250},
+      "expectations": [
+        {"text": "Detected missing aria-expanded on hamburger menu", "passed": true, "evidence": "Item 33: Navbar.tsx:59-72 aria-expanded 없음"},
+        {"text": "Detected missing aria-pressed on filter buttons", "passed": true, "evidence": "Item 33: SearchFilter.tsx:32-43 aria-pressed 없음"},
+        {"text": "Dedicated semantic HTML review section", "passed": true, "evidence": "시맨틱 HTML 검토 section with 8 sub-items"},
+        {"text": "Standard classification system used", "passed": true, "evidence": "All five symbols ✅/❌/⚠️/➖/🔵 used"},
+        {"text": "Fix recommendations provided", "passed": true, "evidence": "All failed/advisory items have fix guides with code examples"},
+        {"text": "Playwright verdict for A-33", "passed": true, "evidence": "Item 33 shows Playwright as verdict method"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "semantic-html-review",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 0.5, "passed": 3, "total": 6, "time_seconds": 153.6, "tokens": 22550},
+      "expectations": [
+        {"text": "Detected missing aria-expanded on hamburger menu", "passed": true, "evidence": "Navbar.tsx item #1: aria-expanded 누락"},
+        {"text": "Detected missing aria-pressed on filter buttons", "passed": true, "evidence": "SearchFilter.tsx item #2: aria-pressed 누락"},
+        {"text": "Dedicated semantic HTML review section", "passed": false, "evidence": "Organized by component file, no dedicated section"},
+        {"text": "Standard classification system used", "passed": false, "evidence": "Uses Korean text badges (불합격/경고/합격) not emoji symbols"},
+        {"text": "Fix recommendations provided", "passed": true, "evidence": "Every item includes 수정 방법 section"},
+        {"text": "Playwright verdict for A-33", "passed": false, "evidence": "All items use 정적 코드 분석, no Playwright"}
+      ]
+    }
+  ],
+  "notes": [
+    "Iteration-2 uses sonnet model (changed from opus in iteration-1)",
+    "with_skill achieves 95.7% pass rate (22/23 assertions) vs without_skill 55.7% (13/23)",
+    "Sole with_skill failure: Lighthouse verdict method inconsistency in eval-1 (A-01/A-17/A-32 used wrong methods)",
+    "without_skill consistently fails: full 33-item coverage, standard classification, Lighthouse/Playwright integration",
+    "Sonnet with_skill costs ~2.5x tokens (68K vs 27K) and ~1.7x time (349s vs 203s) compared to without_skill",
+    "Compared to iteration-1 (opus): with_skill pass rate slightly decreased (100%→95.7%), time increased (198s→349s), tokens increased (53K→68K)",
+    "Compared to iteration-1 (opus): without_skill pass rate decreased (71.7%→55.7%), time increased (107s→203s), tokens increased (18K→27K)"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "eval_id": 1,
+  "eval_name": "kwcag-full-review",
+  "configuration": "without_skill",
+  "expectations": [
+    {
+      "text": "All 33 KWCAG2.2 items are evaluated in the report",
+      "passed": false,
+      "evidence": "The CSV contains only 13 data rows (plus 1 header = 14 lines total). The HTML report also shows only 13 findings. The report explicitly states '전체 검토 항목: 13'. Far short of the required 33 KWCAG 2.2 items."
+    },
+    {
+      "text": "Semantic HTML review section is included in the report",
+      "passed": false,
+      "evidence": "No section titled 'Semantic HTML', '시맨틱', or '의미론적' exists in report.html. The report has sections: 검토 요약, 검토 대상 파일, 세부 검토 결과 — none dedicated to semantic HTML review."
+    },
+    {
+      "text": "Found issues include filename:line references",
+      "passed": true,
+      "evidence": "Issues consistently cite file and line references, e.g. 'dashboard/page.tsx 83번째 줄', 'StatsCard.tsx 10~22번째 줄', 'Navbar.tsx 37~42번째 줄' in both CSV and HTML report."
+    },
+    {
+      "text": "report.html file is generated in outputs directory",
+      "passed": true,
+      "evidence": "File exists at outputs/report.html (678 lines of well-formed HTML)."
+    },
+    {
+      "text": "report.csv file is generated in outputs directory",
+      "passed": true,
+      "evidence": "File exists at outputs/report.csv (14 lines: 1 header + 13 data rows)."
+    },
+    {
+      "text": "Detected missing alt attribute on img in dashboard/page.tsx",
+      "passed": true,
+      "evidence": "CSV row 1 and HTML finding #1 identify 'dashboard/page.tsx 83번째 줄: <img src=\"/promo-banner.png\"> 요소에 alt 속성이 완전히 누락' — correctly detecting the missing alt attribute."
+    },
+    {
+      "text": "Detected icon buttons without aria-label in dashboard/page.tsx",
+      "passed": true,
+      "evidence": "CSV row 2 and HTML finding #2 identify 'dashboard/page.tsx 59~65번째 줄: 새로고침·설정 버튼이 SVG 아이콘만으로 구성되고 aria-label 및 SVG title 요소가 없음'."
+    },
+    {
+      "text": "Detected duplicate id='stat-card' issue in StatsCard.tsx",
+      "passed": true,
+      "evidence": "CSV row 6 and HTML finding #6 identify 'StatsCard.tsx 13번째 줄: id=\"stat-card\"가 3개 인스턴스에 동일하게 사용됨. HTML 스펙 위반'."
+    },
+    {
+      "text": "Lighthouse-mapped items (A-01, A-08, A-17, A-23, A-25, A-29, A-32) show verdict method as Lighthouse, not 정적분석",
+      "passed": false,
+      "evidence": "The CSV does not use item codes like A-01, A-08, etc. The verdict method column (판정방식) uses '자동' or '수동' only — never 'Lighthouse'. No Lighthouse-based verdicts appear anywhere in the report."
+    },
+    {
+      "text": "Playwright-target items (A-10, A-11, A-33) show verdict method as Playwright, not 판정불가",
+      "passed": false,
+      "evidence": "The CSV does not contain item codes A-10, A-11, A-33, and the verdict method column never mentions 'Playwright'. The report uses only '자동' and '수동' as verdict methods."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 4,
+    "total": 10,
+    "pass_rate": 0.6
+  }
+}

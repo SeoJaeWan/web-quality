@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>웹 접근성 검토 리포트 — 2026-03-13</title>
+<style>
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; max-width: 1200px; margin: 0 auto; padding: 24px; color: #333; line-height: 1.6; }
+  h1 { border-bottom: 3px solid #333; padding-bottom: 8px; }
+  h2 { border-left: 5px solid #555; padding-left: 12px; margin-top: 32px; }
+  h3 { color: #444; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9em; }
+  th { background: #f5f5f5; padding: 10px 12px; border: 1px solid #ddd; text-align: left; white-space: nowrap; }
+  td { padding: 10px 12px; border: 1px solid #ddd; vertical-align: top; }
+  tr:hover td { background: #fafafa; }
+  .result-pass    { background: #d4edda; color: #155724; font-weight: bold; text-align: center; }
+  .result-fail    { background: #f8d7da; color: #721c24; font-weight: bold; text-align: center; }
+  .result-partial { background: #fff3cd; color: #856404; font-weight: bold; text-align: center; }
+  .result-na      { background: #e2e3e5; color: #383d41; text-align: center; }
+  .result-unknown { background: #dce8f8; color: #1a4a8a; text-align: center; font-size: 0.85em; }
+  .method-playwright { color: #0066cc; font-size: 0.8em; font-weight: bold; }
+  .method-lighthouse { color: #e67e00; font-size: 0.8em; font-weight: bold; }
+  .method-static     { color: #666; font-size: 0.8em; }
+  .method-unknown    { color: #999; font-size: 0.8em; }
+  .summary-pass { color: #155724; font-weight: bold; }
+  .summary-fail { color: #721c24; font-weight: bold; }
+  .fix-fail    { background: #fff5f5; border-left: 4px solid #dc3545; border-radius: 0 4px 4px 0; padding: 16px; margin: 12px 0; }
+  .fix-partial { background: #fffdf0; border-left: 4px solid #ffc107; border-radius: 0 4px 4px 0; padding: 16px; margin: 12px 0; }
+  code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.9em; }
+  .meta { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 16px; margin-bottom: 24px; }
+  .meta ul { list-style: none; margin: 0; padding: 0; }
+  .meta li { margin: 4px 0; }
+  .playwright-badge { display: inline-block; background: #0066cc; color: white; font-size: 0.75em; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+  .lighthouse-badge { display: inline-block; background: #e67e00; color: white; font-size: 0.75em; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+</style>
+</head>
+<body>
+
+<h1>웹 접근성/웹표준 검토 리포트</h1>
+
+<div class="meta">
+<ul>
+  <li><strong>날짜:</strong> 2026-03-13</li>
+  <li><strong>검토 파일:</strong> features/next-app/components/StatsCard.tsx</li>
+  <li><strong>기준:</strong> KWCAG2.2 (한국지능정보사회진흥원, 2024.10) + 시맨틱 HTML (HTML Living Standard)</li>
+  <li><strong>Lighthouse:</strong> 사용됨 <span class="lighthouse-badge">자동검사</span> — http://localhost:3000 (score: 100/100)</li>
+  <li><strong>Playwright:</strong> 사용됨 <span class="playwright-badge">자동검사</span> — http://localhost:3000/dashboard</li>
+  <li><strong>비고:</strong> StatsCard는 dashboard 페이지에서 3회 반복 렌더링됨 (전체 할 일 / 완료 / 진행중)</li>
+</ul>
+</div>
+
+<h2>요약</h2>
+<table>
+  <tr>
+    <th>원칙</th><th>합격(✅)</th><th>권고(⚠️)</th><th>불합격(❌)</th><th>해당없음(➖)</th><th>판정불가(🔵)</th><th>합격률</th>
+  </tr>
+  <tr>
+    <td>인식의 용이성 (9항목)</td>
+    <td class="summary-pass">7</td>
+    <td>0</td>
+    <td class="summary-fail">0</td>
+    <td>2</td>
+    <td>0</td>
+    <td>100% (해당항목 기준)</td>
+  </tr>
+  <tr>
+    <td>운용의 용이성 (15항목)</td>
+    <td class="summary-pass">5</td>
+    <td>1</td>
+    <td class="summary-fail">2</td>
+    <td>7</td>
+    <td>0</td>
+    <td>62.5% (해당항목 기준)</td>
+  </tr>
+  <tr>
+    <td>이해의 용이성 (7항목)</td>
+    <td class="summary-pass">4</td>
+    <td>0</td>
+    <td class="summary-fail">0</td>
+    <td>3</td>
+    <td>0</td>
+    <td>100% (해당항목 기준)</td>
+  </tr>
+  <tr>
+    <td>견고성 (2항목)</td>
+    <td class="summary-pass">0</td>
+    <td>0</td>
+    <td class="summary-fail">2</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0%</td>
+  </tr>
+  <tr style="font-weight:bold; background:#f5f5f5;">
+    <td>전체 (33항목)</td>
+    <td class="summary-pass">16</td>
+    <td>1</td>
+    <td class="summary-fail">4</td>
+    <td>12</td>
+    <td>0</td>
+    <td><strong>76.2% (해당 21항목 기준)</strong></td>
+  </tr>
+</table>
+
+<h2>상세 결과</h2>
+
+<h3>원칙 1. 인식의 용이성 (Perceivable)</h3>
+<table>
+  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>
+  <tr>
+    <td>1</td><td>적절한 대체 텍스트</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>img 요소 없음. 텍스트 콘텐츠만 사용</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>2</td><td>자막 제공</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>video/audio 요소 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>3</td><td>표의 구성</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>table 요소 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>4</td><td>콘텐츠의 선형 구조</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>DOM 순서가 논리적: 숫자(value) → 레이블(label) 순으로 렌더링</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>5</td><td>명확한 지시 사항</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>색상·위치만으로 지시하는 패턴 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>6</td><td>색에 무관한 콘텐츠 인식</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>색상만으로 정보를 구분하는 패턴 없음. 텍스트 레이블로 구분</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>7</td><td>자동 재생 금지</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>autoplay 속성 없음, 미디어 요소 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>8</td><td>텍스트 명도 대비</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse color-contrast 점수 1.0 (통과). text-zinc-900(#18181b)/bg-white(#ffffff): 약 19:1. text-zinc-500(#71717a)/bg-white: 약 4.6:1 (기준 4.5:1 충족)</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>9</td><td>콘텐츠 간의 구분</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>border border-zinc-200, rounded-xl, p-6으로 카드 경계 명확히 구분됨</td>
+    <td>-</td>
+  </tr>
+</table>
+
+<h3>원칙 2. 운용의 용이성 (Operable)</h3>
+<table>
+  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>
+  <tr>
+    <td>10</td><td>키보드 사용 보장</td>
+    <td class="result-fail">❌</td>
+    <td><span class="method-playwright">Playwright</span></td>
+    <td>StatsCard.tsx:10 — <code>&lt;div onClick={handleClick}&gt;</code>에 키보드 접근 불가. Playwright 확인 결과 tabIndex: -1로 Tab 포커스 이동 불가. onKeyDown 핸들러 없음</td>
+    <td><code>&lt;button&gt;</code>으로 교체하거나 <code>tabIndex={0}</code> + <code>role="button"</code> + <code>onKeyDown</code>(Enter/Space) 추가</td>
+  </tr>
+  <tr>
+    <td>11</td><td>초점 이동과 표시</td>
+    <td class="result-partial">⚠️</td>
+    <td><span class="method-playwright">Playwright</span></td>
+    <td>StatsCard.tsx:10 — 클릭 가능한 div가 Tab 포커스 순서에서 제외되어 있어 초점이 도달하지 않음. 다른 포커스 가능 요소(링크, 버튼)는 브라우저 기본 outline으로 표시됨</td>
+    <td>A-10 수정 후 커스텀 :focus 스타일 추가하여 초점 표시 명확화</td>
+  </tr>
+  <tr>
+    <td>12</td><td>조작 가능</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>별도 크기 제한 없음. p-6 패딩으로 충분한 터치 영역 제공</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>13</td><td>문자 단축키</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>단일 문자 단축키 사용 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>14</td><td>응답시간 조절</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>시간 제한 콘텐츠 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>15</td><td>정지 기능 제공</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>자동 변경 콘텐츠 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>16</td><td>깜박임과 번쩍임 제한</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>깜박이는 콘텐츠 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>17</td><td>반복 영역 건너뛰기</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse bypass 점수 N/A (컴포넌트 단위 평가). 페이지 수준 검토 대상</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>18</td><td>제목 제공</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse heading-order 점수 1.0. StatsCard 자체는 제목 요소 없는 카드 컴포넌트 (적절)</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>19</td><td>적절한 링크 텍스트</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse link-name 점수 1.0. 링크 요소 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>20</td><td>고정된 참조 위치</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>전자출판문서 형식 아님</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>21</td><td>단일 포인터 입력 지원</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>다중 포인터·경로기반 동작 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>22</td><td>포인터 입력 취소</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>StatsCard.tsx:17 — onClick (mouseup 기반) 사용. onMouseDown 즉시 실행 패턴 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>23</td><td>레이블과 네임</td>
+    <td class="result-fail">❌</td>
+    <td><span class="method-playwright">Playwright</span></td>
+    <td>StatsCard.tsx:10 — 클릭 가능한 <code>&lt;div&gt;</code>에 <code>aria-label</code> 없음. Playwright 확인: role=null, ariaLabel=null. 스크린리더가 카드의 목적 인식 불가</td>
+    <td><code>aria-label={`${label}: ${value}`}</code> 추가 또는 <code>&lt;button&gt;</code>으로 교체 시 텍스트 콘텐츠로 대체</td>
+  </tr>
+  <tr>
+    <td>24</td><td>동작 기반 작동</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>DeviceMotionEvent, DeviceOrientationEvent 사용 없음</td>
+    <td>-</td>
+  </tr>
+</table>
+
+<h3>원칙 3. 이해의 용이성 (Understandable)</h3>
+<table>
+  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>
+  <tr>
+    <td>25</td><td>기본 언어 표시</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse html-has-lang 점수 1.0. &lt;html lang&gt; 속성 확인됨</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>26</td><td>사용자 요구에 따른 실행</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>자동 초점 변화, 새 창 자동 열기 없음. onClick만 사용</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>27</td><td>찾기 쉬운 도움 정보</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>도움 정보 링크 없음 (카드 컴포넌트 범위 외)</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>28</td><td>오류 정정</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>입력 폼 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>29</td><td>레이블 제공</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse label 점수 N/A. input/select/textarea 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>30</td><td>접근 가능한 인증</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>인증 과정 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>31</td><td>반복 입력 정보</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>반복 입력 폼 없음 (읽기 전용 카드)</td>
+    <td>-</td>
+  </tr>
+</table>
+
+<h3>원칙 4. 견고성 (Robust)</h3>
+<table>
+  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>
+  <tr>
+    <td>32</td><td>마크업 오류 방지</td>
+    <td class="result-fail">❌</td>
+    <td><span class="method-playwright">Playwright</span></td>
+    <td>StatsCard.tsx:13 — <code>id="stat-card"</code> 하드코딩. 동일 id가 3개 DOM에 동시 존재 확인 (Playwright: duplicates: ["stat-card"]). KWCAG 32-4 위반 — 동일 ID 속성값 중복 사용</td>
+    <td>정적 id 제거 또는 고유 id 사용: <code>id={`stat-card-${testId}`}</code></td>
+  </tr>
+  <tr>
+    <td>33</td><td>웹 애플리케이션 접근성</td>
+    <td class="result-fail">❌</td>
+    <td><span class="method-playwright">Playwright</span></td>
+    <td>StatsCard.tsx:10 — 클릭 가능한 커스텀 <code>&lt;div&gt;</code>에 WAI-ARIA role, 상태(state) 속성 없음. Playwright 확인: role=null, ariaLabel=null, ariaExpanded=null. 스크린리더 사용자가 해당 요소의 기능 인식 불가</td>
+    <td><code>role="button"</code> + <code>aria-label={`${label} 카드: ${value}건`}</code> 추가. 또는 <code>&lt;button&gt;</code>으로 교체</td>
+  </tr>
+</table>
+
+<h2>시맨틱 HTML 검토</h2>
+<table>
+  <tr><th>검토 항목</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>권고 수정</th></tr>
+  <tr>
+    <td>표현용 태그 (b/i → strong/em)</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>b, i 태그 사용 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>랜드마크 요소 (header/main/footer/nav)</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>컴포넌트 단위 검토 — 랜드마크는 페이지 레이아웃 수준에서 적용</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>섹션 구조 (article/section/aside)</td>
+    <td class="result-partial">⚠️</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>StatsCard는 독립적인 통계 카드로 <code>&lt;article&gt;</code> 사용이 의미적으로 적합할 수 있음. 현재 <code>&lt;div&gt;</code>만 사용</td>
+    <td><code>&lt;div&gt;</code> → <code>&lt;article&gt;</code> 또는 <code>&lt;section&gt;</code> 고려. 단, 레이아웃 목적의 div는 허용됨</td>
+  </tr>
+  <tr>
+    <td>대화형 요소 (button/a vs div/span)</td>
+    <td class="result-fail">❌</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>StatsCard.tsx:10-18 — <code>onClick</code> 핸들러를 가진 <code>&lt;div&gt;</code> 사용. 키보드 접근성, 스크린리더 인식, ARIA 역할 모두 누락</td>
+    <td><code>&lt;div onClick&gt;</code> → <code>&lt;button type="button"&gt;</code>으로 교체</td>
+  </tr>
+  <tr>
+    <td>목록 구조 (ul/ol/li)</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>반복 항목 없음 (컴포넌트 단일 인스턴스 기준)</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>폼 그룹 (fieldset/legend)</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>폼 요소 없음</td>
+    <td>-</td>
+  </tr>
+  <tr>
+    <td>기타 시맨틱 요소 (time/blockquote 등)</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>날짜/시간, 인용문 없음</td>
+    <td>-</td>
+  </tr>
+</table>
+
+<h2>수정 필요 항목</h2>
+
+<h3>불합격 (❌)</h3>
+
+<div class="fix-fail">
+  <p><strong>항목 10. 키보드 사용 보장 (A-10)</strong> — <code>StatsCard.tsx:10-18</code></p>
+  <p><strong>문제:</strong> <code>&lt;div onClick={handleClick}&gt;</code>에 키보드 이벤트 없음. tabIndex가 -1이므로 Tab 키로 접근 불가. Playwright로 런타임 확인 완료.</p>
+  <p><strong>수정:</strong></p>
+  <p>방법 1 (권장) — <code>&lt;button&gt;</code>으로 교체:</p>
+  <code>&lt;button type="button" onClick={handleClick} className="rounded-xl border border-zinc-200 bg-white p-6 ..."&gt;</code>
+  <p>방법 2 — ARIA 속성 추가:</p>
+  <code>&lt;div role="button" tabIndex={0} onClick={handleClick} onKeyDown={(e) =&gt; (e.key === 'Enter' || e.key === ' ') &amp;&amp; handleClick()} ...&gt;</code>
+</div>
+
+<div class="fix-fail">
+  <p><strong>항목 23. 레이블과 네임 (A-23)</strong> — <code>StatsCard.tsx:10</code></p>
+  <p><strong>문제:</strong> 클릭 가능한 div에 접근 가능한 이름(accessible name) 없음. aria-label, aria-labelledby, role 모두 누락. 스크린리더 사용자에게 카드 기능 안내 불가.</p>
+  <p><strong>수정:</strong> <code>aria-label={`${label}: ${value}건 — 클릭하여 상세 보기`}</code> 추가 (또는 button 교체 시 텍스트 콘텐츠로 대체됨)</p>
+</div>
+
+<div class="fix-fail">
+  <p><strong>항목 32. 마크업 오류 방지 (A-32)</strong> — <code>StatsCard.tsx:13</code></p>
+  <p><strong>문제:</strong> <code>id="stat-card"</code> 하드코딩. 컴포넌트가 3회 렌더링될 때 동일 id 3개 생성. Playwright 런타임 확인: <code>duplicates: ["stat-card"]</code>. HTML 명세 위반 (id는 페이지 내 유일해야 함).</p>
+  <p><strong>수정:</strong> <code>id={`stat-card-${testId}`}</code> — testId prop이 이미 고유 값(stat-total, stat-completed, stat-pending)으로 전달되므로 활용</p>
+</div>
+
+<div class="fix-fail">
+  <p><strong>항목 33. 웹 애플리케이션 접근성 (A-33)</strong> — <code>StatsCard.tsx:10-18</code></p>
+  <p><strong>문제:</strong> 커스텀 대화형 컴포넌트(div with onClick)에 WAI-ARIA role, 상태 속성 미제공. 스크린리더가 interactive 요소로 인식 불가.</p>
+  <p><strong>수정:</strong></p>
+  <code>&lt;div role="button" aria-label={`${label}: ${value}건`} tabIndex={0} onClick={handleClick} onKeyDown={...}&gt;</code>
+  <p>또는 <code>&lt;button&gt;</code>으로 교체 (role 자동 부여됨)</p>
+</div>
+
+<div class="fix-fail">
+  <p><strong>시맨틱 HTML: 대화형 요소</strong> — <code>StatsCard.tsx:10-18</code></p>
+  <p><strong>문제:</strong> <code>onClick</code>을 가진 <code>&lt;div&gt;</code>. 키보드 접근성, ARIA, 시맨틱 의미 모두 결여.</p>
+  <p><strong>수정:</strong> <code>&lt;button type="button"&gt;</code>으로 교체 — 브라우저가 자동으로 role="button", 키보드 포커스, Enter/Space 처리 제공</p>
+</div>
+
+<h3>권고 (⚠️)</h3>
+
+<div class="fix-partial">
+  <p><strong>항목 11. 초점 이동과 표시 (A-11)</strong> — <code>StatsCard.tsx:10</code></p>
+  <p><strong>내용:</strong> A-10 수정(키보드 접근성 추가) 후, 포커스가 카드에 도달할 때 시각적으로 명확한 outline 또는 box-shadow 스타일 추가 권고. Tailwind CSS의 <code>focus:ring-2 focus:ring-blue-500</code> 클래스 활용 가능.</p>
+</div>
+
+<div class="fix-partial">
+  <p><strong>시맨틱 HTML: 섹션 구조</strong> — <code>StatsCard.tsx:10</code></p>
+  <p><strong>내용:</strong> 독립적인 통계 정보를 표현하는 카드에 <code>&lt;article&gt;</code> 태그 사용 고려. 단, 레이아웃 목적의 div는 허용 범위이므로 팀 컨벤션에 따라 결정.</p>
+</div>
+
+</body>
+</html>

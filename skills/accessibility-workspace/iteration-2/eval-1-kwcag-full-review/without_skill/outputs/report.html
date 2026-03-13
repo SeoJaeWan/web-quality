@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KWCAG 2.2 접근성 검토 보고서</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; font-size: 14px; line-height: 1.6; color: #1a1a1a; background: #f5f7fa; padding: 32px 16px; }
+    .container { max-width: 1100px; margin: 0 auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 16px rgba(0,0,0,0.10); overflow: hidden; }
+    .report-header { background: linear-gradient(135deg, #1a56db 0%, #1e40af 100%); color: #fff; padding: 36px 40px 28px; }
+    .report-header h1 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+    .report-header .subtitle { font-size: 13px; opacity: 0.85; }
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+    .meta-item { background: rgba(255,255,255,0.15); border-radius: 6px; padding: 10px 14px; }
+    .meta-item .meta-label { font-size: 11px; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.5px; }
+    .meta-item .meta-value { font-size: 14px; font-weight: 600; margin-top: 2px; }
+    .summary-section, .scope-section, .findings-section { padding: 28px 40px; border-bottom: 1px solid #e5e7eb; }
+    .summary-section h2, .scope-section h2, .findings-section h2 { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
+    .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+    .summary-card { border-radius: 8px; padding: 16px; text-align: center; }
+    .summary-card .count { font-size: 28px; font-weight: 700; }
+    .summary-card .label { font-size: 12px; margin-top: 4px; }
+    .card-fail { background: #fef2f2; color: #991b1b; }
+    .card-warn { background: #fffbeb; color: #92400e; }
+    .card-pass { background: #f0fdf4; color: #166534; }
+    .card-total { background: #eff6ff; color: #1e40af; }
+    .file-list { list-style: none; }
+    .file-list li { padding: 6px 0; border-bottom: 1px dashed #e5e7eb; font-size: 13px; color: #374151; }
+    .file-list li:last-child { border-bottom: none; }
+    .finding-card { border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 18px; overflow: hidden; }
+    .finding-card-header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #f9fafb; border-bottom: 1px solid #e5e7eb; flex-wrap: wrap; }
+    .finding-num { font-size: 12px; font-weight: 700; color: #6b7280; min-width: 36px; }
+    .finding-title { font-size: 14px; font-weight: 600; color: #111827; flex: 1; }
+    .badge { display: inline-block; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 700; }
+    .badge-fail { background: #fee2e2; color: #b91c1c; }
+    .badge-pass { background: #dcfce7; color: #15803d; }
+    .badge-warn { background: #fef9c3; color: #a16207; }
+    .badge-na { background: #f3f4f6; color: #6b7280; }
+    .badge-auto { background: #e0f2fe; color: #0369a1; }
+    .badge-manual { background: #faf5ff; color: #7e22ce; }
+    .finding-card-body { padding: 14px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .finding-field label { display: block; font-size: 11px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+    .finding-field p { font-size: 13px; color: #374151; }
+    .finding-field.full { grid-column: 1 / -1; }
+    .code-block { background: #1e293b; color: #e2e8f0; border-radius: 6px; padding: 10px 14px; font-family: 'Consolas', monospace; font-size: 12px; line-height: 1.5; overflow-x: auto; white-space: pre; margin-top: 6px; }
+    .principle-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; background: #dbeafe; color: #1d4ed8; }
+    .report-footer { padding: 20px 40px; background: #f9fafb; border-top: 1px solid #e5e7eb; font-size: 12px; color: #9ca3af; text-align: center; }
+    .principle-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+    .principle-table th { background: #f3f4f6; padding: 8px 12px; text-align: left; border: 1px solid #e5e7eb; font-weight: 700; color: #374151; }
+    .principle-table td { padding: 8px 12px; border: 1px solid #e5e7eb; vertical-align: top; }
+    .principle-table tr:hover { background: #f9fafb; }
+    code { background: #f3f4f6; padding: 1px 5px; border-radius: 3px; font-family: 'Consolas', monospace; font-size: 12px; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="report-header">
+    <h1>KWCAG 2.2 웹 접근성 검토 보고서</h1>
+    <p class="subtitle">한국형 웹 콘텐츠 접근성 지침 2.2 (KWCAG 2.2) 기반 정적 코드 분석 결과</p>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="meta-label">검토일</div>
+        <div class="meta-value">2026-03-13</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">적용 기준</div>
+        <div class="meta-value">KWCAG 2.2</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">검토 방식</div>
+        <div class="meta-value">코드 정적 분석</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-label">기술 스택</div>
+        <div class="meta-value">TypeScript / React (Next.js)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-section">
+    <h2>검토 요약</h2>
+    <div class="summary-cards">
+      <div class="summary-card card-total">
+        <div class="count">13</div>
+        <div class="label">전체 검토 항목</div>
+      </div>
+      <div class="summary-card card-fail">
+        <div class="count">7</div>
+        <div class="label">불만족 (Fail)</div>
+      </div>
+      <div class="summary-card card-warn">
+        <div class="count">2</div>
+        <div class="label">주의 (Warning)</div>
+      </div>
+      <div class="summary-card card-pass">
+        <div class="count">4</div>
+        <div class="label">만족 (Pass)</div>
+      </div>
+    </div>
+    <table class="principle-table">
+      <thead>
+        <tr>
+          <th>원칙</th>
+          <th>검토 항목 수</th>
+          <th>불만족</th>
+          <th>주의</th>
+          <th>만족</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1. 인식의 용이성 (Perceivable)</td>
+          <td>5</td>
+          <td style="color:#b91c1c;font-weight:700;">3</td>
+          <td style="color:#a16207;font-weight:700;">1</td>
+          <td style="color:#15803d;font-weight:700;">1</td>
+        </tr>
+        <tr>
+          <td>2. 운용의 용이성 (Operable)</td>
+          <td>4</td>
+          <td style="color:#b91c1c;font-weight:700;">3</td>
+          <td style="color:#a16207;font-weight:700;">0</td>
+          <td style="color:#15803d;font-weight:700;">1</td>
+        </tr>
+        <tr>
+          <td>3. 이해의 용이성 (Understandable)</td>
+          <td>2</td>
+          <td style="color:#b91c1c;font-weight:700;">0</td>
+          <td style="color:#a16207;font-weight:700;">1</td>
+          <td style="color:#15803d;font-weight:700;">1</td>
+        </tr>
+        <tr>
+          <td>4. 견고성 (Robust)</td>
+          <td>2</td>
+          <td style="color:#b91c1c;font-weight:700;">1</td>
+          <td style="color:#a16207;font-weight:700;">0</td>
+          <td style="color:#15803d;font-weight:700;">1</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="scope-section">
+    <h2>검토 대상 파일</h2>
+    <ul class="file-list">
+      <li>features/next-app/app/dashboard/page.tsx &mdash; 대시보드 페이지 컴포넌트</li>
+      <li>features/next-app/components/StatsCard.tsx &mdash; 통계 카드 컴포넌트</li>
+      <li>features/next-app/components/Navbar.tsx &mdash; 내비게이션 바 및 브레드크럼 컴포넌트</li>
+    </ul>
+  </div>
+
+  <div class="findings-section">
+    <h2>세부 검토 결과</h2>
+
+    <!-- #1 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#1</span>
+        <span class="finding-title">이미지 대체 텍스트(alt) 누락</span>
+        <span class="badge badge-fail">불만족</span>
+        <span class="badge badge-auto">자동 판정</span>
+        <span class="principle-tag">1. 인식의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>1.1.1 적절한 대체 텍스트 제공</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>dashboard/page.tsx — 83번째 줄</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p><code>&lt;img src="/promo-banner.png"&gt;</code> 요소에 <code>alt</code> 속성이 완전히 누락되어 있습니다. 스크린리더는 파일명을 읽거나 이미지를 무시해 사용자가 콘텐츠 목적을 파악할 수 없습니다.</p>
+          <div class="code-block">&lt;img src="/promo-banner.png" className="mt-6 w-full" /&gt;
+{/* alt 속성 없음 → KWCAG 1.1.1 위반 */}</div>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p>의미 있는 이미지에는 내용을 설명하는 alt 텍스트를 제공하고, 장식용 이미지에는 <code>alt=""</code>를 명시하십시오.</p>
+          <div class="code-block">{/* 의미 있는 이미지 */}
+&lt;img src="/promo-banner.png" alt="신규 기능 홍보 배너" className="mt-6 w-full" /&gt;
+
+{/* 순수 장식용 이미지 */}
+&lt;img src="/promo-banner.png" alt="" role="presentation" className="mt-6 w-full" /&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #2 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#2</span>
+        <span class="finding-title">아이콘 전용 버튼에 접근 가능한 이름 미제공</span>
+        <span class="badge badge-fail">불만족</span>
+        <span class="badge badge-auto">자동 판정</span>
+        <span class="principle-tag">1. 인식의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>1.1.1 적절한 대체 텍스트 제공</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>dashboard/page.tsx — 59~65번째 줄</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p>새로고침·설정 버튼이 SVG 아이콘만으로 구성되며 <code>aria-label</code>도, SVG 내부 <code>&lt;title&gt;</code>도 없습니다. 스크린리더는 버튼 목적을 전혀 알릴 수 없습니다.</p>
+          <div class="code-block">&lt;button data-testid="btn-refresh"&gt;
+  &lt;svg width="16" height="16" viewBox="0 0 16 16"&gt;
+    &lt;circle cx="8" cy="8" r="8" /&gt;
+  &lt;/svg&gt;
+&lt;/button&gt;
+{/* aria-label, title 없음 → KWCAG 1.1.1 위반 */}</div>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p>각 버튼에 <code>aria-label</code>을 추가하고 SVG에 <code>aria-hidden="true"</code>를 설정하십시오.</p>
+          <div class="code-block">&lt;button aria-label="새로고침" data-testid="btn-refresh"&gt;
+  &lt;svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"&gt;
+    &lt;circle cx="8" cy="8" r="8" /&gt;
+  &lt;/svg&gt;
+&lt;/button&gt;
+&lt;button aria-label="설정" data-testid="btn-settings"&gt;
+  &lt;svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"&gt;
+    &lt;rect width="16" height="16" /&gt;
+  &lt;/svg&gt;
+&lt;/button&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #3 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#3</span>
+        <span class="finding-title">활성 내비게이션 링크를 색상만으로 구분</span>
+        <span class="badge badge-fail">불만족</span>
+        <span class="badge badge-manual">수동 판정</span>
+        <span class="principle-tag">1. 인식의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>1.4.1 색에 무관한 콘텐츠 인식</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>Navbar.tsx — 37~42번째 줄</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p>현재 페이지(활성) 내비게이션 링크는 파란색(<code>text-blue-600</code>)만으로 표시됩니다. 색각 이상 사용자는 현재 위치를 파악하기 어렵습니다. <code>aria-current="page"</code>도 없어 스크린리더 사용자도 현재 페이지 구분이 불가능합니다.</p>
+          <div class="code-block">className={`... ${
+  pathname === link.href
+    ? "text-blue-600 dark:text-blue-400"  // 색상만으로 구분 → KWCAG 1.4.1 위반
+    : "text-zinc-600 hover:text-zinc-900 ..."
+}`}</div>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p>색상 외에 밑줄, 굵기 등 비-색상 단서를 추가하고 <code>aria-current="page"</code>를 부여하십시오.</p>
+          <div class="code-block">&lt;Link
+  href={link.href}
+  aria-current={pathname === link.href ? "page" : undefined}
+  className={`text-sm font-medium transition-colors ${
+    pathname === link.href
+      ? "text-blue-600 dark:text-blue-400 font-bold underline decoration-2"
+      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+  }`}
+&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #4 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#4</span>
+        <span class="finding-title">이미지 크기 미지정으로 레이아웃 이동(CLS) 발생</span>
+        <span class="badge badge-warn">주의</span>
+        <span class="badge badge-manual">수동 판정</span>
+        <span class="principle-tag">1. 인식의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>1.3.4 콘텐츠의 재배치 (예기치 않은 이동 방지)</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>dashboard/page.tsx — 85번째 줄</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p><code>/footer-ad.png</code>에 <code>width</code>·<code>height</code>가 없어 로딩 중 레이아웃이 이동합니다. 인지 장애·저시력 사용자가 읽던 위치를 잃을 수 있습니다.</p>
+          <div class="code-block">&lt;img src="/footer-ad.png" alt="Advertisement" className="mt-4" /&gt;
+{/* width, height 미지정 → CLS 발생, KWCAG 1.3.4 관련 */}</div>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p>실제 이미지 비율에 맞는 <code>width</code>·<code>height</code>를 명시하거나 Next.js <code>Image</code> 컴포넌트를 사용하십시오.</p>
+          <div class="code-block">import Image from "next/image";
+
+&lt;Image
+  src="/footer-ad.png"
+  alt="광고 배너"
+  width={1200}
+  height={200}
+  loading="lazy"
+  className="mt-4"
+/&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #5 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#5</span>
+        <span class="finding-title">div 요소에 onClick — 키보드 접근 불가</span>
+        <span class="badge badge-fail">불만족</span>
+        <span class="badge badge-auto">자동 판정</span>
+        <span class="principle-tag">2. 운용의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>2.1.1 키보드 사용 보장</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>StatsCard.tsx — 10~22번째 줄</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p><code>&lt;div&gt;</code>에 <code>onClick</code>이 있으나 <code>tabIndex</code>, <code>role</code>, <code>onKeyDown</code>이 없습니다. 키보드 사용자는 Tab으로 포커스를 이동할 수 없고 Enter/Space로도 실행할 수 없습니다.</p>
+          <div class="code-block">&lt;div
+  id="stat-card"
+  onClick={handleClick}
+  {/* tabIndex, role, onKeyDown 없음 → KWCAG 2.1.1 위반 */}
+&gt;</div>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p>인터랙티브 요소에는 <code>&lt;button&gt;</code>을 사용하는 것이 가장 간단하고 올바른 방법입니다.</p>
+          <div class="code-block">{/* 권장: button 요소 사용 */}
+&lt;button
+  className="rounded-xl border border-zinc-200 bg-white p-6 text-left dark:border-zinc-800 dark:bg-zinc-900"
+  onClick={handleClick}
+  data-testid={testId}
+&gt;
+  &lt;p className="text-3xl font-bold text-zinc-900 dark:text-zinc-50"&gt;{value}&lt;/p&gt;
+  &lt;p className="mt-1 text-sm text-zinc-500"&gt;{label}&lt;/p&gt;
+&lt;/button&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #6 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#6</span>
+        <span class="finding-title">중복 id 속성 사용</span>
+        <span class="badge badge-fail">불만족</span>
+        <span class="badge badge-auto">자동 판정</span>
+        <span class="principle-tag">4. 견고성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>4.1.1 마크업 오류 방지 (id 유일성)</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>StatsCard.tsx — 13번째 줄 (3개 인스턴스 렌더링)</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p>StatsCard가 3개 렌더링될 때 모두 <code>id="stat-card"</code>를 갖습니다. HTML 스펙은 id가 문서 내 고유해야 함을 요구하며, 중복 id는 보조 기술이 잘못된 요소를 참조하게 하여 접근성 트리를 파손시킵니다.</p>
+          <div class="code-block">&lt;div id="stat-card" ...&gt;  {/* 3회 렌더링 → 중복 id → KWCAG 4.1.1 위반 */}</div>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p>고유한 id가 필요하다면 props로 전달받거나 제거하십시오. <code>data-testid</code>는 이미 고유하게 설정되어 있으므로 <code>id</code>는 제거해도 무방합니다.</p>
+          <div class="code-block">{/* id 제거 — data-testid로 충분 */}
+&lt;div
+  className="rounded-xl border ..."
+  data-testid={testId}
+  onClick={handleClick}
+&gt;
+
+{/* 또는 고유 id 전달 */}
+export default function StatsCard({ label, value, testId, id }: {...}) {
+  return &lt;div id={id} ...&gt;;
+}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #7 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#7</span>
+        <span class="finding-title">햄버거 메뉴 버튼 aria-expanded 미제공</span>
+        <span class="badge badge-fail">불만족</span>
+        <span class="badge badge-auto">자동 판정</span>
+        <span class="principle-tag">2. 운용의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>4.1.2 이름·역할·값 제공</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>Navbar.tsx — 59~72번째 줄</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p>모바일 햄버거 버튼에 <code>aria-label="메뉴 열기"</code>는 있으나 <code>aria-expanded</code>가 없습니다. 스크린리더 사용자는 메뉴가 현재 열려 있는지 닫혀 있는지 알 수 없습니다. 또한 aria-label이 상태에 무관하게 "메뉴 열기"로 고정되어 있습니다.</p>
+          <div class="code-block">&lt;button
+  aria-label="메뉴 열기"   {/* 상태 미반영, aria-expanded 없음 */}
+  onClick={() =&gt; setMenuOpen(!menuOpen)}
+&gt;</div>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p><code>aria-expanded</code>를 상태에 따라 설정하고 <code>aria-controls</code>로 제어 대상을 연결하십시오.</p>
+          <div class="code-block">&lt;button
+  aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
+  aria-expanded={menuOpen}
+  aria-controls="mobile-nav-menu"
+  onClick={() =&gt; setMenuOpen(!menuOpen)}
+&gt;
+
+{menuOpen &amp;&amp; isAuthenticated &amp;&amp; (
+  &lt;div id="mobile-nav-menu" ...&gt;
+    ...
+  &lt;/div&gt;
+)}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #8 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#8</span>
+        <span class="finding-title">반복 영역 건너뛰기 링크(Skip Navigation) 미제공</span>
+        <span class="badge badge-fail">불만족</span>
+        <span class="badge badge-manual">수동 판정</span>
+        <span class="principle-tag">2. 운용의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>2.4.1 반복 영역 건너뛰기</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>Navbar.tsx — 전체 (최상단 건너뛰기 링크 없음)</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p>내비게이션 바 앞에 "본문 바로 가기" 링크가 없습니다. 키보드·스크린리더 사용자는 매 페이지 로드마다 내비게이션 전체를 탐색한 후에야 본문에 접근할 수 있습니다.</p>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p>Navbar 최상단에 시각적으로 숨겨진 건너뛰기 링크를 추가하고, 메인 콘텐츠 래퍼에 <code>id="main-content"</code>를 부여하십시오.</p>
+          <div class="code-block">{/* Navbar.tsx 반환 최상단 */}
+&lt;a
+  href="#main-content"
+  className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50
+             focus:bg-white focus:px-4 focus:py-2 focus:rounded focus:shadow"
+&gt;
+  본문 바로 가기
+&lt;/a&gt;
+
+{/* 레이아웃의 메인 영역 */}
+&lt;main id="main-content" tabIndex={-1}&gt;
+  {children}
+&lt;/main&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #9 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#9</span>
+        <span class="finding-title">브레드크럼에 nav/aria-label 미적용</span>
+        <span class="badge badge-warn">주의</span>
+        <span class="badge badge-manual">수동 판정</span>
+        <span class="principle-tag">3. 이해의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>3.2.4 일관된 식별 / 2.4.8 현재 위치 정보 제공</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>Navbar.tsx — 131~146번째 줄 (Breadcrumbs 컴포넌트)</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p>브레드크럼이 <code>&lt;div&gt;</code>로만 구성되어 스크린리더가 이를 내비게이션 랜드마크로 인식하지 못합니다. 현재 페이지 항목에 <code>aria-current="page"</code>도 없습니다. 구분자 "/" 텍스트를 스크린리더가 그대로 읽습니다.</p>
+          <div class="code-block">&lt;div className="..." data-testid="breadcrumbs"&gt;
+  {/* nav 랜드마크 없음, aria-label 없음, aria-current 없음 */}
+  &lt;Link href="/"&gt;홈&lt;/Link&gt;
+  {segments.map((seg, i) =&gt; (
+    &lt;span key={seg}&gt;
+      &lt;span className="mx-1"&gt;/&lt;/span&gt;  {/* 스크린리더가 "/" 읽음 */}
+      ...
+    &lt;/span&gt;
+  ))}
+&lt;/div&gt;</div>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p><code>&lt;nav aria-label="현재 위치"&gt;</code>와 <code>&lt;ol&gt;</code>/<code>&lt;li&gt;</code> 구조를 사용하고, 구분자는 <code>aria-hidden="true"</code>로 처리하며 현재 페이지에 <code>aria-current="page"</code>를 부여하십시오.</p>
+          <div class="code-block">&lt;nav aria-label="현재 위치" data-testid="breadcrumbs"&gt;
+  &lt;ol style={{display:'flex', listStyle:'none', gap:'4px', fontSize:'14px'}}&gt;
+    &lt;li&gt;&lt;Link href="/"&gt;홈&lt;/Link&gt;&lt;/li&gt;
+    {segments.map((seg, i) =&gt; (
+      &lt;li key={seg} style={{display:'flex', alignItems:'center', gap:'4px'}}&gt;
+        &lt;span aria-hidden="true"&gt;/&lt;/span&gt;
+        {i === segments.length - 1 ? (
+          &lt;span aria-current="page"&gt;{labels[seg] || seg}&lt;/span&gt;
+        ) : (
+          &lt;Link href={...}&gt;{labels[seg] || seg}&lt;/Link&gt;
+        )}
+      &lt;/li&gt;
+    ))}
+  &lt;/ol&gt;
+&lt;/nav&gt;</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #10 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#10</span>
+        <span class="finding-title">nav 랜드마크에 aria-label 미제공 (복수의 nav 존재)</span>
+        <span class="badge badge-pass">만족 (조건부)</span>
+        <span class="badge badge-manual">수동 판정</span>
+        <span class="principle-tag">2. 운용의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>2.4.6 제목과 레이블 / 랜드마크 구분</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>Navbar.tsx — 23번째 줄</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p>현재 <code>&lt;nav&gt;</code> 요소 하나이므로 현재 코드는 통과 기준을 충족하나, 브레드크럼 영역에 <code>&lt;nav&gt;</code>가 추가되면 두 <code>&lt;nav&gt;</code>를 구별하는 <code>aria-label</code>이 필요해집니다. 권고 사항으로 미리 추가할 것을 제안합니다.</p>
+          <div class="code-block">&lt;nav aria-label="주요 내비게이션" data-testid="navbar"&gt;</div>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p>메인 nav에 <code>aria-label="주요 내비게이션"</code>을 추가하면 브레드크럼 nav(<code>aria-label="현재 위치"</code>)와 함께 사용 시 명확히 구분됩니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- #11 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#11</span>
+        <span class="finding-title">페이지 제목(title) 및 lang 속성 — 레이아웃 수준 검토 필요</span>
+        <span class="badge badge-pass">만족 (추정)</span>
+        <span class="badge badge-manual">수동 판정</span>
+        <span class="principle-tag">3. 이해의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>3.1.1 기본 언어 표시 / 2.4.2 페이지 제목 제공</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>대시보드 페이지 (layout.tsx 또는 &lt;head&gt;에서 확인 필요)</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p>검토 대상 파일(page.tsx, StatsCard.tsx, Navbar.tsx)에서 직접 <code>&lt;html lang="ko"&gt;</code> 및 <code>&lt;title&gt;</code> 설정은 확인되지 않습니다. Next.js App Router에서는 root layout에서 설정이 되어야 합니다. 해당 파일이 검토 범위 밖이므로 "만족(추정)"으로 판정하나 레이아웃 파일 검토를 권고합니다.</p>
+        </div>
+        <div class="finding-field full">
+          <label>수정 가이드</label>
+          <p>루트 <code>layout.tsx</code>에 <code>lang="ko"</code>와 페이지별 <code>metadata.title</code>이 설정되어 있는지 확인하십시오.</p>
+          <div class="code-block">// app/layout.tsx
+export const metadata = { title: '대시보드 — TestApp' };
+export default function RootLayout({ children }) {
+  return &lt;html lang="ko"&gt;&lt;body&gt;{children}&lt;/body&gt;&lt;/html&gt;;
+}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- #12 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#12</span>
+        <span class="finding-title">로그아웃 버튼 — 텍스트 기반 접근 가능한 이름 제공</span>
+        <span class="badge badge-pass">만족</span>
+        <span class="badge badge-auto">자동 판정</span>
+        <span class="principle-tag">2. 운용의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>4.1.2 이름·역할·값 제공</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>Navbar.tsx — 48~54번째 줄</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p>로그아웃 <code>&lt;button&gt;</code>은 텍스트 레이블("로그아웃")을 가지고 있으며, 적절한 <code>&lt;button&gt;</code> 요소를 사용하고 있습니다. 접근성 요구사항을 충족합니다.</p>
+        </div>
+        <div class="finding-field full">
+          <label>비고</label>
+          <p>현재 구현으로 충분합니다. 추가 개선이 필요하지 않습니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- #13 -->
+    <div class="finding-card">
+      <div class="finding-card-header">
+        <span class="finding-num">#13</span>
+        <span class="finding-title">내부 링크(전체 할 일 목록 보기)의 목적 명확성</span>
+        <span class="badge badge-pass">만족</span>
+        <span class="badge badge-auto">자동 판정</span>
+        <span class="principle-tag">2. 운용의 용이성</span>
+      </div>
+      <div class="finding-card-body">
+        <div class="finding-field">
+          <label>KWCAG 2.2 항목</label>
+          <p>2.4.4 링크 목적 (맥락에서 파악 가능)</p>
+        </div>
+        <div class="finding-field">
+          <label>위치</label>
+          <p>dashboard/page.tsx — 88~95번째 줄</p>
+        </div>
+        <div class="finding-field full">
+          <label>발견된 문제</label>
+          <p>"전체 할 일 목록 보기 &rarr;" 링크는 텍스트만으로 목적지를 명확히 설명합니다. 맥락 없이도 링크 목적을 파악할 수 있어 KWCAG 2.4.4를 충족합니다.</p>
+        </div>
+        <div class="finding-field full">
+          <label>비고</label>
+          <p>현재 구현으로 충분합니다. 선택적으로 화살표(&rarr;) 문자에 <code>aria-hidden="true"</code>를 추가하면 더 명확해집니다.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /findings-section -->
+
+  <div class="report-footer">
+    <p>본 보고서는 KWCAG 2.2 (한국형 웹 콘텐츠 접근성 지침 2.2) 기준에 따라 정적 코드 분석 방식으로 작성되었습니다.</p>
+    <p style="margin-top:4px;">실제 보조 기술(스크린리더, 키보드 내비게이션) 테스트를 통한 추가 검증을 권장합니다.</p>
+  </div>
+
+</div>
+</body>
+</html>

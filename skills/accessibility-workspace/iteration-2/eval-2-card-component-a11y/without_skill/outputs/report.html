@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>접근성 검토 보고서 - StatsCard.tsx</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans KR', Arial, sans-serif; background: #f4f6f9; color: #1a1a2e; line-height: 1.7; }
+    header { background: #1a1a2e; color: #fff; padding: 32px 40px; }
+    header h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 6px; }
+    header p { font-size: 0.9rem; opacity: 0.75; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 36px; }
+    .summary-card { background: #fff; border-radius: 10px; padding: 20px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border-top: 4px solid #ccc; }
+    .summary-card.fail { border-top-color: #e53e3e; }
+    .summary-card.warn { border-top-color: #dd6b20; }
+    .summary-card.pass { border-top-color: #38a169; }
+    .summary-card .num { font-size: 2.2rem; font-weight: 800; line-height: 1; }
+    .summary-card.fail .num { color: #e53e3e; }
+    .summary-card.warn .num { color: #dd6b20; }
+    .summary-card.pass .num { color: #38a169; }
+    .summary-card .label { font-size: 0.82rem; color: #555; margin-top: 4px; }
+    section { background: #fff; border-radius: 10px; padding: 28px 32px; margin-bottom: 28px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    section h2 { font-size: 1.15rem; font-weight: 700; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 2px solid #e8e8e8; color: #1a1a2e; }
+    .file-info { background: #f0f4ff; border-radius: 8px; padding: 14px 18px; font-size: 0.87rem; color: #333; }
+    .file-info span { font-family: monospace; background: #dde5ff; padding: 2px 6px; border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: #1a1a2e; color: #fff; padding: 11px 14px; text-align: left; font-weight: 600; }
+    td { padding: 11px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
+    tr:nth-child(even) td { background: #fafafa; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+    .badge-fail { background: #ffe5e5; color: #c53030; }
+    .badge-warn { background: #fef3e2; color: #9c4221; }
+    .badge-pass { background: #e6ffed; color: #276749; }
+    .badge-principle { background: #eef2ff; color: #3730a3; font-size: 0.75rem; }
+    .issue-block { background: #fff8f8; border-left: 4px solid #e53e3e; border-radius: 4px; padding: 10px 14px; margin-bottom: 6px; font-size: 0.85rem; }
+    .fix-block { background: #f0fff4; border-left: 4px solid #38a169; border-radius: 4px; padding: 10px 14px; font-size: 0.85rem; }
+    code { font-family: 'Courier New', monospace; background: #f1f1f1; padding: 1px 5px; border-radius: 3px; font-size: 0.82rem; }
+    .code-block { background: #1e1e2e; color: #cdd6f4; border-radius: 8px; padding: 16px 20px; font-family: 'Courier New', monospace; font-size: 0.82rem; line-height: 1.6; overflow-x: auto; margin: 10px 0; white-space: pre; }
+    .code-block .bad { color: #f38ba8; }
+    .code-block .good { color: #a6e3a1; }
+    .code-block .comment { color: #6c7086; }
+    footer { text-align: center; font-size: 0.8rem; color: #888; padding: 24px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>KWCAG 2.2 접근성 검토 보고서</h1>
+  <p>대상 파일: StatsCard.tsx &nbsp;|&nbsp; 검토 기준: 한국형 웹 콘텐츠 접근성 지침 2.2 &nbsp;|&nbsp; 검토일: 2026-03-13</p>
+</header>
+
+<div class="container">
+
+  <!-- 요약 -->
+  <div class="summary-grid">
+    <div class="summary-card fail">
+      <div class="num">4</div>
+      <div class="label">오류 (실패)</div>
+    </div>
+    <div class="summary-card warn">
+      <div class="num">1</div>
+      <div class="label">주의 (검토 필요)</div>
+    </div>
+    <div class="summary-card pass">
+      <div class="num">0</div>
+      <div class="label">통과</div>
+    </div>
+    <div class="summary-card" style="border-top-color:#4a5568;">
+      <div class="num" style="color:#4a5568;">5</div>
+      <div class="label">검토 항목 수</div>
+    </div>
+  </div>
+
+  <!-- 파일 정보 -->
+  <section>
+    <h2>검토 대상 파일 정보</h2>
+    <div class="file-info">
+      파일 경로: <span>features/next-app/components/StatsCard.tsx</span><br/>
+      컴포넌트: <span>StatsCard</span> &nbsp;|&nbsp;
+      Props: <span>label: string</span>, <span>value: number</span>, <span>testId: string</span><br/>
+      프레임워크: Next.js (React) &nbsp;|&nbsp; "use client" 디렉티브 사용
+    </div>
+  </section>
+
+  <!-- 원본 코드 -->
+  <section>
+    <h2>검토 대상 소스 코드</h2>
+    <div class="code-block"><span class="comment">"use client";</span>
+
+export default function StatsCard(<span class="good">{ label, value, testId }</span>: { label: string; value: number; testId: string }) {
+  const handleClick = () => {
+    <span class="comment">// BAD: console.log left in production code</span>
+    console.log("StatsCard clicked:", label);
+  };
+
+  return (
+    &lt;div
+      <span class="bad">id="stat-card"</span>          <span class="comment">// BAD: 모든 인스턴스에 동일한 id → id 중복 위반</span>
+      className="rounded-xl border ..."
+      data-testid={testId}
+      <span class="bad">onClick={handleClick}</span>   <span class="comment">// BAD: tabIndex/role/onKeyDown 없음 → 키보드 접근성 위반</span>
+    &gt;
+      <span class="bad">&lt;p&gt;{value}&lt;/p&gt;</span>        <span class="comment">// BAD: 숫자 의미 레이블 없음 → 레이블 제공 위반</span>
+      <span class="bad">&lt;p&gt;{label}&lt;/p&gt;</span>
+    &lt;/div&gt;
+  );
+}</div>
+  </section>
+
+  <!-- 상세 검토 결과 -->
+  <section>
+    <h2>KWCAG 2.2 항목별 검토 결과</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:4%">#</th>
+          <th style="width:18%">항목명 (KWCAG 2.2)</th>
+          <th style="width:10%">원칙</th>
+          <th style="width:8%">결과</th>
+          <th style="width:10%">판정방식</th>
+          <th style="width:25%">발견된 문제</th>
+          <th style="width:25%">수정 가이드</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- 1 -->
+        <tr>
+          <td>1</td>
+          <td><strong>2.1.1 키보드 사용 보장</strong><br/><small>모든 기능은 키보드로 접근·조작 가능해야 함</small></td>
+          <td><span class="badge badge-principle">운용성</span></td>
+          <td><span class="badge badge-fail">실패</span></td>
+          <td>코드 검토</td>
+          <td>
+            <div class="issue-block">
+              <code>&lt;div onClick={handleClick}&gt;</code>에 <code>tabIndex</code>, <code>role</code>, <code>onKeyDown</code>/<code>onKeyPress</code>가 없어 키보드 사용자는 클릭 이벤트를 트리거할 수 없습니다. 마우스 없이는 이 기능에 접근 불가합니다.
+            </div>
+          </td>
+          <td>
+            <div class="fix-block">
+              <code>&lt;div&gt;</code>를 <code>&lt;button&gt;</code>으로 교체하거나, 불가피하게 <code>&lt;div&gt;</code>를 유지해야 할 경우 <code>role="button"</code>, <code>tabIndex={0}</code>, <code>onKeyDown</code> 이벤트를 함께 추가하세요.
+              <div class="code-block" style="margin-top:8px; font-size:0.78rem;"><span class="good">// 권장: button 요소 사용
+&lt;button type="button" onClick={handleClick}&gt;
+  ...
+&lt;/button&gt;</span></div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- 2 -->
+        <tr>
+          <td>2</td>
+          <td><strong>1.1.1 적절한 대체 텍스트 제공</strong><br/><small>텍스트 아닌 콘텐츠에 대체 텍스트 제공</small></td>
+          <td><span class="badge badge-principle">인식성</span></td>
+          <td><span class="badge badge-fail">실패</span></td>
+          <td>코드 검토</td>
+          <td>
+            <div class="issue-block">
+              <code>&lt;p&gt;{value}&lt;/p&gt;</code>는 숫자 값만 렌더링하며 해당 값이 무엇을 의미하는지 레이블이 없습니다. 스크린 리더 사용자는 숫자만 읽히고 맥락을 파악하기 어렵습니다. 카드 전체를 묶어주는 시맨틱 컨테이너나 <code>aria-label</code>/<code>aria-labelledby</code>도 없습니다.
+            </div>
+          </td>
+          <td>
+            <div class="fix-block">
+              카드 컨테이너에 <code>aria-label</code> 또는 <code>aria-labelledby</code>를 추가해 값과 레이블의 관계를 명시하거나, <code>&lt;dl&gt;</code>/<code>&lt;dt&gt;</code>/<code>&lt;dd&gt;</code> 구조를 사용해 의미를 구조화하세요.
+              <div class="code-block" style="margin-top:8px; font-size:0.78rem;"><span class="good">&lt;button aria-label={`${label}: ${value}`} ...&gt;
+  &lt;p aria-hidden="true"&gt;{value}&lt;/p&gt;
+  &lt;p aria-hidden="true"&gt;{label}&lt;/p&gt;
+&lt;/button&gt;</span></div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- 3 -->
+        <tr>
+          <td>3</td>
+          <td><strong>1.3.1 정보와 관계</strong><br/><small>콘텐츠 구조·관계는 프로그래밍 방식으로 표현되거나 텍스트로 이용 가능해야 함</small></td>
+          <td><span class="badge badge-principle">인식성</span></td>
+          <td><span class="badge badge-fail">실패</span></td>
+          <td>코드 검토</td>
+          <td>
+            <div class="issue-block">
+              카드가 단순 <code>&lt;div&gt;</code> 두 개의 <code>&lt;p&gt;</code>로 구성되어 있어 숫자(value)와 레이블(label) 간의 의미적 관계가 마크업에 표현되지 않습니다. 보조 기술은 두 텍스트가 서로 연관된 데이터(통계 수치와 그 설명)임을 인식할 수 없습니다.
+            </div>
+          </td>
+          <td>
+            <div class="fix-block">
+              시맨틱 마크업(<code>&lt;dl&gt;</code>, <code>&lt;figure&gt;</code>, <code>&lt;section&gt;</code> 등)을 사용하거나 ARIA 속성(<code>role="group"</code>, <code>aria-labelledby</code>)으로 관계를 명시하세요.
+              <div class="code-block" style="margin-top:8px; font-size:0.78rem;"><span class="good">&lt;dl&gt;
+  &lt;dt&gt;{label}&lt;/dt&gt;
+  &lt;dd&gt;{value}&lt;/dd&gt;
+&lt;/dl&gt;</span></div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- 4 -->
+        <tr>
+          <td>4</td>
+          <td><strong>4.1.1 마크업 오류 방지</strong><br/><small>id 속성 값은 페이지 내 유일해야 함</small></td>
+          <td><span class="badge badge-principle">견고성</span></td>
+          <td><span class="badge badge-fail">실패</span></td>
+          <td>코드 검토</td>
+          <td>
+            <div class="issue-block">
+              <code>id="stat-card"</code>가 하드코딩되어 있어 동일 페이지에 <code>StatsCard</code>를 여러 번 렌더링하면 중복 <code>id</code>가 발생합니다. 중복 <code>id</code>는 HTML 명세 위반이며, ARIA 레이블링(<code>aria-labelledby</code>), 앵커 링크, 보조 기술의 탐색 등을 오동작하게 합니다.
+            </div>
+          </td>
+          <td>
+            <div class="fix-block">
+              <code>id</code>를 prop으로 받거나 <code>useId()</code>(React 18+)를 사용해 인스턴스별로 고유한 값을 생성하세요. 또는 <code>id</code> 속성 자체가 불필요하다면 제거하세요.
+              <div class="code-block" style="margin-top:8px; font-size:0.78rem;"><span class="good">import { useId } from "react";
+const uid = useId();
+&lt;div id={uid} ...&gt;</span></div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- 5 -->
+        <tr>
+          <td>5</td>
+          <td><strong>2.4.7 포커스 가시성</strong><br/><small>키보드 조작 가능한 모든 UI 구성요소에 포커스 인디케이터가 표시되어야 함</small></td>
+          <td><span class="badge badge-principle">운용성</span></td>
+          <td><span class="badge badge-warn">주의</span></td>
+          <td>코드 검토</td>
+          <td>
+            <div class="issue-block">
+              현재 키보드 포커스 자체가 불가능하지만(항목 1 참조), 만약 <code>button</code>으로 수정하더라도 Tailwind CSS의 기본 스타일이 <code>outline</code>을 제거하는 경우 포커스 링이 보이지 않을 수 있습니다. 시각적 포커스 표시가 없으면 키보드 사용자가 현재 포커스 위치를 파악할 수 없습니다.
+            </div>
+          </td>
+          <td>
+            <div class="fix-block">
+              Tailwind의 <code>focus-visible:ring-2 focus-visible:ring-blue-500</code> 클래스를 추가하거나 CSS에서 <code>:focus-visible</code> 스타일을 명시적으로 정의하세요.
+              <div class="code-block" style="margin-top:8px; font-size:0.78rem;"><span class="good">&lt;button
+  className="... focus-visible:outline-none
+    focus-visible:ring-2 focus-visible:ring-blue-500"
+  ...
+&gt;</span></div>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 수정 코드 예시 -->
+  <section>
+    <h2>수정된 코드 예시 (권장)</h2>
+    <div class="code-block"><span class="comment">"use client";
+import { useId } from "react";</span>
+
+interface StatsCardProps {
+  label: string;
+  value: number;
+  testId: string;
+  onClick?: () => void;
+}
+
+export default function StatsCard({ label, value, testId, onClick }: StatsCardProps) {
+  <span class="good">const uid = useId();</span>
+  const labelId = `${uid}-label`;
+  const valueId = `${uid}-value`;
+
+  return (
+    <span class="good">&lt;button
+      id={uid}
+      type="button"
+      onClick={onClick}
+      data-testid={testId}
+      aria-labelledby={`${valueId} ${labelId}`}
+      className="rounded-xl border border-zinc-200 bg-white p-6
+        dark:border-zinc-800 dark:bg-zinc-900 text-left w-full
+        focus-visible:outline-none focus-visible:ring-2
+        focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+    &gt;
+      &lt;p id={valueId} className="text-3xl font-bold text-zinc-900 dark:text-zinc-50"&gt;{value}&lt;/p&gt;
+      &lt;p id={labelId} className="mt-1 text-sm text-zinc-500"&gt;{label}&lt;/p&gt;
+    &lt;/button&gt;</span>
+  );
+}</div>
+  </section>
+
+  <!-- 종합 의견 -->
+  <section>
+    <h2>종합 의견</h2>
+    <p style="font-size:0.9rem; color:#333; line-height:1.8;">
+      <code>StatsCard</code> 컴포넌트는 <strong>4개의 KWCAG 2.2 실패 항목</strong>과 <strong>1개의 주의 항목</strong>이 발견되었습니다.
+      가장 심각한 문제는 <strong>키보드 접근 불가</strong>로, 클릭 이벤트가 있는 <code>&lt;div&gt;</code>에 키보드 지원이 전혀 없어
+      키보드 사용자 및 스크린 리더 사용자가 이 기능을 전혀 이용할 수 없습니다.
+      또한 <strong>중복 <code>id</code></strong>는 동일 페이지에서 복수 렌더링 시 보조 기술의 혼란을 야기합니다.
+      <strong>시맨틱 구조 부재</strong>로 인해 스크린 리더는 숫자 값과 레이블의 관계를 파악하지 못합니다.
+      <br/><br/>
+      근본적인 해결책은 <code>&lt;div&gt;</code>를 <code>&lt;button&gt;</code>으로 교체하고,
+      <code>useId()</code>로 고유 ID를 생성하며, <code>aria-labelledby</code>로 값과 레이블의 관계를 명시하고,
+      <code>focus-visible</code> 스타일을 적용하는 것입니다.
+    </p>
+  </section>
+
+</div>
+
+<footer>
+  KWCAG 2.2 기반 접근성 검토 보고서 &nbsp;|&nbsp; 검토일: 2026-03-13 &nbsp;|&nbsp; 대상: StatsCard.tsx
+</footer>
+
+</body>
+</html>

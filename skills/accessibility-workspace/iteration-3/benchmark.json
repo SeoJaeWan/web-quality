@@ -1,0 +1,138 @@
+{
+  "metadata": {
+    "skill_name": "accessibility",
+    "timestamp": "2026-03-13",
+    "evals_run": ["kwcag-full-review", "card-component-a11y", "semantic-html-review"],
+    "runs_per_configuration": 1,
+    "model": "sonnet",
+    "notes": "iteration-3: agent-browser CLI (with_skill) vs Playwright MCP (old_skill). agent-browser failed to install via npx in all 3 with_skill runs."
+  },
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 0.830, "stddev": 0.025},
+      "time_seconds": {"mean": 308.7, "stddev": 11.5},
+      "tokens": {"mean": 60602, "stddev": 2573}
+    },
+    "old_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0},
+      "time_seconds": {"mean": 424.8, "stddev": 40.8},
+      "tokens": {"mean": 76693, "stddev": 5764}
+    },
+    "delta": {
+      "pass_rate": "-17.0%",
+      "time_seconds": "-116.1",
+      "tokens": "-16091"
+    }
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "kwcag-full-review",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 0.8, "passed": 8, "total": 10, "time_seconds": 314.6, "tokens": 63054, "tool_uses": 18},
+      "expectations": [
+        {"text": "All 33 KWCAG2.2 items evaluated", "passed": true, "evidence": "CSV contains rows 1-33 plus semantic HTML items"},
+        {"text": "Semantic HTML section included", "passed": true, "evidence": "Dedicated section present"},
+        {"text": "Filename:line references", "passed": true, "evidence": "page.tsx:83, StatsCard.tsx:10-17, etc."},
+        {"text": "report.html generated", "passed": true, "evidence": "File exists (27KB)"},
+        {"text": "report.csv generated", "passed": true, "evidence": "File exists (6.8KB)"},
+        {"text": "Missing alt detected", "passed": true, "evidence": "A-01: page.tsx:83 img alt 누락"},
+        {"text": "Icon buttons without aria-label", "passed": true, "evidence": "A-23: page.tsx:59,62"},
+        {"text": "Duplicate id='stat-card'", "passed": true, "evidence": "A-32: StatsCard.tsx:13"},
+        {"text": "Lighthouse verdict method used", "passed": false, "evidence": "Only A-25 shows Lighthouse; others fell back to 정적분석 due to login redirect"},
+        {"text": "Browser verdict method (Playwright)", "passed": false, "evidence": "A-10,A-11,A-33 show 정적분석 — agent-browser could not be installed"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "kwcag-full-review",
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 10, "total": 10, "time_seconds": 456.8, "tokens": 79670, "tool_uses": 48},
+      "expectations": [
+        {"text": "All 33 KWCAG2.2 items evaluated", "passed": true, "evidence": "All 33 items present"},
+        {"text": "Semantic HTML section included", "passed": true, "evidence": "Dedicated section present"},
+        {"text": "Filename:line references", "passed": true, "evidence": "File:line references throughout"},
+        {"text": "report.html generated", "passed": true, "evidence": "File exists (570 lines, 30KB)"},
+        {"text": "report.csv generated", "passed": true, "evidence": "File exists (42 rows)"},
+        {"text": "Missing alt detected", "passed": true, "evidence": "A-01: page.tsx:83"},
+        {"text": "Icon buttons without aria-label", "passed": true, "evidence": "A-23: page.tsx:59,63"},
+        {"text": "Duplicate id='stat-card'", "passed": true, "evidence": "A-32: Playwright confirmed 3 duplicates"},
+        {"text": "Lighthouse verdict method used", "passed": true, "evidence": "Lighthouse-mapped items show Lighthouse"},
+        {"text": "Browser verdict method (Playwright)", "passed": true, "evidence": "A-10,A-11,A-33 show Playwright"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "card-component-a11y",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 0.857, "passed": 6, "total": 7, "time_seconds": 292.7, "tokens": 56924, "tool_uses": 19},
+      "expectations": [
+        {"text": "All 33 KWCAG2.2 items evaluated", "passed": true, "evidence": "CSV covers all 33 items"},
+        {"text": "div onClick keyboard issue", "passed": true, "evidence": "A-10: StatsCard.tsx:10,17"},
+        {"text": "Duplicate id='stat-card'", "passed": true, "evidence": "A-32: StatsCard.tsx:13"},
+        {"text": "Issues mapped to KWCAG numbers", "passed": true, "evidence": "Standard numbering used"},
+        {"text": "Fix recommendations provided", "passed": true, "evidence": "All failed items have fix guides"},
+        {"text": "Lighthouse verdict method", "passed": true, "evidence": "Lighthouse-mapped items show Lighthouse"},
+        {"text": "Browser verdict for A-10", "passed": false, "evidence": "A-10 shows 정적분석 — agent-browser module error"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "card-component-a11y",
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 7, "total": 7, "time_seconds": 368.6, "tokens": 68688, "tool_uses": 39},
+      "expectations": [
+        {"text": "All 33 KWCAG2.2 items evaluated", "passed": true, "evidence": "All 33 items present"},
+        {"text": "div onClick keyboard issue", "passed": true, "evidence": "A-10: Playwright confirmed"},
+        {"text": "Duplicate id='stat-card'", "passed": true, "evidence": "A-32: Playwright confirmed 3 duplicates"},
+        {"text": "Issues mapped to KWCAG numbers", "passed": true, "evidence": "Standard numbering"},
+        {"text": "Fix recommendations provided", "passed": true, "evidence": "All items have fix guides"},
+        {"text": "Lighthouse verdict method", "passed": true, "evidence": "Items 1,8,17,18,19,25,29 show Lighthouse"},
+        {"text": "Browser verdict for A-10", "passed": true, "evidence": "Items 10,11,23,32,33 show Playwright"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "semantic-html-review",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 0.833, "passed": 5, "total": 6, "time_seconds": 318.8, "tokens": 61829, "tool_uses": 19},
+      "expectations": [
+        {"text": "aria-expanded missing detected", "passed": true, "evidence": "A-33: Navbar.tsx:59 hamburger button"},
+        {"text": "aria-pressed missing detected", "passed": true, "evidence": "A-33: SearchFilter.tsx:32 filter buttons"},
+        {"text": "Semantic HTML section", "passed": true, "evidence": "Dedicated section present"},
+        {"text": "Standard classification system", "passed": true, "evidence": "All 5 symbols used"},
+        {"text": "Fix recommendations provided", "passed": true, "evidence": "All items have fix guides"},
+        {"text": "Browser verdict for A-33", "passed": false, "evidence": "A-33 shows 정적분석 — agent-browser not installed"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "semantic-html-review",
+      "configuration": "old_skill",
+      "run_number": 1,
+      "result": {"pass_rate": 1.0, "passed": 6, "total": 6, "time_seconds": 449.1, "tokens": 81720, "tool_uses": 52},
+      "expectations": [
+        {"text": "aria-expanded missing detected", "passed": true, "evidence": "A-33: Playwright verified"},
+        {"text": "aria-pressed missing detected", "passed": true, "evidence": "A-33: Playwright verified"},
+        {"text": "Semantic HTML section", "passed": true, "evidence": "Dedicated section with 7 sub-items"},
+        {"text": "Standard classification system", "passed": true, "evidence": "5-level system used"},
+        {"text": "Fix recommendations provided", "passed": true, "evidence": "All items have fix guides"},
+        {"text": "Browser verdict for A-33", "passed": true, "evidence": "A-33 shows Playwright"}
+      ]
+    }
+  ],
+  "notes": [
+    "agent-browser (with_skill) failed to install via npx in all 3 runs — browser verification fell back to static analysis",
+    "old_skill (Playwright MCP) achieved 100% pass rate across all evals with successful runtime verification",
+    "Despite browser failure, with_skill still used 21% fewer tokens (60.6K vs 76.7K) and 27% less time (309s vs 425s)",
+    "Token savings came from: fewer tool calls (avg 19 vs 46), no MCP snapshot overhead",
+    "The pass rate gap (83% vs 100%) is entirely due to browser verdict assertions — all content-based assertions passed",
+    "Root cause: npx agent-browser failed with module loading errors in the subagent environment",
+    "Recommendation: pre-install agent-browser globally or add install step to SKILL.md fallback logic"
+  ]
+}

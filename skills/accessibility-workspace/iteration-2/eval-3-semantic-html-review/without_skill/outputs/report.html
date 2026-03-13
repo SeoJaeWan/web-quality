@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>접근성 및 시맨틱 HTML 검토 보고서</title>
+  <style>
+    body { font-family: 'Malgun Gothic', sans-serif; margin: 0; padding: 24px; background: #f5f5f5; color: #222; }
+    h1 { font-size: 1.6rem; margin-bottom: 4px; }
+    .subtitle { color: #555; font-size: 0.9rem; margin-bottom: 24px; }
+    .section { background: #fff; border-radius: 8px; padding: 20px 24px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    h2 { font-size: 1.15rem; margin-top: 0; border-bottom: 2px solid #e0e0e0; padding-bottom: 8px; margin-bottom: 16px; }
+    h3 { font-size: 1rem; margin-top: 18px; margin-bottom: 6px; color: #1a5fa8; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: #1a5fa8; color: #fff; text-align: left; padding: 8px 10px; }
+    td { padding: 8px 10px; border-bottom: 1px solid #e8e8e8; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #f9f9f9; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.78rem; font-weight: bold; }
+    .fail { background: #fde8e8; color: #c0392b; }
+    .pass { background: #e6f4ea; color: #1e7e34; }
+    .warn { background: #fff3cd; color: #856404; }
+    .tag-p { color: #555; font-size: 0.8rem; }
+    .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 8px; }
+    .summary-card { border-radius: 6px; padding: 14px 16px; text-align: center; }
+    .card-fail { background: #fde8e8; }
+    .card-pass { background: #e6f4ea; }
+    .card-warn { background: #fff3cd; }
+    .summary-card .num { font-size: 2rem; font-weight: bold; }
+    .summary-card .label { font-size: 0.82rem; margin-top: 2px; color: #555; }
+    code { background: #f0f0f0; padding: 1px 5px; border-radius: 4px; font-size: 0.85rem; font-family: monospace; }
+    ul { margin: 6px 0; padding-left: 20px; }
+    li { margin-bottom: 4px; }
+    .file-label { display: inline-block; background: #e8edf7; color: #1a5fa8; border-radius: 4px; padding: 2px 8px; font-size: 0.8rem; margin-bottom: 6px; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<h1>접근성 및 시맨틱 HTML 검토 보고서</h1>
+<p class="subtitle">검토 기준: KWCAG 2.2 (Korean Web Content Accessibility Guidelines 2.2) | 검토일: 2026-03-13</p>
+
+<!-- 요약 섹션 -->
+<div class="section">
+  <h2>검토 요약</h2>
+  <p><strong>검토 대상 파일:</strong></p>
+  <ul>
+    <li><code>features/next-app/components/Navbar.tsx</code></li>
+    <li><code>features/next-app/components/SearchFilter.tsx</code></li>
+  </ul>
+  <div class="summary-grid">
+    <div class="summary-card card-fail"><div class="num" style="color:#c0392b;">7</div><div class="label">불합격 (Fail)</div></div>
+    <div class="summary-card card-warn"><div class="num" style="color:#856404;">2</div><div class="label">경고 (Warning)</div></div>
+    <div class="summary-card card-pass"><div class="num" style="color:#1e7e34;">4</div><div class="label">합격 (Pass)</div></div>
+  </div>
+</div>
+
+<!-- Navbar.tsx 검토 -->
+<div class="section">
+  <h2>Navbar.tsx 검토 결과</h2>
+
+  <h3>1. 햄버거 메뉴 버튼 — <code>aria-expanded</code> 누락</h3>
+  <div class="file-label">Navbar.tsx · 59–72번 줄</div>
+  <p><span class="badge fail">불합격</span> <span class="tag-p">KWCAG 2.2 — 4.1.2 이름, 역할, 값 (인식의 용이성)</span></p>
+  <p>모바일 햄버거 버튼에 <code>aria-label="메뉴 열기"</code>는 제공되어 있으나, 메뉴 열림/닫힘 상태를 나타내는 <code>aria-expanded</code> 속성이 없습니다. 스크린리더 사용자는 현재 메뉴가 열려 있는지 닫혀 있는지 알 수 없습니다.</p>
+  <p><strong>수정 방법:</strong> <code>aria-expanded={menuOpen}</code>를 버튼에 추가하고, <code>aria-label</code>을 상태에 맞게 동적으로 변경하거나 <code>aria-controls</code>로 제어 대상을 명시합니다.</p>
+  <pre style="background:#f0f0f0;padding:10px;border-radius:4px;font-size:0.85rem;overflow-x:auto;">&lt;button
+  aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}
+  aria-expanded={menuOpen}
+  aria-controls="mobile-menu"
+  ...
+&gt;</pre>
+
+  <h3>2. 모바일 메뉴 패널 — 역할 및 ID 누락</h3>
+  <div class="file-label">Navbar.tsx · 88번 줄</div>
+  <p><span class="badge fail">불합격</span> <span class="tag-p">KWCAG 2.2 — 4.1.2 이름, 역할, 값</span></p>
+  <p>모바일 메뉴 컨테이너(<code>&lt;div&gt;</code>)에 <code>id</code>가 없어 햄버거 버튼의 <code>aria-controls</code>와 연결이 불가능합니다. 또한 메뉴가 동적으로 열릴 때 스크린리더에 변경이 알려지지 않습니다.</p>
+  <p><strong>수정 방법:</strong> <code>id="mobile-menu"</code>를 추가하고, 필요 시 <code>role="navigation"</code> 또는 <code>aria-label="모바일 메뉴"</code>를 부여합니다.</p>
+
+  <h3>3. 현재 페이지 링크 — <code>aria-current</code> 누락</h3>
+  <div class="file-label">Navbar.tsx · 34–45번 줄, 89–99번 줄</div>
+  <p><span class="badge fail">불합격</span> <span class="tag-p">KWCAG 2.2 — 2.4.4 링크 목적 / 4.1.2 이름, 역할, 값</span></p>
+  <p>현재 경로(<code>pathname === link.href</code>)일 때 색상만 변경되고 <code>aria-current="page"</code>가 설정되지 않습니다. 스크린리더 사용자는 어떤 링크가 현재 페이지인지 알 수 없습니다.</p>
+  <p><strong>수정 방법:</strong></p>
+  <pre style="background:#f0f0f0;padding:10px;border-radius:4px;font-size:0.85rem;overflow-x:auto;">&lt;Link
+  ...
+  aria-current={pathname === link.href ? "page" : undefined}
+&gt;</pre>
+
+  <h3>4. 브레드크럼브 — 시맨틱 마크업 및 aria-label 누락</h3>
+  <div class="file-label">Navbar.tsx · 131–147번 줄</div>
+  <p><span class="badge fail">불합격</span> <span class="tag-p">KWCAG 2.2 — 2.4.8 위치, 1.3.1 정보와 관계</span></p>
+  <p>브레드크럼브가 <code>&lt;div&gt;</code>와 <code>&lt;span&gt;</code>으로만 구성되어 있으며, <code>&lt;nav&gt;</code>, <code>&lt;ol&gt;</code>/<code>&lt;li&gt;</code> 같은 시맨틱 요소가 사용되지 않았습니다. 또한 구분자 <code>/</code>가 장식용인데 스크린리더에 그대로 읽힙니다.</p>
+  <p><strong>수정 방법:</strong></p>
+  <pre style="background:#f0f0f0;padding:10px;border-radius:4px;font-size:0.85rem;overflow-x:auto;">&lt;nav aria-label="브레드크럼브"&gt;
+  &lt;ol style="list-style:none;display:flex;..."&gt;
+    &lt;li&gt;&lt;Link href="/"&gt;홈&lt;/Link&gt;&lt;/li&gt;
+    {segments.map((seg, i) =&gt; (
+      &lt;li key={seg}&gt;
+        &lt;span aria-hidden="true"&gt; / &lt;/span&gt;
+        {i === segments.length - 1
+          ? &lt;span aria-current="page"&gt;{labels[seg]}&lt;/span&gt;
+          : &lt;Link href={...}&gt;{labels[seg]}&lt;/Link&gt;}
+      &lt;/li&gt;
+    ))}
+  &lt;/ol&gt;
+&lt;/nav&gt;</pre>
+
+  <h3>5. 네비게이션 링크 목록 — <code>&lt;ul&gt;</code>/<code>&lt;li&gt;</code> 미사용</h3>
+  <div class="file-label">Navbar.tsx · 32–46번 줄</div>
+  <p><span class="badge warn">경고</span> <span class="tag-p">KWCAG 2.2 — 1.3.1 정보와 관계</span></p>
+  <p>데스크톱 내비게이션 링크들이 <code>&lt;div&gt;</code> 안에 바로 나열되어 있습니다. 링크 목록은 <code>&lt;ul&gt;</code>/<code>&lt;li&gt;</code>로 묶어 목록 구조를 명시하는 것이 시맨틱 HTML 관례에 맞습니다.</p>
+  <p><strong>수정 방법:</strong> 링크들을 <code>&lt;ul role="list"&gt;</code>와 <code>&lt;li&gt;</code>로 감쌉니다. 단, CSS reset으로 기본 스타일을 제거해야 합니다.</p>
+
+  <h3>6. SVG 아이콘 — 접근 가능한 텍스트 처리</h3>
+  <div class="file-label">Navbar.tsx · 65–71번 줄</div>
+  <p><span class="badge warn">경고</span> <span class="tag-p">KWCAG 2.2 — 1.1.1 비텍스트 콘텐츠</span></p>
+  <p>SVG에 <code>aria-hidden="true"</code>가 없습니다. 버튼에 <code>aria-label</code>이 있어 최악의 상황은 피하지만, SVG 자체가 스크린리더에 의미 없는 내용으로 읽힐 수 있습니다.</p>
+  <p><strong>수정 방법:</strong> <code>&lt;svg aria-hidden="true" focusable="false" ...&gt;</code>를 추가합니다.</p>
+
+  <h3>7. 로그아웃 버튼 — 색상만으로 구분</h3>
+  <div class="file-label">Navbar.tsx · 48–54번 줄</div>
+  <p><span class="badge pass">합격</span> <span class="tag-p">KWCAG 2.2 — 1.4.1 색상 사용</span></p>
+  <p>로그아웃 버튼은 빨간색으로 강조되어 있지만 텍스트("로그아웃")가 명확히 표시되어 있어 색상만으로 정보가 전달되지는 않습니다.</p>
+
+  <h3>8. 주 내비게이션 <code>&lt;nav&gt;</code> 랜드마크</h3>
+  <div class="file-label">Navbar.tsx · 23번 줄</div>
+  <p><span class="badge pass">합격</span> <span class="tag-p">KWCAG 2.2 — 2.4.1 블록 건너뛰기</span></p>
+  <p><code>&lt;nav&gt;</code> 요소가 사용되어 랜드마크 역할을 수행합니다. 단, <code>aria-label="주 내비게이션"</code>을 추가하면 페이지에 여러 <code>&lt;nav&gt;</code>가 있을 때 구분에 도움이 됩니다.</p>
+</div>
+
+<!-- SearchFilter.tsx 검토 -->
+<div class="section">
+  <h2>SearchFilter.tsx 검토 결과</h2>
+
+  <h3>1. 검색 입력 필드 — <code>&lt;label&gt;</code> 누락</h3>
+  <div class="file-label">SearchFilter.tsx · 21–28번 줄</div>
+  <p><span class="badge fail">불합격</span> <span class="tag-p">KWCAG 2.2 — 1.3.1 정보와 관계 / 3.3.2 레이블 또는 지시사항</span></p>
+  <p><code>&lt;input type="search"&gt;</code>에 <code>placeholder</code>만 있고 <code>&lt;label&gt;</code> 요소가 없습니다. <code>placeholder</code>는 레이블의 대체재가 아니며, 포커스 시 사라져 인지 부하를 증가시킵니다. 스크린리더가 입력의 목적을 정확히 전달하지 못합니다.</p>
+  <p><strong>수정 방법:</strong></p>
+  <pre style="background:#f0f0f0;padding:10px;border-radius:4px;font-size:0.85rem;overflow-x:auto;">&lt;label htmlFor="todo-search" style={{display:"block",...}}&gt;할 일 검색&lt;/label&gt;
+&lt;input id="todo-search" type="search" ... /&gt;
+
+/* 또는 시각적으로 숨기는 경우 */
+&lt;label htmlFor="todo-search" className="sr-only"&gt;할 일 검색&lt;/label&gt;</pre>
+
+  <h3>2. 필터 버튼 — <code>aria-pressed</code> 누락</h3>
+  <div class="file-label">SearchFilter.tsx · 31–44번 줄</div>
+  <p><span class="badge fail">불합격</span> <span class="tag-p">KWCAG 2.2 — 4.1.2 이름, 역할, 값</span></p>
+  <p>선택된 필터 버튼의 상태가 파란색 배경으로만 표시됩니다. 스크린리더 사용자는 어떤 필터가 현재 활성화되어 있는지 알 수 없습니다. 코드 주석에도 "BAD: missing aria-pressed"라고 명시되어 있습니다.</p>
+  <p><strong>수정 방법:</strong></p>
+  <pre style="background:#f0f0f0;padding:10px;border-radius:4px;font-size:0.85rem;overflow-x:auto;">&lt;button
+  aria-pressed={filter === f.value}
+  onClick={() =&gt; onFilterChange(f.value)}
+  ...
+&gt;
+  {f.label}
+&lt;/button&gt;</pre>
+  <p>또는 필터 그룹을 <code>role="group"</code>과 <code>aria-label="필터"</code>로 묶어 컨텍스트를 제공합니다.</p>
+
+  <h3>3. 필터 버튼 그룹 — 그룹 역할 및 레이블 누락</h3>
+  <div class="file-label">SearchFilter.tsx · 29번 줄</div>
+  <p><span class="badge fail">불합격</span> <span class="tag-p">KWCAG 2.2 — 1.3.1 정보와 관계</span></p>
+  <p>필터 버튼들을 감싸는 <code>&lt;div&gt;</code>에 그룹 역할이 없어, 이 버튼들이 관련 있는 항목들의 묶음이라는 것을 스크린리더가 파악하기 어렵습니다.</p>
+  <p><strong>수정 방법:</strong></p>
+  <pre style="background:#f0f0f0;padding:10px;border-radius:4px;font-size:0.85rem;overflow-x:auto;">&lt;div role="group" aria-label="할 일 필터" ...&gt;
+  {filters.map(...)}
+&lt;/div&gt;</pre>
+
+  <h3>4. 전체 컨테이너 — 시맨틱 요소 부재</h3>
+  <div class="file-label">SearchFilter.tsx · 20번 줄</div>
+  <p><span class="badge pass">합격</span> <span class="tag-p">KWCAG 2.2 — 1.3.1 정보와 관계</span></p>
+  <p>외부 <code>&lt;div&gt;</code>는 레이아웃 목적으로만 사용되어 큰 문제는 없지만, <code>&lt;search&gt;</code> (HTML5.3) 또는 <code>&lt;form role="search"&gt;</code>로 감싸면 더 명확한 시맨틱을 제공할 수 있습니다.</p>
+
+  <h3>5. 색상 대비</h3>
+  <div class="file-label">SearchFilter.tsx · 35–40번 줄</div>
+  <p><span class="badge pass">합격</span> <span class="tag-p">KWCAG 2.2 — 1.4.3 명도 대비</span></p>
+  <p>비선택 필터 버튼의 텍스트 색상(<code>text-zinc-600</code>: #52525b)과 흰 배경의 명도 대비는 약 5.9:1로 기준(4.5:1)을 충족합니다. 선택 상태(<code>bg-blue-600 text-white</code>)도 기준을 충족합니다.</p>
+</div>
+
+<!-- 종합 권고사항 -->
+<div class="section">
+  <h2>종합 권고사항 및 우선순위</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>우선순위</th>
+        <th>파일</th>
+        <th>항목</th>
+        <th>KWCAG 기준</th>
+        <th>판정</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1 (긴급)</td>
+        <td>SearchFilter.tsx</td>
+        <td>검색 입력 필드 &lt;label&gt; 누락</td>
+        <td>1.3.1 / 3.3.2</td>
+        <td><span class="badge fail">불합격</span></td>
+      </tr>
+      <tr>
+        <td>2 (긴급)</td>
+        <td>SearchFilter.tsx</td>
+        <td>필터 버튼 aria-pressed 누락</td>
+        <td>4.1.2</td>
+        <td><span class="badge fail">불합격</span></td>
+      </tr>
+      <tr>
+        <td>3 (높음)</td>
+        <td>Navbar.tsx</td>
+        <td>햄버거 버튼 aria-expanded 누락</td>
+        <td>4.1.2</td>
+        <td><span class="badge fail">불합격</span></td>
+      </tr>
+      <tr>
+        <td>4 (높음)</td>
+        <td>Navbar.tsx</td>
+        <td>현재 페이지 링크 aria-current 누락</td>
+        <td>2.4.4 / 4.1.2</td>
+        <td><span class="badge fail">불합격</span></td>
+      </tr>
+      <tr>
+        <td>5 (높음)</td>
+        <td>Navbar.tsx</td>
+        <td>브레드크럼브 시맨틱 마크업 미적용</td>
+        <td>1.3.1 / 2.4.8</td>
+        <td><span class="badge fail">불합격</span></td>
+      </tr>
+      <tr>
+        <td>6 (보통)</td>
+        <td>SearchFilter.tsx</td>
+        <td>필터 버튼 그룹 role/label 누락</td>
+        <td>1.3.1</td>
+        <td><span class="badge fail">불합격</span></td>
+      </tr>
+      <tr>
+        <td>7 (보통)</td>
+        <td>Navbar.tsx</td>
+        <td>모바일 메뉴 패널 ID/역할 누락</td>
+        <td>4.1.2</td>
+        <td><span class="badge fail">불합격</span></td>
+      </tr>
+      <tr>
+        <td>8 (낮음)</td>
+        <td>Navbar.tsx</td>
+        <td>내비게이션 링크 ul/li 미사용</td>
+        <td>1.3.1</td>
+        <td><span class="badge warn">경고</span></td>
+      </tr>
+      <tr>
+        <td>9 (낮음)</td>
+        <td>Navbar.tsx</td>
+        <td>SVG aria-hidden 미설정</td>
+        <td>1.1.1</td>
+        <td><span class="badge warn">경고</span></td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>Navbar.tsx</td>
+        <td>nav 랜드마크 사용</td>
+        <td>2.4.1</td>
+        <td><span class="badge pass">합격</span></td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>Navbar.tsx</td>
+        <td>로그아웃 텍스트 명시</td>
+        <td>1.4.1</td>
+        <td><span class="badge pass">합격</span></td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>SearchFilter.tsx</td>
+        <td>필터 버튼 명도 대비</td>
+        <td>1.4.3</td>
+        <td><span class="badge pass">합격</span></td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td>SearchFilter.tsx</td>
+        <td>컨테이너 레이아웃</td>
+        <td>1.3.1</td>
+        <td><span class="badge pass">합격</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p style="color:#888;font-size:0.8rem;text-align:center;">본 보고서는 KWCAG 2.2 기준 정적 코드 분석 결과입니다. 실제 스크린리더 테스트를 추가로 권장합니다.</p>
+
+</body>
+</html>

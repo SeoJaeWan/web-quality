@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>웹 접근성 검토 리포트 — 2026-03-13</title>
+<style>
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; max-width: 1200px; margin: 0 auto; padding: 24px; color: #333; line-height: 1.6; }
+  h1 { border-bottom: 3px solid #333; padding-bottom: 8px; }
+  h2 { border-left: 5px solid #555; padding-left: 12px; margin-top: 32px; }
+  h3 { color: #444; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9em; }
+  th { background: #f5f5f5; padding: 10px 12px; border: 1px solid #ddd; text-align: left; white-space: nowrap; }
+  td { padding: 10px 12px; border: 1px solid #ddd; vertical-align: top; }
+  tr:hover td { background: #fafafa; }
+  .result-pass    { background: #d4edda; color: #155724; font-weight: bold; text-align: center; }
+  .result-fail    { background: #f8d7da; color: #721c24; font-weight: bold; text-align: center; }
+  .result-partial { background: #fff3cd; color: #856404; font-weight: bold; text-align: center; }
+  .result-na      { background: #e2e3e5; color: #383d41; text-align: center; }
+  .result-unknown { background: #dce8f8; color: #1a4a8a; text-align: center; font-size: 0.85em; }
+  .method-lighthouse { color: #e67e22; font-size: 0.8em; font-weight: bold; }
+  .method-playwright { color: #0066cc; font-size: 0.8em; font-weight: bold; }
+  .method-static     { color: #666; font-size: 0.8em; }
+  .method-unknown    { color: #999; font-size: 0.8em; }
+  .summary-pass { color: #155724; font-weight: bold; }
+  .summary-fail { color: #721c24; font-weight: bold; }
+  .fix-fail    { background: #fff5f5; border-left: 4px solid #dc3545; border-radius: 0 4px 4px 0; padding: 16px; margin: 12px 0; }
+  .fix-partial { background: #fffdf0; border-left: 4px solid #ffc107; border-radius: 0 4px 4px 0; padding: 16px; margin: 12px 0; }
+  code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.9em; }
+  .meta { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 16px; margin-bottom: 24px; }
+  .meta ul { list-style: none; margin: 0; padding: 0; }
+  .meta li { margin: 4px 0; }
+  .lighthouse-badge { display: inline-block; background: #e67e22; color: white; font-size: 0.75em; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+  .playwright-badge { display: inline-block; background: #0066cc; color: white; font-size: 0.75em; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+</style>
+</head>
+<body>
+
+<h1>웹 접근성/웹표준 검토 리포트</h1>
+
+<div class="meta">
+<ul>
+  <li><strong>날짜:</strong> 2026-03-13</li>
+  <li><strong>검토 파일:</strong>
+    <ul style="margin:4px 0 0 16px; padding:0; list-style:disc;">
+      <li>features/next-app/components/Navbar.tsx</li>
+      <li>features/next-app/components/SearchFilter.tsx</li>
+    </ul>
+  </li>
+  <li><strong>기준:</strong> KWCAG2.2 (한국지능정보사회진흥원, 2024.10) + 시맨틱 HTML (HTML Living Standard)</li>
+  <li><strong>Lighthouse:</strong> 사용됨 <span class="lighthouse-badge">자동검사</span> — http://localhost:3000 (score: 1.0 / 100점)</li>
+  <li><strong>Playwright:</strong> 사용됨 <span class="playwright-badge">자동검사</span> — http://localhost:3000 (키보드·포커스·ARIA 상태 검증)</li>
+</ul>
+</div>
+
+<h2>요약</h2>
+<table>
+  <tr>
+    <th>원칙</th><th>합격(✅)</th><th>권고(⚠️)</th><th>불합격(❌)</th><th>해당없음(➖)</th><th>판정불가(🔵)</th><th>합격률</th>
+  </tr>
+  <tr>
+    <td>인식의 용이성 (9항목)</td>
+    <td class="summary-pass">4</td>
+    <td>0</td>
+    <td class="summary-fail">1</td>
+    <td>4</td>
+    <td>0</td>
+    <td>80% (4/5 판정 가능)</td>
+  </tr>
+  <tr>
+    <td>운용의 용이성 (15항목)</td>
+    <td class="summary-pass">6</td>
+    <td>1</td>
+    <td class="summary-fail">2</td>
+    <td>6</td>
+    <td>0</td>
+    <td>67% (6/9 판정 가능)</td>
+  </tr>
+  <tr>
+    <td>이해의 용이성 (7항목)</td>
+    <td class="summary-pass">4</td>
+    <td>0</td>
+    <td class="summary-fail">0</td>
+    <td>3</td>
+    <td>0</td>
+    <td>100% (4/4 판정 가능)</td>
+  </tr>
+  <tr>
+    <td>견고성 (2항목)</td>
+    <td class="summary-pass">1</td>
+    <td>0</td>
+    <td class="summary-fail">1</td>
+    <td>0</td>
+    <td>0</td>
+    <td>50% (1/2)</td>
+  </tr>
+  <tr style="font-weight:bold; background:#f5f5f5;">
+    <td>전체 (33항목)</td>
+    <td class="summary-pass">15</td>
+    <td>1</td>
+    <td class="summary-fail">4</td>
+    <td>13</td>
+    <td>0</td>
+    <td><strong>79% (15/19 판정 가능 항목 기준)</strong></td>
+  </tr>
+</table>
+
+<h2>상세 결과</h2>
+
+<h3>원칙 1. 인식의 용이성 (Perceivable)</h3>
+<table>
+  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>
+  <tr>
+    <td>1</td><td>적절한 대체 텍스트</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse: image-alt N/A (이미지 없음). 코드상 SVG 아이콘은 aria-label이 부모 button에 있어 접근 가능.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>2</td><td>자막 제공</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>video/audio 요소 없음</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3</td><td>표의 구성</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>table 요소 없음</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>4</td><td>콘텐츠의 선형 구조</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>DOM 순서와 시각 순서 일치. position:absolute/fixed 남용 없음.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>5</td><td>명확한 지시 사항 제공</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>색상·위치만으로 지시하는 텍스트 패턴 없음</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>6</td><td>색에 무관한 콘텐츠 인식</td>
+    <td class="result-fail">❌</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td><strong>SearchFilter.tsx 31~43행:</strong> 활성 필터 버튼을 <code>bg-blue-600 text-white</code>(배경색 변경)만으로 구분. 색상 외 텍스트·아이콘 등 추가 구분 수단 없음. 색맹 사용자가 활성 필터를 인지하기 어려움.</td>
+    <td>활성 필터에 밑줄, 체크 아이콘, 굵은 글씨 등 색상 외 시각 구분 수단을 병행 제공. 또는 <code>aria-pressed="true"</code>를 통해 보조기기 사용자에게 상태 전달.</td>
+  </tr>
+  <tr>
+    <td>7</td><td>자동 재생 금지</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>autoplay 속성 없음. 자동 재생 콘텐츠 없음.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>8</td><td>텍스트 명도 대비</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse color-contrast: Pass (score 1.0). Tailwind 클래스 기반 색상 전반 이상 없음.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>9</td><td>콘텐츠 간의 구분</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>시각적 디자인 판단 필요 — 런타임 확인 항목</td>
+    <td></td>
+  </tr>
+</table>
+
+<h3>원칙 2. 운용의 용이성 (Operable)</h3>
+<table>
+  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>
+  <tr>
+    <td>10</td><td>키보드 사용 보장</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-playwright">Playwright</span></td>
+    <td>Playwright 키보드 탐색 확인: <code>&lt;button&gt;</code>, <code>&lt;a&gt;</code> 요소 모두 Tab으로 접근 가능. onClick만 있는 div/span 없음.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>11</td><td>초점 이동과 표시</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-playwright">Playwright</span></td>
+    <td>Playwright 포커스 스타일 확인: 첫 번째 Tab 포커스 이동 시 TestApp 링크에 <code>outline: rgb(16, 16, 16) auto 1px</code> 표시 확인. 브라우저 기본 포커스 링 유지. <code>outline: none</code> 미사용.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>12</td><td>조작 가능</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>버튼 크기는 Tailwind 유틸리티 클래스(<code>p-2</code>, <code>px-3 py-1</code>)로 지정. 런타임 px 측정 필요.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>13</td><td>문자 단축키</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>단일 문자 단축키 사용 없음</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>14</td><td>응답시간 조절</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>setTimeout/세션 타임아웃 로직 없음</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>15</td><td>정지 기능 제공</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>자동 전환 콘텐츠(슬라이더, 배너 등) 없음</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>16</td><td>깜박임과 번쩍임 사용 제한</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>3~50Hz 범위 깜박임 애니메이션 없음</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>17</td><td>반복 영역 건너뛰기</td>
+    <td class="result-fail">❌</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse bypass: N/A (랜드마크 nav 존재로 bypass 조건 충족으로 판정). 그러나 <strong>Navbar.tsx</strong>에 명시적 스킵 내비게이션 링크(<code>&lt;a href="#main-content"&gt;본문 바로가기&lt;/a&gt;</code>)가 없음. 키보드 사용자가 반복 nav를 매번 탐색해야 함.</td>
+    <td><code>Navbar.tsx</code> 최상단에 스킵 링크 추가:<br><code>&lt;a href="#main-content" class="skip-nav"&gt;본문 바로가기&lt;/a&gt;</code><br>CSS: <code>.skip-nav { position:absolute; top:-40px; } .skip-nav:focus { top:0; }</code><br>페이지 main 영역에 <code>id="main-content"</code> 추가</td>
+  </tr>
+  <tr>
+    <td>18</td><td>제목 제공</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse heading-order: Pass. <code>&lt;title&gt;TestApp&lt;/title&gt;</code> 확인. 헤딩 계층 순서 이상 없음.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>19</td><td>적절한 링크 텍스트</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse link-name: Pass. "로그인", "회원가입", "대시보드", "할 일", "프로필", "홈" 등 모두 의미 있는 텍스트.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>20</td><td>고정된 참조 위치 정보</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>전자출판문서 형식 콘텐츠 아님</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>21</td><td>단일 포인터 입력 지원</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>다중 포인터·경로 기반 동작 없음</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>22</td><td>포인터 입력 취소</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>onMouseDown 즉시 실행 패턴 없음. 모든 버튼 onClick(mouseup 기반) 사용.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>23</td><td>레이블과 네임</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse button-name: Pass (score 1.0). 햄버거 버튼 <code>aria-label="메뉴 열기"</code>, 필터 버튼들 텍스트 레이블("전체", "진행중", "완료") 보유.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>24</td><td>동작 기반 작동</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>DeviceMotionEvent/DeviceOrientationEvent 없음</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>25</td><td>기본 언어 표시</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-lighthouse">Lighthouse</span></td>
+    <td>Lighthouse html-has-lang: Pass. <code>&lt;html lang="ko"&gt;</code> 확인.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>26</td><td>사용자 요구에 따른 실행</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>select onChange 자동 이동, window.open 자동 실행, autofocus 남용 없음.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>27</td><td>찾기 쉬운 도움 정보</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>도움 정보(FAQ/고객센터) 링크 없음 — 해당 컴포넌트 범위 외</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>28</td><td>오류 정정</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>검색 입력은 오류 제출 형식이 아님. 별도 폼 validation 로직 없음.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>29</td><td>레이블 제공</td>
+    <td class="result-fail">❌</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td><strong>SearchFilter.tsx 21~28행:</strong> <code>&lt;input type="search"&gt;</code>에 연결된 <code>&lt;label&gt;</code>이 없고 <code>aria-label</code>, <code>title</code>도 없음. <code>placeholder="할 일 검색..."</code>만 존재. placeholder는 레이블로 인정되지 않음 (KWCAG2.2 29항).</td>
+    <td><code>aria-label="할 일 검색"</code> 속성 추가:<br><code>&lt;input type="search" aria-label="할 일 검색" placeholder="할 일 검색..." ... /&gt;</code><br>또는 시각적으로 숨긴 <code>&lt;label&gt;</code> 제공</td>
+  </tr>
+  <tr>
+    <td>30</td><td>접근 가능한 인증</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>CAPTCHA·퍼즐 인증 없음. 인증 관련 코드 범위 밖.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>31</td><td>반복 입력 정보</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>다단계 폼 없음. 해당 컴포넌트 범위 외.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>32</td><td>마크업 오류 방지</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>중복 id 없음. 잘못된 태그 중첩 없음. 리스트 렌더링 key prop 올바르게 사용(<code>key={link.href}</code>, <code>key={f.value}</code>). Lighthouse duplicate-id-aria: N/A (중복 없음).</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>33</td><td>웹 애플리케이션 접근성</td>
+    <td class="result-fail">❌</td>
+    <td><span class="method-playwright">Playwright</span></td>
+    <td>
+      <strong>[1] Navbar.tsx 59~72행 — 햄버거 메뉴 버튼:</strong> <code>aria-expanded</code> 속성 없음. 메뉴 열림/닫힘 상태가 보조기기에 전달되지 않음. 코드 주석에도 <em>"BAD: missing aria-expanded"</em>로 명시됨.<br><br>
+      <strong>[2] SearchFilter.tsx 32~43행 — 필터 버튼:</strong> <code>aria-pressed</code> 속성 없음. 현재 선택된 필터 상태가 보조기기에 전달되지 않음. 코드 주석에도 <em>"BAD: missing aria-pressed"</em>로 명시됨.
+    </td>
+    <td>
+      [1] 햄버거 버튼에 aria-expanded 추가:<br>
+      <code>&lt;button aria-label="메뉴" aria-expanded={menuOpen} aria-controls="mobile-menu" ...&gt;</code><br>
+      <code>aria-label</code>도 상태에 맞게 동적으로 제공 권고: <code>aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"}</code><br><br>
+      [2] 필터 버튼에 aria-pressed 추가:<br>
+      <code>&lt;button aria-pressed={filter === f.value} ...&gt;{f.label}&lt;/button&gt;</code><br>
+      또는 필터 그룹에 <code>role="group"</code> + 각 버튼에 <code>role="radio"</code> + <code>aria-checked</code> 사용
+    </td>
+  </tr>
+</table>
+
+<h2>시맨틱 HTML 검토</h2>
+<table>
+  <tr><th>검토 항목</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>권고 수정</th></tr>
+  <tr>
+    <td>랜드마크 요소 (header/main/footer/nav)</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>Navbar.tsx에서 <code>&lt;nav&gt;</code> 랜드마크 올바르게 사용. Playwright 스냅샷에서 <code>navigation</code> 랜드마크 확인.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>섹션 구조 (article/section/aside)</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>네비게이션 바와 검색/필터 컴포넌트는 독립 콘텐츠 블록이 아니므로 div 래퍼 사용 적절.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>대화형 요소 (button/a vs div/span)</td>
+    <td class="result-pass">✅</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>클릭 가능한 요소에 모두 <code>&lt;button&gt;</code> 또는 <code>&lt;Link&gt;(→&lt;a&gt;)</code> 사용. clickable div/span 없음.</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>목록 구조 (ul/ol/li)</td>
+    <td class="result-partial">⚠️</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td><strong>Navbar.tsx 33~46행:</strong> 반복 렌더링된 navLinks를 <code>div</code> 컨테이너 안 개별 <code>&lt;Link&gt;</code>로 나열. 의미상 내비게이션 링크 목록이므로 <code>&lt;ul&gt;</code>/<code>&lt;li&gt;</code> 구조가 더 적합.</td>
+    <td>nav 링크를 리스트로 감싸기:<br><code>&lt;ul role="list"&gt;{navLinks.map(link =&gt; &lt;li key={link.href}&gt;&lt;Link ...&gt;{link.label}&lt;/Link&gt;&lt;/li&gt;)}&lt;/ul&gt;</code></td>
+  </tr>
+  <tr>
+    <td>브레드크럼 구조 (nav aria-label)</td>
+    <td class="result-partial">⚠️</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td><strong>Navbar.tsx 132~147행 (Breadcrumbs 함수):</strong> 브레드크럼이 <code>&lt;div&gt;</code>로 렌더링됨. <code>&lt;nav aria-label="현재 위치"&gt;</code> 및 <code>&lt;ol&gt;</code>/<code>&lt;li&gt;</code> 구조 사용 권고. 구분자 "/"가 스크린리더에 읽힐 수 있음(<code>aria-hidden="true"</code> 처리 필요).</td>
+    <td><code>&lt;nav aria-label="현재 위치"&gt;&lt;ol&gt;&lt;li&gt;...&lt;/li&gt;&lt;/ol&gt;&lt;/nav&gt;</code> 구조로 변경. 구분자 span에 <code>aria-hidden="true"</code> 추가.</td>
+  </tr>
+  <tr>
+    <td>폼 그룹 (fieldset/legend)</td>
+    <td class="result-partial">⚠️</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td><strong>SearchFilter.tsx 29~45행:</strong> 필터 버튼 그룹이 단순 <code>&lt;div&gt;</code>로 묶임. 관련된 버튼들의 묶음이므로 <code>role="group"</code> + <code>aria-label="필터"</code> 또는 <code>&lt;fieldset&gt;</code>+<code>&lt;legend&gt;</code> 사용 권고.</td>
+    <td><code>&lt;div role="group" aria-label="할 일 필터"&gt;...&lt;/div&gt;</code> 또는<br><code>&lt;fieldset&gt;&lt;legend&gt;필터&lt;/legend&gt;...&lt;/fieldset&gt;</code></td>
+  </tr>
+  <tr>
+    <td>표현용 태그 (b/i → strong/em)</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>b, i 표현용 태그 사용 없음</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>기타 시맨틱 요소 (time/blockquote 등)</td>
+    <td class="result-na">➖</td>
+    <td><span class="method-static">정적분석</span></td>
+    <td>날짜/시간 표시, 인용구 등 해당 요소 없음</td>
+    <td></td>
+  </tr>
+</table>
+
+<h2>수정 필요 항목</h2>
+
+<h3>불합격 (❌)</h3>
+
+<div class="fix-fail">
+  <p><strong>항목 6. 색에 무관한 콘텐츠 인식</strong> — <code>SearchFilter.tsx:31~43</code></p>
+  <p><strong>문제:</strong> 활성 필터 버튼을 배경색(<code>bg-blue-600 text-white</code>) 변경만으로 구분. 색상 외 시각 구분 수단 없음.</p>
+  <p><strong>수정:</strong> 활성 버튼에 체크 아이콘 추가, 밑줄, 굵기 변경 등 색 이외의 수단 병행. 또는 <code>aria-pressed</code>로 보조기기 상태 전달(시각적 색 구분을 완전히 대체하지는 않으나 보완 가능).</p>
+</div>
+
+<div class="fix-fail">
+  <p><strong>항목 17. 반복 영역 건너뛰기</strong> — <code>Navbar.tsx</code></p>
+  <p><strong>문제:</strong> 스킵 내비게이션 링크 미제공. 키보드 사용자가 매 페이지마다 내비게이션 링크를 전부 탐색해야 함.</p>
+  <p><strong>수정:</strong></p>
+  <code>&lt;a href="#main-content" style="position:absolute;top:-40px;" onFocus={e =&gt; e.target.style.top='0'}&gt;본문 바로가기&lt;/a&gt;</code>
+  <p>페이지 main에 <code>id="main-content"</code> 추가</p>
+</div>
+
+<div class="fix-fail">
+  <p><strong>항목 29. 레이블 제공</strong> — <code>SearchFilter.tsx:21~28</code></p>
+  <p><strong>문제:</strong> <code>&lt;input type="search"&gt;</code>에 label, aria-label, title 모두 없음. placeholder만 존재.</p>
+  <p><strong>수정:</strong> <code>&lt;input type="search" aria-label="할 일 검색" placeholder="할 일 검색..." /&gt;</code></p>
+</div>
+
+<div class="fix-fail">
+  <p><strong>항목 33. 웹 애플리케이션 접근성</strong></p>
+  <p><strong>[1]</strong> <code>Navbar.tsx:59~72</code> — 햄버거 메뉴 버튼 <code>aria-expanded</code> 누락</p>
+  <p><strong>문제:</strong> 메뉴 열림/닫힘 상태가 스크린리더에 전달되지 않음.</p>
+  <p><strong>수정:</strong> <code>&lt;button aria-label={menuOpen ? "메뉴 닫기" : "메뉴 열기"} aria-expanded={menuOpen} aria-controls="mobile-menu" ...&gt;</code></p>
+  <p>모바일 메뉴 div에 <code>id="mobile-menu"</code> 추가</p>
+  <p><strong>[2]</strong> <code>SearchFilter.tsx:32~43</code> — 필터 버튼 <code>aria-pressed</code> 누락</p>
+  <p><strong>문제:</strong> 선택된 필터 상태가 스크린리더에 전달되지 않음.</p>
+  <p><strong>수정:</strong> <code>&lt;button aria-pressed={filter === f.value} ...&gt;{f.label}&lt;/button&gt;</code></p>
+</div>
+
+<h3>권고 (⚠️)</h3>
+
+<div class="fix-partial">
+  <p><strong>시맨틱 HTML: 목록 구조</strong> — <code>Navbar.tsx:33~46</code></p>
+  <p><strong>내용:</strong> 내비게이션 링크 목록을 <code>&lt;ul&gt;</code>/<code>&lt;li&gt;</code>로 감싸면 스크린리더가 항목 수를 안내하고 목록 탐색 단축키를 사용할 수 있어 접근성이 향상됩니다.</p>
+</div>
+
+<div class="fix-partial">
+  <p><strong>시맨틱 HTML: 브레드크럼 구조</strong> — <code>Navbar.tsx:132~147</code></p>
+  <p><strong>내용:</strong> Breadcrumbs를 <code>&lt;nav aria-label="현재 위치"&gt;&lt;ol&gt;...&lt;/ol&gt;&lt;/nav&gt;</code>로 변경하고 구분자 "/"에 <code>aria-hidden="true"</code>를 추가하면 스크린리더 사용자에게 더 명확한 탐색 맥락을 제공합니다.</p>
+</div>
+
+<div class="fix-partial">
+  <p><strong>시맨틱 HTML: 폼 그룹</strong> — <code>SearchFilter.tsx:29~45</code></p>
+  <p><strong>내용:</strong> 필터 버튼 그룹에 <code>role="group" aria-label="할 일 필터"</code>를 추가하면 스크린리더가 관련 버튼들의 묶음 맥락을 파악할 수 있습니다.</p>
+</div>
+
+</body>
+</html>
