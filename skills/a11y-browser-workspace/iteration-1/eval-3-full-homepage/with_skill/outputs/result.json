@@ -1,0 +1,74 @@
+[
+  {
+    "id": "A-10",
+    "name": "키보드 사용 보장",
+    "result": "✅",
+    "verdict_method": "Playwright",
+    "issue": "All 6 interactive elements (3 nav links, 2 main CTA links, 1 button) are reachable via Tab key. Focus moves sequentially through each element.",
+    "fix_guide": null
+  },
+  {
+    "id": "A-11",
+    "name": "초점 표시",
+    "result": "✅",
+    "verdict_method": "Playwright",
+    "issue": "Focused element (A tag) shows outline: 'rgb(16, 16, 16) auto 1px'. Default browser focus indicator is visible on all interactive elements.",
+    "fix_guide": null
+  },
+  {
+    "id": "A-08",
+    "name": "콘텐츠 명도 대비",
+    "result": "✅",
+    "verdict_method": "Playwright",
+    "issue": "All text elements pass WCAG AA contrast requirements. Measured pairs: text-zinc-900 on white (~17:1), text-zinc-600 on white (~9:1), text-zinc-700 on white (~11:1), white on bg-blue-600 (~5.9:1), text-blue-600 on white (~5.9:1). All exceed 4.5:1 for normal text (14px) and 3:1 for large text (36px heading).",
+    "fix_guide": null
+  },
+  {
+    "id": "A-32",
+    "name": "중복 ID 금지",
+    "result": "✅",
+    "verdict_method": "Playwright",
+    "issue": "DOM contains 1 element with an id attribute. No duplicate IDs found.",
+    "fix_guide": null
+  },
+  {
+    "id": "A-33",
+    "name": "ARIA 상태 변경",
+    "result": "⚠️",
+    "verdict_method": "Playwright",
+    "issue": "Hamburger menu button ('메뉴 열기') toggles mobile navigation visibility on click, but does not have aria-expanded attribute to communicate open/closed state to assistive technology. The button label also does not change to '메뉴 닫기' when expanded.",
+    "fix_guide": "Add aria-expanded={isOpen} to the hamburger menu button element and toggle the accessible label between '메뉴 열기' and '메뉴 닫기' based on menu state."
+  },
+  {
+    "id": "A-12",
+    "name": "초점 이동 순서",
+    "result": "➖",
+    "verdict_method": "Playwright",
+    "issue": "Homepage does not contain modal or popup triggers. Hamburger menu uses a disclosure pattern where focus remaining on the trigger button is acceptable behavior.",
+    "fix_guide": null
+  },
+  {
+    "id": "A-26",
+    "name": "요청에 의한 변경",
+    "result": "➖",
+    "verdict_method": "Playwright",
+    "issue": "No <select> elements present on the homepage.",
+    "fix_guide": null
+  },
+  {
+    "id": "A-28",
+    "name": "오류 정정 방법 제공",
+    "result": "➖",
+    "verdict_method": "Playwright",
+    "issue": "No form elements present on the homepage.",
+    "fix_guide": null
+  },
+  {
+    "id": "A-31",
+    "name": "일관된 내비게이션",
+    "result": "✅",
+    "verdict_method": "Playwright",
+    "issue": "Navigation structure (TestApp logo link + navigation links) persists consistently when navigating between homepage and other pages (할 일 page verified). Same nav bar structure with identical link order.",
+    "fix_guide": null
+  }
+]

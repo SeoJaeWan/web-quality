@@ -1,0 +1,63 @@
+{
+  "skill_name": "a11y",
+  "iteration": 1,
+  "configurations": [
+    {
+      "name": "with_skill",
+      "evals": [
+        {
+          "eval_name": "orchestrator-full",
+          "pass_rate": 0.875,
+          "passed": 7,
+          "total": 8,
+          "duration_seconds": 719.4,
+          "total_tokens": 64780
+        },
+        {
+          "eval_name": "two-component",
+          "pass_rate": 0.8,
+          "passed": 4,
+          "total": 5,
+          "duration_seconds": 345.9,
+          "total_tokens": 63234
+        }
+      ],
+      "aggregate": {
+        "mean_pass_rate": 0.838,
+        "mean_duration_seconds": 532.6,
+        "mean_tokens": 64007
+      }
+    },
+    {
+      "name": "without_skill",
+      "evals": [
+        {
+          "eval_name": "orchestrator-full",
+          "pass_rate": 0.25,
+          "passed": 2,
+          "total": 8,
+          "duration_seconds": 99.7,
+          "total_tokens": 20152
+        },
+        {
+          "eval_name": "two-component",
+          "pass_rate": 0.4,
+          "passed": 2,
+          "total": 5,
+          "duration_seconds": 115.8,
+          "total_tokens": 20115
+        }
+      ],
+      "aggregate": {
+        "mean_pass_rate": 0.325,
+        "mean_duration_seconds": 107.8,
+        "mean_tokens": 20134
+      }
+    }
+  ],
+  "delta": {
+    "pass_rate": "+51.3%",
+    "duration": "+394.1%",
+    "tokens": "+217.8%"
+  }
+}

@@ -1,0 +1,91 @@
+[
+  {
+    "id": "A11Y-001",
+    "severity": "critical",
+    "kwcag": "5.1.1 (키보드 접근성)",
+    "wcag": "2.1.1 Keyboard (Level A)",
+    "line": 17,
+    "code": "onClick={handleClick}",
+    "element": "<div onClick={handleClick}>",
+    "issue": "비대화형 요소인 <div>에 onClick 핸들러가 있으나 키보드 접근이 불가능합니다. tabIndex, role, onKeyDown/onKeyPress 속성이 모두 누락되어 키보드 사용자가 해당 요소와 상호작용할 수 없습니다.",
+    "suggestion": "<div>를 <button>으로 변경하거나, role=\"button\", tabIndex={0}, onKeyDown 핸들러(Enter/Space 키 처리)를 추가하세요.",
+    "fixExample": "<button onClick={handleClick} className=\"...\"> 또는 <div role=\"button\" tabIndex={0} onClick={handleClick} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(); }}>"
+  },
+  {
+    "id": "A11Y-002",
+    "severity": "critical",
+    "kwcag": "5.1.1 (키보드 접근성)",
+    "wcag": "2.1.1 Keyboard (Level A)",
+    "line": 10,
+    "code": "<div ... onClick={handleClick}>",
+    "element": "<div>",
+    "issue": "<div> 요소에 tabIndex가 없어 키보드 포커스를 받을 수 없습니다. 클릭 가능한 요소는 반드시 키보드 포커스를 받을 수 있어야 합니다.",
+    "suggestion": "tabIndex={0}을 추가하거나, 네이티브 대화형 요소인 <button>을 사용하세요."
+  },
+  {
+    "id": "A11Y-003",
+    "severity": "major",
+    "kwcag": "5.3.1 (적절한 역할 부여)",
+    "wcag": "4.1.2 Name, Role, Value (Level A)",
+    "line": 10,
+    "code": "<div ... onClick={handleClick}>",
+    "element": "<div>",
+    "issue": "클릭 가능한 <div>에 ARIA role 속성이 없습니다. 보조 기술(스크린 리더)이 이 요소가 상호작용 가능한 요소임을 인식할 수 없습니다.",
+    "suggestion": "role=\"button\"을 추가하거나, 의미론적으로 적합한 <button> 요소를 사용하세요."
+  },
+  {
+    "id": "A11Y-004",
+    "severity": "major",
+    "kwcag": "5.3.2 (마크업 오류 방지)",
+    "wcag": "4.1.1 Parsing (Level A)",
+    "line": 13,
+    "code": "id=\"stat-card\"",
+    "element": "<div id=\"stat-card\">",
+    "issue": "id 값이 \"stat-card\"로 하드코딩되어 있습니다. 이 컴포넌트가 리스트 내에서 여러 번 렌더링되면 동일한 id가 중복되어 HTML 유효성 규칙(id 고유성)을 위반합니다. 중복 id는 보조 기술의 요소 식별을 방해합니다.",
+    "suggestion": "id를 props로 전달받아 고유하게 만들거나, testId처럼 동적으로 생성하세요. 예: id={`stat-card-${testId}`}"
+  },
+  {
+    "id": "A11Y-005",
+    "severity": "minor",
+    "kwcag": "5.1.2 (초점 이동과 표시)",
+    "wcag": "2.4.7 Focus Visible (Level AA)",
+    "line": 10,
+    "code": "<div ... onClick={handleClick}>",
+    "element": "<div>",
+    "issue": "클릭 가능한 요소에 포커스 표시 스타일이 정의되지 않았습니다. tabIndex를 추가하더라도 포커스 시 시각적 표시(focus ring 등)가 없으면 키보드 사용자가 현재 포커스 위치를 파악할 수 없습니다.",
+    "suggestion": "focus:outline 또는 focus-visible:ring 등의 Tailwind 클래스를 추가하세요. 예: className=\"... focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none\""
+  },
+  {
+    "id": "A11Y-006",
+    "severity": "minor",
+    "kwcag": "5.1.3 (조작 가능)",
+    "wcag": "2.5.5 Target Size (Level AAA) / 2.5.8 Target Size Minimum (Level AA, WCAG 2.2)",
+    "line": 14,
+    "code": "className=\"rounded-xl border border-zinc-200 bg-white p-6 ...\"",
+    "element": "<div>",
+    "issue": "클릭 가능한 요소의 최소 터치/클릭 영역 크기가 명시적으로 보장되지 않습니다. WCAG 2.2의 Target Size Minimum(2.5.8)은 최소 24x24 CSS px을 요구합니다. p-6 패딩이 적용되어 있어 실질적으로 충분할 가능성이 높으나, 명시적 min-height/min-width 설정이 없습니다.",
+    "suggestion": "min-h-[44px] min-w-[44px] 등의 최소 크기를 명시적으로 지정하는 것을 권장합니다."
+  },
+  {
+    "id": "A11Y-007",
+    "severity": "major",
+    "kwcag": "5.2.1 (텍스트 콘텐츠의 명도 대비)",
+    "wcag": "1.4.3 Contrast Minimum (Level AA)",
+    "line": 20,
+    "code": "className=\"mt-1 text-sm text-zinc-500\"",
+    "element": "<p className=\"... text-zinc-500\">{label}</p>",
+    "issue": "text-zinc-500(#71717a)은 흰색 배경(#ffffff)에서 명도 대비율이 약 4.6:1로, 일반 텍스트(14px 이상)의 최소 기준 4.5:1은 충족하지만, text-sm(14px)에 bold가 아닌 경우 대비율이 기준에 근접하여 경계선에 있습니다. 다크 모드에서 dark:text-zinc-500이 별도 지정되지 않아 dark:bg-zinc-900(#18181b) 배경에서의 대비율도 검토가 필요합니다.",
+    "suggestion": "라이트 모드에서는 text-zinc-600 이상, 다크 모드에서는 dark:text-zinc-400 등 더 밝은 색상을 사용하여 충분한 명도 대비를 확보하세요."
+  },
+  {
+    "id": "A11Y-008",
+    "severity": "minor",
+    "kwcag": "5.3.1 (적절한 역할 부여) / 5.2.3 (콘텐츠의 선형구조)",
+    "wcag": "1.3.1 Info and Relationships (Level A)",
+    "line": "19-20",
+    "code": "<p>{value}</p><p>{label}</p>",
+    "element": "<p> elements",
+    "issue": "통계 값(value)과 레이블(label)의 관계가 프로그래밍적으로 명확하지 않습니다. 스크린 리더 사용자는 숫자 값이 무엇을 의미하는지 맥락을 파악하기 어려울 수 있습니다. 또한 시각적 순서(값 → 레이블)와 논리적 순서(레이블 → 값)가 반대입니다.",
+    "suggestion": "aria-label 또는 aria-labelledby를 활용하여 값과 레이블의 관계를 명시하세요. 예: <div role=\"group\" aria-label={`${label}: ${value}`}> 또는 시각적으로 숨겨진 레이블을 값 앞에 배치하세요."
+  }
+]

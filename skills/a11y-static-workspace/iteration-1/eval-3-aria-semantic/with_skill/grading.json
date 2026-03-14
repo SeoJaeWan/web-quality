@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "A-33: 햄버거 메뉴 버튼에 aria-expanded 누락 감지", "passed": true, "evidence": "A-33: Navbar.tsx:59-72 — 햄버거 메뉴 버튼에 aria-expanded 누락, 코드 주석도 확인"},
+    {"text": "A-33: 필터 토글 버튼에 aria-pressed 누락 감지", "passed": true, "evidence": "A-33: SearchFilter.tsx:32-43 — 필터 버튼에 aria-pressed 누락"},
+    {"text": "시맨틱 HTML: nav 요소 사용 여부 평가", "passed": true, "evidence": "S-01: nav 요소 aria-label 누락 지적, S-05: Breadcrumbs nav 미사용 감지"},
+    {"text": "A-23: 아이콘 버튼의 aria-label 누락 감지", "passed": true, "evidence": "A-23: hamburger 버튼 aria-label이 상태에 따라 변하지 않는 문제 감지"},
+    {"text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료", "passed": true, "evidence": "모든 항목 verdict_method='정적분석', 브라우저 의존성 없음"}
+  ]
+}

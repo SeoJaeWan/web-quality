@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인", "passed": true, "evidence": "dev server 시작 및 대시보드 접근 성공"},
+    {"text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인", "passed": false, "evidence": "snapshot -c 명령어 미사용, Playwright MCP 도구로 직접 접근"},
+    {"text": "A-10: Tab 키로 인터랙티브 요소 접근 가능 여부 테스트", "passed": true, "evidence": "StatsCard div onClick 키보드 접근 불가 확인"},
+    {"text": "A-11: 포커스 시 outline/boxShadow/border 시각적 표시 확인", "passed": true, "evidence": "focus:outline-none 문제 감지, focus:border-blue-500 대체 스타일 확인"},
+    {"text": "A-32: DOM에서 중복 ID 검사 실행", "passed": true, "evidence": "id='stat-card' 3개 중복 ID 확인"},
+    {"text": "A-08: getComputedStyle로 텍스트 색상 대비 확인", "passed": false, "evidence": "색상 대비 검사 미수행"},
+    {"text": "모든 검증 항목의 verdict_method가 'Playwright'", "passed": false, "evidence": "verdict_method 필드 없음, 자체 형식 사용"},
+    {"text": "결과가 JSON 배열 형식으로 반환됨", "passed": true, "evidence": "result.json에 JSON 배열로 저장됨"}
+  ]
+}

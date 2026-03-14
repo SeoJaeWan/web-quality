@@ -1,0 +1,15 @@
+{
+  "eval_id": 1,
+  "eval_name": "keyboard-focus",
+  "prompt": "dashboard 페이지의 키보드 접근성과 포커스 표시를 브라우저에서 검증해줘",
+  "assertions": [
+    {"id": "dev-server-started", "text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인"},
+    {"id": "page-readiness-check", "text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인"},
+    {"id": "keyboard-navigation-tested", "text": "A-10: Tab 키로 인터랙티브 요소 접근 가능 여부 테스트"},
+    {"id": "focus-visible-tested", "text": "A-11: 포커스 시 outline/boxShadow/border 시각적 표시 확인"},
+    {"id": "duplicate-id-checked", "text": "A-32: DOM에서 중복 ID 검사 실행"},
+    {"id": "color-contrast-checked", "text": "A-08: getComputedStyle로 텍스트 색상 대비 확인"},
+    {"id": "verdict-method-playwright", "text": "모든 검증 항목의 verdict_method가 'Playwright'"},
+    {"id": "json-array-format", "text": "결과가 JSON 배열 형식으로 반환됨"}
+  ]
+}

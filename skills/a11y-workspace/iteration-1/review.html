@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>평가 리뷰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>평가 리뷰: <span id="skill-name"></span></h1>
+        <div class="instructions">각 출력을 검토하고 아래에 피드백을 남겨주세요. 화살표 키 또는 버튼으로 이동할 수 있습니다. 완료되면 피드백을 복사하여 Claude Code에 붙여넣으세요.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">출력 결과</button>
+      <button class="view-tab" onclick="switchView('benchmark')">벤치마크</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">프롬프트 <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">출력</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">출력 파일을 찾을 수 없습니다</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            이전 출력
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            평가 등급
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">피드백</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="이 출력에 대해 어떻게 생각하시나요? 문제점, 제안사항, 또는 잘된 점이 있나요?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">이전 피드백</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; 이전</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">모든 리뷰 제출</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">다음 &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">벤치마크 데이터가 없습니다. 벤치마크를 실행하면 여기에 정량적 결과가 표시됩니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>리뷰 완료</h2>
+      <p>피드백이 저장되었습니다. Claude Code 세션으로 돌아가서 리뷰가 끝났다고 알려주세요.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "a11y", "runs": [{"id": "eval-1-orchestrator-full-with_skill", "prompt": "변경된 웹 코드의 접근성을 KWCAG2.2 기준으로 검토해줘", "eval_id": 1, "outputs": [{"name": "report.csv", "type": "text", "content": "번호,항목명,원칙,결과,판정방식,발견된 문제,수정 가이드\n1,적절한 대체 텍스트,인식의 용이성,❌,정적분석,\"page.tsx:83 — <img src=\"\"/promo-banner.png\"\"> alt 속성 누락\",\"의미 있는 대체 텍스트 추가: <img src=\"\"/promo-banner.png\"\" alt=\"\"프로모션 배너\"\">\"\n2,자막 제공,인식의 용이성,➖,정적분석,,\n3,표의 구성,인식의 용이성,➖,정적분석,,\n4,콘텐츠의 선형 구조,인식의 용이성,✅,정적분석,,\n5,명확한 지시 사항,인식의 용이성,✅,정적분석,,\n6,색에 무관한 인식,인식의 용이성,➖,정적분석,,\n7,자동 재생 금지,인식의 용이성,✅,정적분석,,\n8,명도 대비,인식의 용이성,⚠️,정적분석,\"page.tsx:47 — text-zinc-400 클래스가 흰색 배경에서 4.5:1 미달 가능성\",\"작은 텍스트에 text-zinc-600 이상 사용 권고\"\n9,콘텐츠 간의 구분,인식의 용이성,✅,정적분석,,\n10,키보드 사용 보장,운용의 용이성,❌,정적분석,\"StatsCard.tsx:17 — <div onClick>에 tabIndex, role, onKeyDown 없음\",\"<div>를 <button>으로 변경하거나 role=\"\"button\"\" tabIndex={0} onKeyDown 추가\"\n11,초점 이동과 표시,운용의 용이성,⚠️,정적분석,\"StatsCard.tsx — <div onClick>에 tabIndex 없어 포커스 불가\",\"포커스 가능 요소로 변경 후 :focus-visible 스타일 추가\"\n12,조작 가능,운용의 용이성,➖,정적분석,,\n13,문자 단축키,운용의 용이성,➖,정적분석,,\n14,응답시간 조절,운용의 용이성,➖,정적분석,,\n15,정지 기능 제공,운용의 용이성,➖,정적분석,,\n16,깜박임과 번쩍임,운용의 용이성,➖,정적분석,,\n17,반복 영역 건너뛰기,운용의 용이성,❌,정적분석,\"스킵 내비게이션 링크 없음, <main> 랜드마크 미사용\",\"<a href=\"\"#main-content\"\">본문 바로가기</a> 추가 및 <main id=\"\"main-content\"\"> 사용\"\n18,제목 제공,운용의 용이성,✅,정적분석,,\n19,적절한 링크 텍스트,운용의 용이성,✅,정적분석,,\n20,고정된 참조 위치,운용의 용이성,➖,정적분석,,\n21,단일 포인터 입력,운용의 용이성,✅,정적분석,,\n22,포인터 입력 취소,운용의 용이성,✅,정적분석,,\n23,레이블과 네임,운용의 용이성,❌,정적분석,\"page.tsx:59-64 — 아이콘 전용 버튼에 aria-label 없음\",\"<button aria-label=\"\"새로고침\"\">, <button aria-label=\"\"설정\"\"> 추가\"\n24,동작 기반 작동,운용의 용이성,✅,정적분석,,\n25,기본 언어 표시,이해의 용이성,✅,정적분석,,\n26,사용자 요구에 따른 실행,이해의 용이성,✅,정적분석,,\n27,찾기 쉬운 도움 정보,이해의 용이성,➖,정적분석,,\n28,오류 정정,이해의 용이성,➖,정적분석,,\n29,레이블 제공,이해의 용이성,➖,정적분석,,\n30,접근 가능한 인증,이해의 용이성,✅,정적분석,,\n31,반복 입력 정보,이해의 용이성,⚠️,정적분석,\"모바일 메뉴 토글에 aria-expanded 미제공\",\"aria-expanded 추가하여 상태 전달\"\n32,마크업 오류 방지,견고성,❌,정적분석,\"StatsCard.tsx:14 — id=\"\"stat-card\"\" 하드코딩으로 중복 ID 생성, page.tsx:73 — map()에 key prop 누락\",\"고유 ID 생성 및 key prop 추가\"\n33,웹 애플리케이션 접근성,견고성,⚠️,정적분석,\"Navbar.tsx:59 — 햄버거 메뉴 버튼에 aria-expanded 누락\",\"<button aria-expanded={menuOpen}> 추가\"\n시맨틱-1,랜드마크 요소,시맨틱 HTML,⚠️,정적분석,\"page.tsx — <main> 미사용, 브레드크럼에 <nav> 미사용\",\"<main> 및 <nav aria-label=\"\"브레드크럼\"\"> 사용\"\n시맨틱-2,섹션 구조,시맨틱 HTML,✅,정적분석,,\n시맨틱-3,대화형 요소,시맨틱 HTML,❌,정적분석,\"StatsCard.tsx — 클릭 가능한 <div onClick>를 <button> 대신 사용\",\"<button>으로 변경\"\n시맨틱-4,목록 구조,시맨틱 HTML,⚠️,정적분석,\"recentItems 반복 렌더링과 네비게이션 링크가 <div>로 구현\",\"<ul><li> 구조로 변경\"\n시맨틱-5,표현용 태그,시맨틱 HTML,➖,정적분석,,\n시맨틱-6,폼 그룹,시맨틱 HTML,➖,정적분석,,\n시맨틱-7,기타 시맨틱 요소,시맨틱 HTML,⚠️,정적분석,\"page.tsx:48 — 날짜 표시에 <time> 요소 미사용\",\"<time dateTime={...}> 사용 권고\"\n"}, {"name": "report.html", "type": "text", "content": "<!DOCTYPE html>\n<html lang=\"ko\">\n<head>\n<meta charset=\"UTF-8\">\n<title>웹 접근성 검토 리포트 — 2026-03-14</title>\n<style>\n  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; max-width: 1200px; margin: 0 auto; padding: 24px; color: #333; line-height: 1.6; }\n  h1 { border-bottom: 3px solid #333; padding-bottom: 8px; }\n  h2 { border-left: 5px solid #555; padding-left: 12px; margin-top: 32px; }\n  h3 { color: #444; }\n  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9em; }\n  th { background: #f5f5f5; padding: 10px 12px; border: 1px solid #ddd; text-align: left; white-space: nowrap; }\n  td { padding: 10px 12px; border: 1px solid #ddd; vertical-align: top; }\n  tr:hover td { background: #fafafa; }\n  .result-pass    { background: #d4edda; color: #155724; font-weight: bold; text-align: center; }\n  .result-fail    { background: #f8d7da; color: #721c24; font-weight: bold; text-align: center; }\n  .result-partial { background: #fff3cd; color: #856404; font-weight: bold; text-align: center; }\n  .result-na      { background: #e2e3e5; color: #383d41; text-align: center; }\n  .result-unknown { background: #dce8f8; color: #1a4a8a; text-align: center; font-size: 0.85em; }\n  .method-playwright { color: #0066cc; font-size: 0.8em; font-weight: bold; }\n  .method-static     { color: #666; font-size: 0.8em; }\n  .method-unknown    { color: #999; font-size: 0.8em; }\n  .summary-pass { color: #155724; font-weight: bold; }\n  .summary-fail { color: #721c24; font-weight: bold; }\n  .fix-fail    { background: #fff5f5; border-left: 4px solid #dc3545; border-radius: 0 4px 4px 0; padding: 16px; margin: 12px 0; }\n  .fix-partial { background: #fffdf0; border-left: 4px solid #ffc107; border-radius: 0 4px 4px 0; padding: 16px; margin: 12px 0; }\n  code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.9em; }\n  .meta { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 16px; margin-bottom: 24px; }\n  .meta ul { list-style: none; margin: 0; padding: 0; }\n  .meta li { margin: 4px 0; }\n  .playwright-badge { display: inline-block; background: #0066cc; color: white; font-size: 0.75em; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }\n</style>\n</head>\n<body>\n\n<h1>웹 접근성/웹표준 검토 리포트</h1>\n\n<div class=\"meta\">\n<ul>\n  <li><strong>날짜:</strong> 2026-03-14</li>\n  <li><strong>검토 파일:</strong> app/dashboard/page.tsx, components/StatsCard.tsx, components/Navbar.tsx</li>\n  <li><strong>기준:</strong> KWCAG2.2 (한국지능정보사회진흥원, 2024.10) + 시맨틱 HTML (HTML Living Standard)</li>\n  <li><strong>Playwright:</strong> 미사용 — dev server 시작 실패로 정적분석만 수행</li>\n</ul>\n</div>\n\n<h2>요약</h2>\n<table>\n  <tr>\n    <th>원칙</th><th>합격(&#x2705;)</th><th>권고(&#x26A0;&#xFE0F;)</th><th>불합격(&#x274C;)</th><th>해당없음(&#x2796;)</th><th>판정불가(&#x1F535;)</th><th>합격률</th>\n  </tr>\n  <tr><td>인식의 용이성 (9항목)</td><td class=\"summary-pass\">4</td><td>1</td><td class=\"summary-fail\">1</td><td>3</td><td>0</td><td>67%</td></tr>\n  <tr><td>운용의 용이성 (15항목)</td><td class=\"summary-pass\">6</td><td>1</td><td class=\"summary-fail\">3</td><td>5</td><td>0</td><td>60%</td></tr>\n  <tr><td>이해의 용이성 (7항목)</td><td class=\"summary-pass\">3</td><td>1</td><td class=\"summary-fail\">0</td><td>3</td><td>0</td><td>75%</td></tr>\n  <tr><td>견고성 (2항목)</td><td class=\"summary-pass\">0</td><td>1</td><td class=\"summary-fail\">1</td><td>0</td><td>0</td><td>0%</td></tr>\n  <tr style=\"font-weight:bold; background:#f5f5f5;\">\n    <td>전체 (33항목)</td><td class=\"summary-pass\">13</td><td>4</td><td class=\"summary-fail\">5</td><td>11</td><td>0</td><td><strong>59%</strong></td>\n  </tr>\n</table>\n\n<h2>상세 결과</h2>\n\n<h3>원칙 1. 인식의 용이성</h3>\n<table>\n  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>\n  <tr>\n    <td>1</td><td>적절한 대체 텍스트</td>\n    <td class=\"result-fail\">&#x274C;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>page.tsx:83 &mdash; <code>&lt;img src=\"/promo-banner.png\"&gt;</code> alt 속성 누락</td>\n    <td>의미 있는 대체 텍스트 추가: <code>&lt;img src=\"/promo-banner.png\" alt=\"프로모션 배너\"&gt;</code></td>\n  </tr>\n  <tr>\n    <td>2</td><td>자막 제공</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>3</td><td>표의 구성</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>4</td><td>콘텐츠의 선형 구조</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>5</td><td>명확한 지시 사항</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>6</td><td>색에 무관한 인식</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>7</td><td>자동 재생 금지</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>8</td><td>명도 대비</td>\n    <td class=\"result-partial\">&#x26A0;&#xFE0F;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>page.tsx:47 &mdash; <code>text-zinc-400</code> (약 #a1a1aa) 클래스가 흰색 배경에서 4.5:1 미달 가능성. page.tsx:46 &mdash; <code>text-zinc-500</code> (약 #71717a) 경계선상 대비율</td>\n    <td>작은 텍스트에 <code>text-zinc-600</code> 이상 사용 권고. 정확한 대비율은 런타임 검증 필요</td>\n  </tr>\n  <tr>\n    <td>9</td><td>콘텐츠 간의 구분</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n</table>\n\n<h3>원칙 2. 운용의 용이성</h3>\n<table>\n  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>\n  <tr>\n    <td>10</td><td>키보드 사용 보장</td>\n    <td class=\"result-fail\">&#x274C;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>StatsCard.tsx:17 &mdash; <code>&lt;div onClick&gt;</code>에 tabIndex, role, onKeyDown 없음. 키보드로 접근 및 활성화 불가</td>\n    <td><code>&lt;div&gt;</code>를 <code>&lt;button&gt;</code>으로 변경하거나, <code>role=\"button\" tabIndex={0} onKeyDown</code> 추가</td>\n  </tr>\n  <tr>\n    <td>11</td><td>초점 이동과 표시</td>\n    <td class=\"result-partial\">&#x26A0;&#xFE0F;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>StatsCard.tsx &mdash; <code>&lt;div onClick&gt;</code>에 tabIndex 없어 포커스 자체가 불가. 커스텀 포커스 스타일 미확인</td>\n    <td>포커스 가능 요소로 변경 후 <code>:focus-visible</code> 스타일 추가</td>\n  </tr>\n  <tr>\n    <td>12</td><td>조작 가능</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>13</td><td>문자 단축키</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>14</td><td>응답시간 조절</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>15</td><td>정지 기능 제공</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>16</td><td>깜박임과 번쩍임</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>17</td><td>반복 영역 건너뛰기</td>\n    <td class=\"result-fail\">&#x274C;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>page.tsx, Navbar.tsx &mdash; 스킵 내비게이션 링크(<code>href=\"#main\"</code> 등) 없음. <code>&lt;main&gt;</code> 랜드마크도 미사용</td>\n    <td>레이아웃에 <code>&lt;a href=\"#main-content\" class=\"skip-nav\"&gt;본문 바로가기&lt;/a&gt;</code> 추가 및 <code>&lt;main id=\"main-content\"&gt;</code> 사용</td>\n  </tr>\n  <tr>\n    <td>18</td><td>제목 제공</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td>page.tsx에 h1, h2 제목 구조 적절히 사용됨</td>\n  </tr>\n  <tr>\n    <td>19</td><td>적절한 링크 텍스트</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td>\"전체 할 일 목록 보기\", \"대시보드\", \"할 일\" 등 목적이 명확한 링크 텍스트 사용</td>\n  </tr>\n  <tr>\n    <td>20</td><td>고정된 참조 위치</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>21</td><td>단일 포인터 입력</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>22</td><td>포인터 입력 취소</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>23</td><td>레이블과 네임</td>\n    <td class=\"result-fail\">&#x274C;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>page.tsx:59-64 &mdash; 아이콘 전용 버튼(<code>btn-refresh</code>, <code>btn-settings</code>)에 <code>aria-label</code> 없음. 스크린리더가 버튼 용도 인식 불가</td>\n    <td><code>&lt;button aria-label=\"새로고침\"&gt;</code>, <code>&lt;button aria-label=\"설정\"&gt;</code> 추가</td>\n  </tr>\n  <tr>\n    <td>24</td><td>동작 기반 작동</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n</table>\n\n<h3>원칙 3. 이해의 용이성</h3>\n<table>\n  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>\n  <tr>\n    <td>25</td><td>기본 언어 표시</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td>Next.js 프레임워크가 layout.tsx에서 lang 속성 관리 (별도 확인 필요하나 프레임워크 기본 동작 신뢰)</td>\n  </tr>\n  <tr>\n    <td>26</td><td>사용자 요구에 따른 실행</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>27</td><td>찾기 쉬운 도움 정보</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>28</td><td>오류 정정</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td>검토 대상 파일에 폼 유효성 검사 로직 미포함 (TodoForm은 별도 컴포넌트)</td>\n  </tr>\n  <tr>\n    <td>29</td><td>레이블 제공</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td>검토 대상 파일에 직접적인 input/select 요소 미포함</td>\n  </tr>\n  <tr>\n    <td>30</td><td>접근 가능한 인증</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>31</td><td>반복 입력 정보</td>\n    <td class=\"result-partial\">&#x26A0;&#xFE0F;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>Navbar.tsx &mdash; 내비게이션 구조가 데스크톱/모바일에서 동일하게 유지되나, 모바일 메뉴의 aria-expanded 미제공으로 일관성 파악이 어려움</td>\n    <td>모바일 메뉴 토글에 <code>aria-expanded</code> 추가하여 상태 전달</td>\n  </tr>\n</table>\n\n<h3>원칙 4. 견고성</h3>\n<table>\n  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>\n  <tr>\n    <td>32</td><td>마크업 오류 방지</td>\n    <td class=\"result-fail\">&#x274C;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>StatsCard.tsx:14 &mdash; <code>id=\"stat-card\"</code> 하드코딩. 3회 렌더링 시 동일 ID 3개 생성 (중복 ID 위반). page.tsx:73 &mdash; <code>recentItems.map()</code>에서 <code>key</code> prop 누락</td>\n    <td>StatsCard: <code>id={`stat-card-${testId}`}</code>로 고유 ID 생성. map: <code>&lt;div key={item}&gt;</code> 또는 <code>key={index}</code> 추가</td>\n  </tr>\n  <tr>\n    <td>33</td><td>웹 애플리케이션 접근성</td>\n    <td class=\"result-partial\">&#x26A0;&#xFE0F;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>Navbar.tsx:59 &mdash; 햄버거 메뉴 버튼에 <code>aria-expanded</code> 속성 누락. 메뉴 상태(열림/닫힘) 정보가 보조기술에 전달되지 않음</td>\n    <td><code>&lt;button aria-expanded={menuOpen} aria-label=\"메뉴 열기\"&gt;</code>로 변경</td>\n  </tr>\n</table>\n\n<h2>시맨틱 HTML 검토</h2>\n<table>\n  <tr><th>검토 항목</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>권고 수정</th></tr>\n  <tr>\n    <td>랜드마크 요소 (header/main/footer/nav)</td>\n    <td class=\"result-partial\">&#x26A0;&#xFE0F;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>page.tsx &mdash; 페이지 전체를 <code>&lt;div&gt;</code>로 감싸고 있으며 <code>&lt;main&gt;</code> 랜드마크 미사용. Navbar.tsx:132 &mdash; 브레드크럼 영역이 <code>&lt;div&gt;</code>로 구현됨 (<code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> 권고)</td>\n    <td>page.tsx: 최상위 <code>&lt;div&gt;</code>를 <code>&lt;main&gt;</code>으로 변경. 브레드크럼: <code>&lt;nav aria-label=\"브레드크럼\"&gt;</code> 사용</td>\n  </tr>\n  <tr>\n    <td>섹션 구조 (article/section/aside)</td>\n    <td class=\"result-pass\">&#x2705;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td>대시보드 콘텐츠 블록이 논리적으로 h2 제목으로 구분되어 있음</td>\n  </tr>\n  <tr>\n    <td>대화형 요소 (button/a vs div/span)</td>\n    <td class=\"result-fail\">&#x274C;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>StatsCard.tsx:10-21 &mdash; 클릭 가능한 <code>&lt;div onClick&gt;</code>를 <code>&lt;button&gt;</code> 대신 사용</td>\n    <td><code>&lt;div onClick&gt;</code>를 <code>&lt;button&gt;</code> 또는 시맨틱 인터랙티브 요소로 변경</td>\n  </tr>\n  <tr>\n    <td>목록 구조 (ul/ol/li)</td>\n    <td class=\"result-partial\">&#x26A0;&#xFE0F;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>page.tsx:72-74 &mdash; <code>recentItems</code> 반복 렌더링이 <code>&lt;div&gt;</code>로 구현됨. Navbar.tsx:33-46 &mdash; 내비게이션 링크 목록이 <code>&lt;div&gt;</code> 내부에 나열됨</td>\n    <td>반복 항목은 <code>&lt;ul&gt;&lt;li&gt;</code> 구조로 변경. 네비게이션 링크도 <code>&lt;ul&gt;&lt;li&gt;&lt;a&gt;</code> 패턴 권고</td>\n  </tr>\n  <tr>\n    <td>표현용 태그 (b/i &rarr; strong/em)</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>폼 그룹 (fieldset/legend)</td>\n    <td class=\"result-na\">&#x2796;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>기타 시맨틱 요소 (time/blockquote 등)</td>\n    <td class=\"result-partial\">&#x26A0;&#xFE0F;</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>page.tsx:48 &mdash; 날짜 표시(<code>new Date().toLocaleDateString()</code>)에 <code>&lt;time&gt;</code> 요소 미사용</td>\n    <td><code>&lt;time dateTime={new Date().toISOString()}&gt;{formatted}&lt;/time&gt;</code> 사용 권고</td>\n  </tr>\n</table>\n\n<h2>수정 필요 항목</h2>\n\n<h3>불합격 (&#x274C;)</h3>\n\n<div class=\"fix-fail\">\n  <p><strong>항목 1. 적절한 대체 텍스트</strong> &mdash; <code>page.tsx:83</code></p>\n  <p><strong>문제:</strong> <code>&lt;img src=\"/promo-banner.png\"&gt;</code>에 alt 속성이 완전히 누락되어 스크린리더가 이미지 정보를 전달할 수 없음</p>\n  <p><strong>수정:</strong> <code>&lt;img src=\"/promo-banner.png\" alt=\"프로모션 배너\" className=\"mt-6 w-full\" /&gt;</code></p>\n</div>\n\n<div class=\"fix-fail\">\n  <p><strong>항목 10. 키보드 사용 보장</strong> &mdash; <code>StatsCard.tsx:17</code></p>\n  <p><strong>문제:</strong> <code>&lt;div onClick={handleClick}&gt;</code>가 키보드 이벤트 핸들러(onKeyDown) 없이 사용됨. tabIndex도 없어 Tab 키로 포커스 불가</p>\n  <p><strong>수정:</strong> <code>&lt;button onClick={handleClick} className=\"...\"&gt;</code>로 변경하거나, <code>&lt;div role=\"button\" tabIndex={0} onClick={handleClick} onKeyDown={(e) =&gt; { if (e.key === 'Enter' || e.key === ' ') handleClick(); }}&gt;</code></p>\n</div>\n\n<div class=\"fix-fail\">\n  <p><strong>항목 17. 반복 영역 건너뛰기</strong> &mdash; <code>Navbar.tsx, page.tsx</code></p>\n  <p><strong>문제:</strong> 페이지에 스킵 내비게이션 링크가 없음. 키보드 사용자가 매번 내비게이션 영역을 탭으로 지나가야 함</p>\n  <p><strong>수정:</strong> 레이아웃 최상단에 <code>&lt;a href=\"#main-content\" className=\"sr-only focus:not-sr-only\"&gt;본문 바로가기&lt;/a&gt;</code> 추가, 본문을 <code>&lt;main id=\"main-content\"&gt;</code>로 감싸기</p>\n</div>\n\n<div class=\"fix-fail\">\n  <p><strong>항목 23. 레이블과 네임</strong> &mdash; <code>page.tsx:59-64</code></p>\n  <p><strong>문제:</strong> SVG 아이콘만 포함된 버튼 2개(btn-refresh, btn-settings)에 aria-label이 없어 스크린리더에서 \"버튼\"으로만 읽힘</p>\n  <p><strong>수정:</strong> <code>&lt;button aria-label=\"새로고침\" data-testid=\"btn-refresh\"&gt;</code>, <code>&lt;button aria-label=\"설정\" data-testid=\"btn-settings\"&gt;</code></p>\n</div>\n\n<div class=\"fix-fail\">\n  <p><strong>항목 32. 마크업 오류 방지</strong> &mdash; <code>StatsCard.tsx:14</code>, <code>page.tsx:73</code></p>\n  <p><strong>문제:</strong> (1) StatsCard에 <code>id=\"stat-card\"</code> 하드코딩 &mdash; 3개 인스턴스 렌더링 시 동일 ID 중복 위반. (2) recentItems.map()에서 key prop 누락</p>\n  <p><strong>수정:</strong> (1) <code>id={`stat-card-${testId}`}</code>로 고유 ID 생성. (2) <code>{recentItems.map((item, idx) =&gt; &lt;div key={idx}&gt;{item}&lt;/div&gt;)}</code></p>\n</div>\n\n<h3>권고 (&#x26A0;&#xFE0F;)</h3>\n\n<div class=\"fix-partial\">\n  <p><strong>항목 8. 명도 대비</strong></p>\n  <p><strong>내용:</strong> page.tsx에서 <code>text-zinc-400</code>, <code>text-zinc-500</code> 색상이 흰색 배경에서 WCAG AA 기준(4.5:1) 미달 가능성이 있음. Tailwind의 zinc-400(#a1a1aa)은 약 3.5:1, zinc-500(#71717a)은 약 4.7:1. 보조 텍스트에도 최소 <code>text-zinc-500</code> 이상 사용 권고</p>\n</div>\n\n<div class=\"fix-partial\">\n  <p><strong>항목 11. 초점 이동과 표시</strong></p>\n  <p><strong>내용:</strong> StatsCard의 <code>&lt;div onClick&gt;</code>에 tabIndex 없어 포커스 자체 불가. 인터랙티브 요소로 변경 후 커스텀 포커스 스타일 추가 권고</p>\n</div>\n\n<div class=\"fix-partial\">\n  <p><strong>항목 33. 웹 애플리케이션 접근성</strong></p>\n  <p><strong>내용:</strong> Navbar.tsx 햄버거 메뉴 버튼에 <code>aria-expanded={menuOpen}</code> 추가하여 메뉴 열림/닫힘 상태를 보조기술에 전달해야 함</p>\n</div>\n\n<div class=\"fix-partial\">\n  <p><strong>시맨틱 HTML: 랜드마크 요소</strong></p>\n  <p><strong>내용:</strong> page.tsx 최상위 <code>&lt;div&gt;</code>를 <code>&lt;main&gt;</code>으로 변경 권고. 브레드크럼 영역에 <code>&lt;nav aria-label=\"브레드크럼\"&gt;</code> 사용 권고</p>\n</div>\n\n<div class=\"fix-partial\">\n  <p><strong>시맨틱 HTML: 목록 구조</strong></p>\n  <p><strong>내용:</strong> recentItems 반복 렌더링과 네비게이션 링크를 <code>&lt;ul&gt;&lt;li&gt;</code> 구조로 변경 권고</p>\n</div>\n\n<div class=\"fix-partial\">\n  <p><strong>시맨틱 HTML: 기타 시맨틱 요소</strong></p>\n  <p><strong>내용:</strong> 날짜 표시에 <code>&lt;time&gt;</code> 요소 사용 권고</p>\n</div>\n\n</body>\n</html>"}], "grading": {"expectations": [{"text": "a11y-static 스킬의 정적분석이 실행되어 verdict_method='정적분석' 항목이 존재", "passed": true, "evidence": "a11y-static 완료, 33개 KWCAG + 7개 시맨틱 HTML 항목 모두 verdict_method='정적분석'"}, {"text": "a11y-browser 스킬의 브라우저 검증이 시도됨 (성공 또는 판정불가)", "passed": true, "evidence": "a11y-browser 시도됨, dev server 시작 실패로 적절히 판정불가 처리"}, {"text": "33개 KWCAG2.2 항목이 모두 평가됨 (누락 없음)", "passed": true, "evidence": "33개 KWCAG 항목 전부 포함, 합격률 59%"}, {"text": "시맨틱 HTML 섹션이 리포트에 포함됨", "passed": true, "evidence": "7개 시맨틱 HTML 항목 포함"}, {"text": "브라우저 검증 항목은 verdict_method='Playwright'로 표시됨 (브라우저 실행 성공 시)", "passed": false, "evidence": "브라우저 실행 실패로 모든 항목이 정적분석으로 처리됨 (기대 동작)"}, {"text": "브라우저 판정불가 항목은 정적분석 결과로 fallback됨", "passed": true, "evidence": "브라우저 전체 실패 시 정적분석 결과로 적절히 fallback"}, {"text": "report.html 파일이 reports/accessibility/ 디렉토리에 생성됨", "passed": true, "evidence": "with_skill/outputs/report.html 생성됨 (19.7KB 추정)"}, {"text": "report.csv 파일이 reports/accessibility/ 디렉토리에 생성됨", "passed": true, "evidence": "with_skill/outputs/report.csv 생성됨"}]}}, {"id": "eval-1-orchestrator-full-without_skill", "prompt": "변경된 웹 코드의 접근성을 KWCAG2.2 기준으로 검토해줘", "eval_id": 1, "outputs": [{"name": "report.csv", "type": "text", "content": "번호,파일,위치(라인),KWCAG2.2 검사항목,심각도,위반 내용,권장 수정사항\n1,dashboard/page.tsx,59-61,5.1.1 대체 텍스트 (적절한 대체 텍스트 제공),심각,\"아이콘 버튼(btn-refresh)에 aria-label이 없어 스크린 리더가 버튼 용도를 알 수 없음\",\"<button aria-label=\"\"새로고침\"\"> 추가\"\n2,dashboard/page.tsx,62-64,5.1.1 대체 텍스트 (적절한 대체 텍스트 제공),심각,\"아이콘 버튼(btn-settings)에 aria-label이 없어 스크린 리더가 버튼 용도를 알 수 없음\",\"<button aria-label=\"\"설정\"\"> 추가\"\n3,dashboard/page.tsx,83,5.1.1 대체 텍스트 (적절한 대체 텍스트 제공),심각,\"<img src=\"\"/promo-banner.png\"\">에 alt 속성이 없음. 이미지 목적을 전달할 수 없음\",\"의미 있는 이미지면 alt=\"\"프로모션 배너\"\" 추가, 장식용이면 alt=\"\"\"\" 및 role=\"\"presentation\"\" 추가\"\n4,dashboard/page.tsx,73,5.3.1 콘텐츠의 선형 구조 (콘텐츠의 선형화),경고,\"recentItems의 map 반복에서 key 속성 누락. 접근성 트리의 안정성에 영향\",\"<div key={item}> 또는 고유 key 추가\"\n5,StatsCard.tsx,13,5.1.1 대체 텍스트 / 5.2.1 키보드 접근성 (키보드 사용 보장),심각,\"id=\"\"stat-card\"\"가 모든 StatsCard 인스턴스에 동일하게 적용되어 HTML id 고유성 위반. 보조 기술이 요소를 올바르게 식별할 수 없음\",\"고유한 id 사용 (예: id={`stat-card-${testId}`}) 또는 id 제거\"\n6,StatsCard.tsx,17,5.2.1 키보드 접근성 (키보드 사용 보장),심각,\"div에 onClick 이벤트가 있으나 tabIndex, role=\"\"button\"\", onKeyDown 핸들러가 없어 키보드 사용자가 상호작용할 수 없음\",\"<div role=\"\"button\"\" tabIndex={0} onKeyDown={handleKeyDown}> 추가 또는 <button> 요소 사용\"\n7,Navbar.tsx,59-63,5.2.1 키보드 접근성 / 5.3.1 콘텐츠의 선형 구조,경고,\"햄버거 메뉴 버튼에 aria-expanded 속성이 없어 메뉴 열림/닫힘 상태를 보조 기술에 전달할 수 없음\",\"aria-expanded={menuOpen} 추가\"\n8,Navbar.tsx,23,5.3.1 콘텐츠의 선형 구조 (콘텐츠의 선형화),경고,\"<nav> 요소에 aria-label이 없음. 페이지에 여러 nav가 있을 경우 구분할 수 없음\",\"<nav aria-label=\"\"메인 내비게이션\"\"> 추가\"\n9,Navbar.tsx,87-109,5.2.1 키보드 접근성 (키보드 사용 보장),경고,\"모바일 메뉴가 열렸을 때 포커스 트랩 또는 포커스 이동이 없어 키보드 사용자가 메뉴를 쉽게 탐색할 수 없음\",\"메뉴 열릴 때 첫 번째 메뉴 항목으로 포커스 이동, Escape 키로 메뉴 닫기 구현\"\n10,Navbar.tsx,132,5.3.1 콘텐츠의 선형 구조 (콘텐츠의 선형화),경고,\"Breadcrumbs가 <nav> 또는 aria-label 없이 구현되어 보조 기술이 탐색 경로임을 인식할 수 없음\",\"<nav aria-label=\"\"탐색 경로\"\"> 래핑 추가\"\n11,dashboard/page.tsx,42,5.3.1 콘텐츠의 선형 구조 (콘텐츠의 선형화),경고,\"페이지 최상위 <div>에 <main> 랜드마크 역할이 없음. 보조 기술 사용자가 주요 콘텐츠 영역을 찾기 어려움\",\"<main> 요소로 변경 또는 role=\"\"main\"\" 추가\"\n12,dashboard/page.tsx,85,5.1.1 대체 텍스트 (적절한 대체 텍스트 제공),경미,\"footer-ad 이미지에 width/height 속성이 없어 CLS 발생 가능. 직접적 접근성 위반은 아니나 사용자 경험 저하\",\"width 및 height 속성 명시\"\n13,Navbar.tsx,38-39,5.3.2 표의 구성 / 5.1.3 색에 무관한 콘텐츠 인식,경고,\"현재 활성 페이지가 색상(text-blue-600)으로만 구분됨. aria-current=\"\"page\"\" 속성이 없어 보조 기술이 현재 페이지를 인식할 수 없음\",\"활성 링크에 aria-current=\"\"page\"\" 추가\"\n"}, {"name": "report.html", "type": "text", "content": "<!DOCTYPE html>\n<html lang=\"ko\">\n<head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>KWCAG 2.2 접근성 검토 보고서</title>\n<style>\n  * { margin: 0; padding: 0; box-sizing: border-box; }\n  body { font-family: 'Pretendard', 'Noto Sans KR', -apple-system, sans-serif; background: #f8f9fa; color: #212529; line-height: 1.6; }\n  .container { max-width: 1100px; margin: 0 auto; padding: 24px; }\n  h1 { font-size: 1.75rem; margin-bottom: 8px; }\n  .subtitle { color: #6c757d; margin-bottom: 32px; }\n  .summary { display: flex; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }\n  .summary-card { background: #fff; border-radius: 12px; padding: 20px 28px; border: 1px solid #dee2e6; flex: 1; min-width: 150px; }\n  .summary-card .num { font-size: 2rem; font-weight: 700; }\n  .summary-card .label { font-size: 0.875rem; color: #6c757d; }\n  .severity-critical .num { color: #dc3545; }\n  .severity-warning .num { color: #fd7e14; }\n  .severity-minor .num { color: #6c757d; }\n  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #dee2e6; }\n  thead { background: #343a40; color: #fff; }\n  th { padding: 12px 16px; text-align: left; font-weight: 600; font-size: 0.85rem; }\n  td { padding: 12px 16px; border-bottom: 1px solid #e9ecef; font-size: 0.875rem; vertical-align: top; }\n  tr:last-child td { border-bottom: none; }\n  tbody tr:hover { background: #f1f3f5; }\n  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }\n  .badge-critical { background: #fce4e6; color: #dc3545; }\n  .badge-warning { background: #fff3e0; color: #e65100; }\n  .badge-minor { background: #e9ecef; color: #495057; }\n  .file-tag { display: inline-block; background: #e7f5ff; color: #1971c2; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-family: monospace; }\n  .section-title { font-size: 1.25rem; font-weight: 700; margin: 32px 0 16px; }\n  code { background: #f1f3f5; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; }\n  .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #dee2e6; color: #6c757d; font-size: 0.8rem; }\n</style>\n</head>\n<body>\n<div class=\"container\">\n\n<h1>KWCAG 2.2 접근성 검토 보고서</h1>\n<p class=\"subtitle\">검토 대상: dashboard/page.tsx, StatsCard.tsx, Navbar.tsx &mdash; 검토일: 2026-03-14</p>\n\n<div class=\"summary\">\n  <div class=\"summary-card severity-critical\">\n    <div class=\"num\">4</div>\n    <div class=\"label\">심각 (Critical)</div>\n  </div>\n  <div class=\"summary-card severity-warning\">\n    <div class=\"num\">7</div>\n    <div class=\"label\">경고 (Warning)</div>\n  </div>\n  <div class=\"summary-card severity-minor\">\n    <div class=\"num\">2</div>\n    <div class=\"label\">경미 (Minor)</div>\n  </div>\n  <div class=\"summary-card\">\n    <div class=\"num\">13</div>\n    <div class=\"label\">전체 발견 항목</div>\n  </div>\n</div>\n\n<h2 class=\"section-title\">검토 결과 상세</h2>\n\n<table>\n<thead>\n<tr>\n  <th style=\"width:40px\">#</th>\n  <th>파일 / 위치</th>\n  <th>KWCAG 2.2 검사항목</th>\n  <th style=\"width:70px\">심각도</th>\n  <th>위반 내용</th>\n  <th>권장 수정사항</th>\n</tr>\n</thead>\n<tbody>\n\n<tr>\n  <td>1</td>\n  <td><span class=\"file-tag\">page.tsx</span><br>라인 59-61</td>\n  <td>5.1.1 적절한 대체 텍스트 제공</td>\n  <td><span class=\"badge badge-critical\">심각</span></td>\n  <td>아이콘 버튼(<code>btn-refresh</code>)에 <code>aria-label</code>이 없어 스크린 리더가 버튼의 용도를 알 수 없습니다.</td>\n  <td><code>&lt;button aria-label=\"새로고침\"&gt;</code> 추가</td>\n</tr>\n\n<tr>\n  <td>2</td>\n  <td><span class=\"file-tag\">page.tsx</span><br>라인 62-64</td>\n  <td>5.1.1 적절한 대체 텍스트 제공</td>\n  <td><span class=\"badge badge-critical\">심각</span></td>\n  <td>아이콘 버튼(<code>btn-settings</code>)에 <code>aria-label</code>이 없어 스크린 리더가 버튼의 용도를 알 수 없습니다.</td>\n  <td><code>&lt;button aria-label=\"설정\"&gt;</code> 추가</td>\n</tr>\n\n<tr>\n  <td>3</td>\n  <td><span class=\"file-tag\">page.tsx</span><br>라인 83</td>\n  <td>5.1.1 적절한 대체 텍스트 제공</td>\n  <td><span class=\"badge badge-critical\">심각</span></td>\n  <td><code>&lt;img src=\"/promo-banner.png\"&gt;</code>에 <code>alt</code> 속성이 없습니다. 이미지의 목적을 보조 기술 사용자에게 전달할 수 없습니다.</td>\n  <td>의미 있는 이미지: <code>alt=\"프로모션 배너\"</code> 추가<br>장식 이미지: <code>alt=\"\" role=\"presentation\"</code> 추가</td>\n</tr>\n\n<tr>\n  <td>4</td>\n  <td><span class=\"file-tag\">page.tsx</span><br>라인 73</td>\n  <td>5.3.1 콘텐츠의 선형화</td>\n  <td><span class=\"badge badge-warning\">경고</span></td>\n  <td><code>recentItems.map()</code> 반복에서 React <code>key</code> 속성이 누락되었습니다. 접근성 트리의 안정성에 영향을 줄 수 있습니다.</td>\n  <td><code>&lt;div key={item}&gt;</code> 또는 고유 key 추가</td>\n</tr>\n\n<tr>\n  <td>5</td>\n  <td><span class=\"file-tag\">StatsCard.tsx</span><br>라인 13</td>\n  <td>5.1.1 적절한 대체 텍스트 제공</td>\n  <td><span class=\"badge badge-critical\">심각</span></td>\n  <td><code>id=\"stat-card\"</code>가 모든 StatsCard 인스턴스에 동일하게 적용되어 HTML id 고유성 요구사항을 위반합니다. 보조 기술이 요소를 올바르게 식별할 수 없습니다.</td>\n  <td>고유 id 사용: <code>id={`stat-card-${testId}`}</code> 또는 id 속성 제거</td>\n</tr>\n\n<tr>\n  <td>6</td>\n  <td><span class=\"file-tag\">StatsCard.tsx</span><br>라인 17</td>\n  <td>5.2.1 키보드 사용 보장</td>\n  <td><span class=\"badge badge-critical\">심각</span></td>\n  <td><code>&lt;div&gt;</code>에 <code>onClick</code> 이벤트만 있고 <code>tabIndex</code>, <code>role=\"button\"</code>, <code>onKeyDown</code> 핸들러가 없어 키보드 사용자가 상호작용할 수 없습니다.</td>\n  <td><code>&lt;div role=\"button\" tabIndex={0} onKeyDown={handleKeyDown}&gt;</code> 추가하거나 <code>&lt;button&gt;</code> 요소로 변경</td>\n</tr>\n\n<tr>\n  <td>7</td>\n  <td><span class=\"file-tag\">Navbar.tsx</span><br>라인 59-63</td>\n  <td>5.2.1 키보드 사용 보장</td>\n  <td><span class=\"badge badge-warning\">경고</span></td>\n  <td>햄버거 메뉴 버튼에 <code>aria-expanded</code> 속성이 없어 메뉴의 열림/닫힘 상태를 보조 기술에 전달할 수 없습니다.</td>\n  <td><code>aria-expanded={menuOpen}</code> 추가</td>\n</tr>\n\n<tr>\n  <td>8</td>\n  <td><span class=\"file-tag\">Navbar.tsx</span><br>라인 23</td>\n  <td>5.3.1 콘텐츠의 선형화</td>\n  <td><span class=\"badge badge-warning\">경고</span></td>\n  <td><code>&lt;nav&gt;</code> 요소에 <code>aria-label</code>이 없습니다. 페이지에 여러 <code>&lt;nav&gt;</code>가 있을 경우 보조 기술 사용자가 구분할 수 없습니다.</td>\n  <td><code>&lt;nav aria-label=\"메인 내비게이션\"&gt;</code> 추가</td>\n</tr>\n\n<tr>\n  <td>9</td>\n  <td><span class=\"file-tag\">Navbar.tsx</span><br>라인 87-109</td>\n  <td>5.2.1 키보드 사용 보장</td>\n  <td><span class=\"badge badge-warning\">경고</span></td>\n  <td>모바일 메뉴가 열렸을 때 포커스 트랩이나 포커스 이동이 없어 키보드 사용자가 메뉴를 효과적으로 탐색할 수 없습니다.</td>\n  <td>메뉴 열릴 때 첫 번째 항목으로 포커스 이동 구현, <kbd>Escape</kbd> 키로 메뉴 닫기 기능 추가</td>\n</tr>\n\n<tr>\n  <td>10</td>\n  <td><span class=\"file-tag\">Navbar.tsx</span><br>라인 132</td>\n  <td>5.3.1 콘텐츠의 선형화</td>\n  <td><span class=\"badge badge-warning\">경고</span></td>\n  <td>Breadcrumbs 컴포넌트가 <code>&lt;nav&gt;</code>로 래핑되지 않아 보조 기술이 탐색 경로(breadcrumb)임을 인식할 수 없습니다.</td>\n  <td><code>&lt;nav aria-label=\"탐색 경로\"&gt;</code>로 래핑 추가</td>\n</tr>\n\n<tr>\n  <td>11</td>\n  <td><span class=\"file-tag\">page.tsx</span><br>라인 42</td>\n  <td>5.3.1 콘텐츠의 선형화</td>\n  <td><span class=\"badge badge-warning\">경고</span></td>\n  <td>페이지 최상위 컨테이너가 <code>&lt;div&gt;</code>로 되어 있어 <code>&lt;main&gt;</code> 랜드마크 역할이 없습니다. 보조 기술 사용자가 주요 콘텐츠 영역을 찾기 어렵습니다.</td>\n  <td><code>&lt;main&gt;</code> 요소로 변경 또는 <code>role=\"main\"</code> 추가</td>\n</tr>\n\n<tr>\n  <td>12</td>\n  <td><span class=\"file-tag\">page.tsx</span><br>라인 85</td>\n  <td>5.1.1 적절한 대체 텍스트 제공</td>\n  <td><span class=\"badge badge-minor\">경미</span></td>\n  <td><code>footer-ad</code> 이미지에 <code>width</code>/<code>height</code> 속성이 없어 레이아웃 이동(CLS)이 발생할 수 있습니다.</td>\n  <td><code>width</code> 및 <code>height</code> 속성 명시</td>\n</tr>\n\n<tr>\n  <td>13</td>\n  <td><span class=\"file-tag\">Navbar.tsx</span><br>라인 38-39</td>\n  <td>5.1.3 색에 무관한 콘텐츠 인식</td>\n  <td><span class=\"badge badge-warning\">경고</span></td>\n  <td>현재 활성 페이지가 색상(<code>text-blue-600</code>)으로만 구분됩니다. <code>aria-current=\"page\"</code> 속성이 없어 보조 기술이 현재 페이지를 인식할 수 없습니다.</td>\n  <td>활성 링크에 <code>aria-current=\"page\"</code> 추가</td>\n</tr>\n\n</tbody>\n</table>\n\n<h2 class=\"section-title\">KWCAG 2.2 검사항목별 요약</h2>\n\n<table>\n<thead>\n<tr>\n  <th>검사항목</th>\n  <th>설명</th>\n  <th>위반 건수</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n  <td><strong>5.1.1</strong></td>\n  <td>적절한 대체 텍스트 제공 &mdash; 텍스트가 아닌 콘텐츠에 대체 텍스트를 제공해야 함</td>\n  <td>5건</td>\n</tr>\n<tr>\n  <td><strong>5.1.3</strong></td>\n  <td>색에 무관한 콘텐츠 인식 &mdash; 색상 외 다른 방법으로도 정보를 전달해야 함</td>\n  <td>1건</td>\n</tr>\n<tr>\n  <td><strong>5.2.1</strong></td>\n  <td>키보드 사용 보장 &mdash; 모든 기능을 키보드로 사용할 수 있어야 함</td>\n  <td>4건</td>\n</tr>\n<tr>\n  <td><strong>5.3.1</strong></td>\n  <td>콘텐츠의 선형화 &mdash; 콘텐츠의 논리적 구조와 순서를 제공해야 함</td>\n  <td>4건</td>\n</tr>\n</tbody>\n</table>\n\n<div class=\"footer\">\n  <p>본 보고서는 한국 웹 콘텐츠 접근성 지침(KWCAG) 2.2를 기준으로 정적 코드 분석을 수행한 결과입니다.</p>\n  <p>생성 도구: Claude AI &mdash; 검토일: 2026-03-14</p>\n</div>\n\n</div>\n</body>\n</html>\n"}], "grading": {"expectations": [{"text": "a11y-static 스킬의 정적분석이 실행되어 verdict_method='정적분석' 항목이 존재", "passed": false, "evidence": "스킬 미사용, 자체 분석 수행. verdict_method 필드 없음"}, {"text": "a11y-browser 스킬의 브라우저 검증이 시도됨 (성공 또는 판정불가)", "passed": false, "evidence": "브라우저 검증 미시도, 정적분석만 수행"}, {"text": "33개 KWCAG2.2 항목이 모두 평가됨 (누락 없음)", "passed": false, "evidence": "13개 항목만 평가됨, 표준 KWCAG 코드 미사용"}, {"text": "시맨틱 HTML 섹션이 리포트에 포함됨", "passed": false, "evidence": "시맨틱 HTML 별도 섹션 없음"}, {"text": "브라우저 검증 항목은 verdict_method='Playwright'로 표시됨 (브라우저 실행 성공 시)", "passed": false, "evidence": "브라우저 검증 미수행"}, {"text": "브라우저 판정불가 항목은 정적분석 결과로 fallback됨", "passed": false, "evidence": "브라우저 검증 미시도"}, {"text": "report.html 파일이 reports/accessibility/ 디렉토리에 생성됨", "passed": true, "evidence": "report.html 생성됨"}, {"text": "report.csv 파일이 reports/accessibility/ 디렉토리에 생성됨", "passed": true, "evidence": "report.csv 생성됨"}]}}, {"id": "eval-2-two-component-with_skill", "prompt": "Navbar.tsx와 StatsCard.tsx의 접근성을 KWCAG2.2 기준으로 검토하고 리포트 생성해줘", "eval_id": 2, "outputs": [{"name": "report.csv", "type": "text", "content": "번호,항목명,원칙,결과,판정방식,발견된 문제,수정 가이드\n1,적절한 대체 텍스트,인식의 용이성,✅,정적분석,,\n2,자막 제공,인식의 용이성,➖,정적분석,영상/음성 콘텐츠 없음,\n3,표의 구성,인식의 용이성,➖,정적분석,테이블 요소 없음,\n4,콘텐츠의 선형 구조,인식의 용이성,✅,정적분석,,\n5,명확한 지시 사항,인식의 용이성,✅,정적분석,,\n6,색에 무관한 인식,인식의 용이성,➖,정적분석,색상만으로 정보 전달하는 요소 미발견,\n7,자동 재생,인식의 용이성,✅,정적분석,,\n8,명도 대비,인식의 용이성,🔵 판정불가,판정불가,\"Tailwind CSS 유틸리티 클래스 사용으로 실제 계산된 색상값 확인 불가\",브라우저 기반 대비율 확인 필요\n9,콘텐츠 간의 구분,인식의 용이성,✅,정적분석,,\n10,키보드 사용 보장,운용의 용이성,❌,정적분석,\"StatsCard.tsx:17 — div onClick에 tabIndex/role/onKeyDown 없어 키보드 접근 불가\",\"<div>를 <button>으로 교체하거나 role=\"\"button\"\" tabIndex={0} onKeyDown 추가\"\n11,초점 이동과 표시,운용의 용이성,🔵 판정불가,판정불가,\"outline:none 미발견이나 Tailwind 리셋 영향 런타임 확인 필요\",브라우저에서 Tab 키 탐색 시 포커스 표시 확인 필요\n12,조작 가능,운용의 용이성,➖,정적분석,크기 제한 패턴 미발견,\n13,문자 단축키,운용의 용이성,➖,정적분석,단일 문자 단축키 없음,\n14,응답시간 조절,운용의 용이성,➖,정적분석,시간 제한 콘텐츠 없음,\n15,정지 기능,운용의 용이성,➖,정적분석,자동 변경 콘텐츠 없음,\n16,깜박임과 번쩍임,운용의 용이성,➖,정적분석,깜박임 콘텐츠 없음,\n17,반복 영역 건너뛰기,운용의 용이성,❌,정적분석,\"Navbar.tsx — 건너뛰기 링크(skip navigation) 미제공\",\"<a href=\"\"#main-content\"\">본문 바로가기</a> 추가 후 <main id=\"\"main-content\"\"> 연결\"\n18,제목 제공,운용의 용이성,✅,정적분석,layout.tsx metadata.title 제공됨,\n19,적절한 링크 텍스트,운용의 용이성,✅,정적분석,모든 링크에 의미 있는 텍스트 제공됨,\n20,고정된 참조 위치,운용의 용이성,➖,정적분석,전자출판문서 형식 아님,\n21,단일 포인터 입력,운용의 용이성,✅,정적분석,,\n22,포인터 입력 취소,운용의 용이성,✅,정적분석,onClick(mouseup 기반) 사용,\n23,레이블과 네임,운용의 용이성,✅,정적분석,햄버거 버튼에 aria-label 제공됨,\n24,동작 기반 작동,운용의 용이성,🔵 판정불가,판정불가,\"DeviceMotion/Orientation 미사용이나 전체 앱 맥락 확인 필요\",\n25,기본 언어 표시,이해의 용이성,✅,정적분석,<html lang=\"ko\"> 제공됨,\n26,사용자 요구에 따른 실행,이해의 용이성,✅,정적분석,자동 새 창/select onChange 패턴 없음,\n27,찾기 쉬운 도움 정보,이해의 용이성,➖,정적분석,도움 정보 요소 없음,\n28,오류 정정,이해의 용이성,➖,정적분석,폼 입력 요소 없음,\n29,레이블 제공,이해의 용이성,➖,정적분석,입력 요소 없음,\n30,접근 가능한 인증,이해의 용이성,➖,정적분석,인증 UI 요소 없음,\n31,반복 입력 정보,이해의 용이성,✅,정적분석,반복 입력 필요 폼 없음,\n32,마크업 오류 방지,견고성,❌,정적분석,\"StatsCard.tsx:13 — id=\"\"stat-card\"\" 하드코딩으로 복수 렌더링 시 중복 ID 발생\",\"id 제거 또는 id={`stat-card-${testId}`}로 고유 ID 생성\"\n33,웹 애플리케이션 접근성,견고성,⚠️,정적분석,\"Navbar.tsx:59 — 햄버거 버튼 aria-expanded 미제공; StatsCard.tsx:10 — div onClick에 role/aria 없음\",\"햄버거: aria-expanded={menuOpen} 추가; StatsCard: <button>으로 교체 또는 role=\"\"button\"\" 추가\"\n시맨틱-1,랜드마크 요소,시맨틱 HTML,✅,정적분석,nav 및 main 요소 사용됨,\n시맨틱-2,섹션 구조,시맨틱 HTML,➖,정적분석,해당 없음,\n시맨틱-3,대화형 요소,시맨틱 HTML,❌,정적분석,\"StatsCard.tsx:10-18 — 클릭 가능한 div onClick을 button 대신 사용\",\"<div onClick>을 <button type=\"\"button\"\" onClick>으로 교체\"\n시맨틱-4,목록 구조,시맨틱 HTML,⚠️,정적분석,\"Navbar.tsx — 내비게이션 링크가 ul/li 없이 div 내 반복 Link로 구성\",\"<ul><li><Link>...</Link></li></ul> 구조로 변경 권고\"\n시맨틱-5,표현용 태그,시맨틱 HTML,➖,정적분석,표현용 태그 미사용,\n시맨틱-6,폼 그룹,시맨틱 HTML,➖,정적분석,폼 요소 없음,\n시맨틱-7,기타 시맨틱 요소,시맨틱 HTML,➖,정적분석,해당 콘텐츠 없음,"}, {"name": "report.html", "type": "text", "content": "<!DOCTYPE html>\n<html lang=\"ko\">\n<head>\n<meta charset=\"UTF-8\">\n<title>웹 접근성 검토 리포트 — 2026-03-14</title>\n<style>\n  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; max-width: 1200px; margin: 0 auto; padding: 24px; color: #333; line-height: 1.6; }\n  h1 { border-bottom: 3px solid #333; padding-bottom: 8px; }\n  h2 { border-left: 5px solid #555; padding-left: 12px; margin-top: 32px; }\n  h3 { color: #444; }\n  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.9em; }\n  th { background: #f5f5f5; padding: 10px 12px; border: 1px solid #ddd; text-align: left; white-space: nowrap; }\n  td { padding: 10px 12px; border: 1px solid #ddd; vertical-align: top; }\n  tr:hover td { background: #fafafa; }\n  .result-pass    { background: #d4edda; color: #155724; font-weight: bold; text-align: center; }\n  .result-fail    { background: #f8d7da; color: #721c24; font-weight: bold; text-align: center; }\n  .result-partial { background: #fff3cd; color: #856404; font-weight: bold; text-align: center; }\n  .result-na      { background: #e2e3e5; color: #383d41; text-align: center; }\n  .result-unknown { background: #dce8f8; color: #1a4a8a; text-align: center; font-size: 0.85em; }\n  .method-playwright { color: #0066cc; font-size: 0.8em; font-weight: bold; }\n  .method-static     { color: #666; font-size: 0.8em; }\n  .method-unknown    { color: #999; font-size: 0.8em; }\n  .summary-pass { color: #155724; font-weight: bold; }\n  .summary-fail { color: #721c24; font-weight: bold; }\n  .fix-fail    { background: #fff5f5; border-left: 4px solid #dc3545; border-radius: 0 4px 4px 0; padding: 16px; margin: 12px 0; }\n  .fix-partial { background: #fffdf0; border-left: 4px solid #ffc107; border-radius: 0 4px 4px 0; padding: 16px; margin: 12px 0; }\n  code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 0.9em; }\n  .meta { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 16px; margin-bottom: 24px; }\n  .meta ul { list-style: none; margin: 0; padding: 0; }\n  .meta li { margin: 4px 0; }\n  .playwright-badge { display: inline-block; background: #0066cc; color: white; font-size: 0.75em; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }\n</style>\n</head>\n<body>\n\n<h1>웹 접근성/웹표준 검토 리포트</h1>\n\n<div class=\"meta\">\n<ul>\n  <li><strong>날짜:</strong> 2026-03-14</li>\n  <li><strong>검토 파일:</strong> Navbar.tsx, StatsCard.tsx</li>\n  <li><strong>기준:</strong> KWCAG2.2 (한국지능정보사회진흥원, 2024.10) + 시맨틱 HTML (HTML Living Standard)</li>\n  <li><strong>Playwright:</strong> 미사용 — dev server 시작 실패 (next CLI 미설치)</li>\n</ul>\n</div>\n\n<h2>요약</h2>\n<table>\n  <tr>\n    <th>원칙</th><th>합격(✅)</th><th>권고(⚠️)</th><th>불합격(❌)</th><th>해당없음(➖)</th><th>판정불가(🔵)</th><th>합격률</th>\n  </tr>\n  <tr><td>인식의 용이성 (9항목)</td><td class=\"summary-pass\">5</td><td>0</td><td class=\"summary-fail\">0</td><td>3</td><td>1</td><td>100%</td></tr>\n  <tr><td>운용의 용이성 (15항목)</td><td class=\"summary-pass\">6</td><td>1</td><td class=\"summary-fail\">2</td><td>5</td><td>2</td><td>60%</td></tr>\n  <tr><td>이해의 용이성 (7항목)</td><td class=\"summary-pass\">3</td><td>0</td><td class=\"summary-fail\">0</td><td>4</td><td>0</td><td>100%</td></tr>\n  <tr><td>견고성 (2항목)</td><td class=\"summary-pass\">0</td><td>1</td><td class=\"summary-fail\">1</td><td>0</td><td>0</td><td>0%</td></tr>\n  <tr style=\"font-weight:bold; background:#f5f5f5;\">\n    <td>전체 (33항목)</td><td class=\"summary-pass\">14</td><td>2</td><td class=\"summary-fail\">3</td><td>12</td><td>3</td><td>74%</td>\n  </tr>\n</table>\n\n<h2>상세 결과</h2>\n\n<h3>원칙 1. 인식의 용이성</h3>\n<table>\n  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>\n  <tr>\n    <td>1</td><td>적절한 대체 텍스트</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>2</td><td>자막 제공</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>영상/음성 콘텐츠 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>3</td><td>표의 구성</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>테이블 요소 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>4</td><td>콘텐츠의 선형 구조</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>5</td><td>명확한 지시 사항</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>6</td><td>색에 무관한 인식</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>색상만으로 정보 전달하는 요소 미발견 (활성 링크 색상 구분은 시각적 위치 맥락과 병행)</td><td></td>\n  </tr>\n  <tr>\n    <td>7</td><td>자동 재생</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td></td><td></td>\n  </tr>\n  <tr>\n    <td>8</td><td>명도 대비</td>\n    <td class=\"result-unknown\">🔵 판정불가</td>\n    <td><span class=\"method-unknown\">판정불가</span></td>\n    <td>Tailwind CSS 유틸리티 클래스 사용으로 정적분석만으로는 실제 계산된 색상값 확인 불가. text-zinc-500 (#71717a) on white (#ffffff) = 4.6:1로 AA 통과 추정, 그러나 다크모드 등 런타임 확인 필요</td>\n    <td>Playwright 기반 브라우저 검증 또는 수동 대비율 확인 필요</td>\n  </tr>\n  <tr>\n    <td>9</td><td>콘텐츠 간의 구분</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>border, padding, background-color 등으로 시각적 구분 제공됨</td><td></td>\n  </tr>\n</table>\n\n<h3>원칙 2. 운용의 용이성</h3>\n<table>\n  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>\n  <tr>\n    <td>10</td><td>키보드 사용 보장</td>\n    <td class=\"result-fail\">❌</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>StatsCard.tsx:17 — <code>&lt;div onClick={handleClick}&gt;</code> 비대화형 요소에 onClick만 사용. tabIndex, role, onKeyDown 없어 키보드로 접근 불가</td>\n    <td><code>&lt;div&gt;</code>를 <code>&lt;button&gt;</code>으로 교체하거나, <code>role=\"button\" tabIndex={0} onKeyDown</code> 추가</td>\n  </tr>\n  <tr>\n    <td>11</td><td>초점 이동과 표시</td>\n    <td class=\"result-unknown\">🔵 판정불가</td>\n    <td><span class=\"method-unknown\">판정불가</span></td>\n    <td>CSS outline:none 패턴 미발견. 그러나 Tailwind CSS 리셋 스타일이 기본 포커스 표시를 제거할 수 있어 런타임 확인 필요</td>\n    <td>브라우저에서 Tab 키 탐색 시 포커스 표시 확인 필요</td>\n  </tr>\n  <tr>\n    <td>12</td><td>조작 가능</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>버튼/링크 크기가 명시적으로 제한된 패턴 미발견</td><td></td>\n  </tr>\n  <tr>\n    <td>13</td><td>문자 단축키</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>단일 문자 단축키 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>14</td><td>응답시간 조절</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>시간 제한 콘텐츠 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>15</td><td>정지 기능</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>자동 변경 콘텐츠 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>16</td><td>깜박임과 번쩍임</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>깜박임 콘텐츠 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>17</td><td>반복 영역 건너뛰기</td>\n    <td class=\"result-fail\">❌</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>Navbar.tsx — 건너뛰기 링크(skip navigation) 미제공. layout.tsx에 <code>&lt;main&gt;</code> 요소는 있으나 <code>href=\"#main\"</code> 등의 앵커 링크 없음</td>\n    <td>Navbar 상단에 <code>&lt;a href=\"#main-content\" class=\"skip-nav\"&gt;본문 바로가기&lt;/a&gt;</code> 추가 후 <code>&lt;main id=\"main-content\"&gt;</code>으로 연결</td>\n  </tr>\n  <tr>\n    <td>18</td><td>제목 제공</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>layout.tsx에서 metadata.title = \"TestApp\" 제공됨</td><td></td>\n  </tr>\n  <tr>\n    <td>19</td><td>적절한 링크 텍스트</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>모든 링크에 의미 있는 텍스트 제공됨 (대시보드, 할 일, 프로필, 홈, 로그인, 회원가입)</td><td></td>\n  </tr>\n  <tr>\n    <td>20</td><td>고정된 참조 위치</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>전자출판문서 형식 아님</td><td></td>\n  </tr>\n  <tr>\n    <td>21</td><td>단일 포인터 입력</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>다중 포인터/경로 기반 동작 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>22</td><td>포인터 입력 취소</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>onMouseDown/onPointerDown 즉시 실행 패턴 없음. onClick(mouseup 기반) 사용</td><td></td>\n  </tr>\n  <tr>\n    <td>23</td><td>레이블과 네임</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>햄버거 버튼에 aria-label=\"메뉴 열기\" 제공됨. 로그아웃 버튼은 텍스트 \"로그아웃\" 포함</td><td></td>\n  </tr>\n  <tr>\n    <td>24</td><td>동작 기반 작동</td>\n    <td class=\"result-unknown\">🔵 판정불가</td>\n    <td><span class=\"method-unknown\">판정불가</span></td>\n    <td>DeviceMotion/Orientation 이벤트 미사용. 해당 컴포넌트에서 동작 기반 기능 없음으로 판단되나 전체 앱 맥락 확인 필요</td>\n    <td></td>\n  </tr>\n</table>\n\n<h3>원칙 3. 이해의 용이성</h3>\n<table>\n  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>\n  <tr>\n    <td>25</td><td>기본 언어 표시</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>layout.tsx에서 <code>&lt;html lang=\"ko\"&gt;</code> 제공됨</td><td></td>\n  </tr>\n  <tr>\n    <td>26</td><td>사용자 요구에 따른 실행</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>자동 새 창, select onChange 자동 이동 패턴 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>27</td><td>찾기 쉬운 도움 정보</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>도움 정보 요소 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>28</td><td>오류 정정</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>폼 입력 요소 없음 (Navbar, StatsCard에 해당 없음)</td><td></td>\n  </tr>\n  <tr>\n    <td>29</td><td>레이블 제공</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>입력 요소 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>30</td><td>접근 가능한 인증</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>인증 UI 요소 없음 (로그인 링크만 존재)</td><td></td>\n  </tr>\n  <tr>\n    <td>31</td><td>반복 입력 정보</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>반복 입력 필요 폼 없음</td><td></td>\n  </tr>\n</table>\n\n<h3>원칙 4. 견고성</h3>\n<table>\n  <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>\n  <tr>\n    <td>32</td><td>마크업 오류 방지</td>\n    <td class=\"result-fail\">❌</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>StatsCard.tsx:13 — <code>id=\"stat-card\"</code> 하드코딩. 이 컴포넌트가 리스트에서 복수 렌더링되면 동일 ID 중복 발생 (KWCAG 32-4 위반)</td>\n    <td>고정 id 제거하거나 <code>id={`stat-card-${testId}`}</code>처럼 고유한 id 생성. 또는 id 속성 자체를 제거하고 data-testid만 사용</td>\n  </tr>\n  <tr>\n    <td>33</td><td>웹 애플리케이션 접근성</td>\n    <td class=\"result-partial\">⚠️</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>Navbar.tsx:59 — 햄버거 메뉴 버튼에 <code>aria-expanded</code> 속성 미제공. 메뉴 열림/닫힘 상태를 보조기기에 전달하지 않음<br>StatsCard.tsx:10-18 — <code>&lt;div onClick&gt;</code>에 role, aria 속성 없이 커스텀 인터랙션 구현</td>\n    <td>햄버거: <code>&lt;button aria-expanded={menuOpen}&gt;</code> 추가<br>StatsCard: <code>&lt;button&gt;</code>으로 교체하거나 <code>role=\"button\"</code> + 필요 ARIA 속성 추가</td>\n  </tr>\n</table>\n\n<h2>시맨틱 HTML 검토</h2>\n<table>\n  <tr><th>검토 항목</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>권고 수정</th></tr>\n  <tr>\n    <td>S-01. 랜드마크 요소 (header/main/footer/nav)</td>\n    <td class=\"result-pass\">✅</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>Navbar.tsx에서 <code>&lt;nav&gt;</code> 사용, layout.tsx에서 <code>&lt;main&gt;</code> 사용</td><td></td>\n  </tr>\n  <tr>\n    <td>S-02. 섹션 구조 (article/section/aside)</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>독립 콘텐츠 블록 구조 해당 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>S-03. 대화형 요소 (button/a vs div/span)</td>\n    <td class=\"result-fail\">❌</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>StatsCard.tsx:10-18 — 클릭 가능한 <code>&lt;div onClick&gt;</code>를 <code>&lt;button&gt;</code> 대신 사용</td>\n    <td><code>&lt;div onClick={handleClick}&gt;</code>를 <code>&lt;button type=\"button\" onClick={handleClick} className=\"...\"&gt;</code>로 교체</td>\n  </tr>\n  <tr>\n    <td>S-04. 목록 구조 (ul/ol/li)</td>\n    <td class=\"result-partial\">⚠️</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>Navbar.tsx — 내비게이션 링크 목록이 <code>&lt;ul&gt;/&lt;li&gt;</code> 없이 <code>&lt;div&gt;</code> 내 반복 <code>&lt;Link&gt;</code>로 구성됨</td>\n    <td>내비게이션 링크를 <code>&lt;ul&gt;&lt;li&gt;&lt;Link&gt;...&lt;/Link&gt;&lt;/li&gt;&lt;/ul&gt;</code> 구조로 변경 권고</td>\n  </tr>\n  <tr>\n    <td>S-05. 표현용 태그 (b/i vs strong/em)</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>표현용 태그 미사용</td><td></td>\n  </tr>\n  <tr>\n    <td>S-06. 폼 그룹 (fieldset/legend)</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>폼 요소 없음</td><td></td>\n  </tr>\n  <tr>\n    <td>S-07. 기타 시맨틱 요소 (time/blockquote 등)</td>\n    <td class=\"result-na\">➖</td>\n    <td><span class=\"method-static\">정적분석</span></td>\n    <td>해당 콘텐츠 없음</td><td></td>\n  </tr>\n</table>\n\n<h2>수정 필요 항목</h2>\n\n<h3>불합격 (❌)</h3>\n\n<div class=\"fix-fail\">\n  <p><strong>항목 10. 키보드 사용 보장</strong> — <code>StatsCard.tsx:17</code></p>\n  <p><strong>문제:</strong> <code>&lt;div onClick={handleClick}&gt;</code> — 비대화형 요소에 onClick만 사용하여 키보드 사용자가 해당 기능에 접근할 수 없음. tabIndex, role, onKeyDown이 모두 누락됨</p>\n  <p><strong>수정:</strong> <code>&lt;div&gt;</code>를 <code>&lt;button type=\"button\" onClick={handleClick} className=\"rounded-xl border ...\"&gt;</code>로 교체. 또는 <code>&lt;div role=\"button\" tabIndex={0} onClick={handleClick} onKeyDown={(e) =&gt; { if (e.key === 'Enter' || e.key === ' ') handleClick(); }}&gt;</code> 추가</p>\n</div>\n\n<div class=\"fix-fail\">\n  <p><strong>항목 17. 반복 영역 건너뛰기</strong> — <code>Navbar.tsx</code> / <code>layout.tsx</code></p>\n  <p><strong>문제:</strong> 페이지 최상단에 건너뛰기 링크(skip navigation)가 없어 키보드 사용자가 반복되는 내비게이션 영역을 매번 탐색해야 함</p>\n  <p><strong>수정:</strong> layout.tsx의 <code>&lt;body&gt;</code> 직후에 <code>&lt;a href=\"#main-content\" style=\"position:absolute;top:-40px;left:0;z-index:100\" onFocus=\"this.style.top='0'\"&gt;본문 바로가기&lt;/a&gt;</code> 추가, <code>&lt;main&gt;</code>에 <code>id=\"main-content\"</code> 부여</p>\n</div>\n\n<div class=\"fix-fail\">\n  <p><strong>항목 32. 마크업 오류 방지</strong> — <code>StatsCard.tsx:13</code></p>\n  <p><strong>문제:</strong> <code>id=\"stat-card\"</code>가 하드코딩되어 있어 컴포넌트가 페이지에 여러 번 렌더링되면 동일 ID가 중복됨 (HTML 명세 위반)</p>\n  <p><strong>수정:</strong> <code>id={`stat-card-${testId}`}</code>로 고유 ID 생성하거나, id 속성 자체를 제거하고 <code>data-testid</code>만 사용</p>\n</div>\n\n<div class=\"fix-fail\">\n  <p><strong>시맨틱 HTML: 대화형 요소</strong> — <code>StatsCard.tsx:10-18</code></p>\n  <p><strong>문제:</strong> 클릭 가능한 카드가 <code>&lt;div onClick&gt;</code>로 구현됨. 의미적으로 버튼 역할이나 <code>&lt;button&gt;</code> 요소를 사용하지 않음</p>\n  <p><strong>수정:</strong> <code>&lt;button type=\"button\" onClick={handleClick} className=\"...\"&gt;</code>로 교체하여 키보드 접근성과 시맨틱 마크업을 동시에 확보</p>\n</div>\n\n<h3>권고 (⚠️)</h3>\n\n<div class=\"fix-partial\">\n  <p><strong>항목 33. 웹 애플리케이션 접근성</strong></p>\n  <p><strong>내용:</strong> Navbar.tsx:59 — 햄버거 메뉴 버튼에 <code>aria-expanded</code> 속성이 없어 메뉴 열림/닫힘 상태가 보조기기(스크린 리더)에 전달되지 않음. <code>&lt;button aria-expanded={menuOpen} aria-label=\"메뉴 열기\"&gt;</code>로 변경 권고</p>\n</div>\n\n<div class=\"fix-partial\">\n  <p><strong>시맨틱 HTML: 목록 구조</strong></p>\n  <p><strong>내용:</strong> Navbar.tsx — 내비게이션 링크가 <code>&lt;div&gt;</code> 안에 나열되어 있으나, 의미적으로 목록이므로 <code>&lt;ul&gt;&lt;li&gt;</code> 구조 사용 권고. 스크린 리더가 \"3개 항목 목록\"처럼 안내하여 사용자 이해도 향상</p>\n</div>\n\n</body>\n</html>"}], "grading": {"expectations": [{"text": "Navbar.tsx와 StatsCard.tsx 모두 분석 대상에 포함됨", "passed": true, "evidence": "두 파일 모두 분석 대상으로 포함, 각 파일의 이슈가 결과에 반영됨"}, {"text": "정적분석과 Playwright 두 가지 verdict_method가 리포트에 존재 (브라우저 성공 시)", "passed": false, "evidence": "브라우저 실행 실패(dev server 미시작)로 정적분석만. 판정불가 3개 항목 처리"}, {"text": "❌ 항목에 구체적인 수정 가이드가 포함됨", "passed": true, "evidence": "A-10, A-17, A-32 등 ❌ 항목에 구체적 코드 수준 수정 가이드 포함"}, {"text": "리포트가 한국어로 작성됨", "passed": true, "evidence": "report.html이 한국어로 작성됨"}, {"text": "✅/❌/⚠️/➖/🔵 분류 체계가 올바르게 사용됨", "passed": true, "evidence": "모든 항목에 ✅/❌/⚠️/➖/🔵 판정불가 분류 체계 적용됨"}]}}, {"id": "eval-2-two-component-without_skill", "prompt": "Navbar.tsx와 StatsCard.tsx의 접근성을 KWCAG2.2 기준으로 검토하고 리포트 생성해줘", "eval_id": 2, "outputs": [{"name": "report.csv", "type": "text", "content": "번호,컴포넌트,심각도,KWCAG2.2 검사항목,위반 내용,코드 위치(라인),권장 수정 사항\n1,Navbar.tsx,중요,\"7.1.1 (적절한 대체 텍스트 제공)\",\"햄버거 메뉴 SVG 아이콘에 role=\"\"img\"\"와 aria-hidden=\"\"true\"\" 또는 대체 텍스트가 없음. 스크린리더가 SVG 내부 path를 읽으려 시도할 수 있음\",65,\"SVG에 aria-hidden=\"\"true\"\" 추가하거나 <title> 요소 제공\"\n2,Navbar.tsx,중요,\"7.2.1 (키보드 접근성)\",\"햄버거 메뉴 버튼에 aria-expanded 속성이 없어 메뉴 열림/닫힘 상태를 보조기술이 인식할 수 없음\",59-63,\"aria-expanded={menuOpen} 속성 추가\"\n3,Navbar.tsx,중요,\"7.2.1 (키보드 접근성)\",\"햄버거 메뉴 aria-label이 '메뉴 열기'로 고정. 메뉴가 열린 상태에서도 동일한 레이블을 사용하여 현재 상태를 반영하지 못함\",63,\"aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'} 로 동적 변경\"\n4,Navbar.tsx,보통,\"7.2.4 (반복 영역 건너뛰기)\",\"<nav> 요소에 aria-label이 없음. 페이지에 여러 nav 랜드마크가 있을 경우 구분 불가\",23,\"<nav aria-label=\"\"주 메뉴\"\"> 추가\"\n5,Navbar.tsx,보통,\"7.2.4 (반복 영역 건너뛰기)\",\"브레드크럼 영역이 <div>로 마크업됨. <nav aria-label=\"\"브레드크럼\"\"> 랜드마크를 사용해야 함\",132,\"<div> 대신 <nav aria-label=\"\"브레드크럼\"\"> 사용\"\n6,Navbar.tsx,보통,\"7.4.2 (제목 제공)\",\"현재 페이지를 나타내는 네비게이션 링크에 aria-current=\"\"page\"\" 속성이 없음. 시각적으로만 파란색으로 구분됨\",37-45,\"활성 링크에 aria-current=\"\"page\"\" 속성 추가\"\n7,Navbar.tsx,경미,\"7.3.2 (예측 가능한 기능)\",\"모바일 메뉴가 열렸을 때 Escape 키로 닫을 수 없음. 키보드 사용자의 예측 가능한 동작이 보장되지 않음\",87-109,\"useEffect로 Escape 키 이벤트 리스너 추가\"\n8,Navbar.tsx,경미,\"7.2.1 (키보드 접근성)\",\"모바일 메뉴 열림 시 포커스가 메뉴로 이동하지 않고, 닫힘 시 햄버거 버튼으로 포커스가 복귀하지 않음 (포커스 트래핑 부재)\",87-109,\"메뉴 열림 시 첫 번째 링크로 포커스 이동, 닫힘 시 버튼으로 복귀\"\n9,Navbar.tsx,경미,\"7.2.1 (키보드 접근성)\",\"모바일 메뉴 컨테이너에 role 및 관련 ARIA 속성 없음. 햄버거 버튼과 메뉴 패널 간 연결이 명시적이지 않음\",88,\"aria-controls=\"\"mobile-menu\"\" (버튼), id=\"\"mobile-menu\"\" role=\"\"menu\"\" (패널) 추가\"\n10,Navbar.tsx,경미,\"7.1.3 (색에 무관한 인식)\",\"활성 네비게이션 링크가 색상(파란색)으로만 구분됨. 색각 이상 사용자가 구분하기 어려울 수 있음\",38-39,\"밑줄, font-weight 변경 등 추가적인 시각적 구분 제공\"\n11,StatsCard.tsx,중요,\"7.2.1 (키보드 접근성)\",\"div에 onClick 핸들러가 있으나 role, tabIndex, onKeyDown 속성이 없음. 키보드 사용자가 이 요소와 상호작용할 수 없음\",17,\"role=\"\"button\"\" tabIndex={0} onKeyDown 추가 또는 <button> 요소로 변경\"\n12,StatsCard.tsx,중요,\"7.3.4 (일관된 식별)\",\"id=\"\"stat-card\"\"가 하드코딩됨. 리스트에서 여러 번 렌더링 시 동일 id가 중복되어 HTML 유효성 및 보조기술 참조 오류 발생\",13,\"id={`stat-card-${testId}`} 등 고유한 id 생성 또는 id 속성 제거\"\n13,StatsCard.tsx,보통,\"7.1.1 (적절한 대체 텍스트 제공)\",\"클릭 가능한 요소이나 접근 가능한 이름(accessible name)이 없음. 스크린리더 사용자가 이 요소의 목적을 알 수 없음\",10-21,\"aria-label={label} 또는 aria-labelledby로 접근 가능한 이름 제공\"\n14,StatsCard.tsx,보통,\"7.4.1 (표의 구성)\",\"통계 수치(value)와 레이블(label)의 관계가 의미적으로 연결되지 않음. 스크린리더 사용자에게 값과 레이블의 관계가 불명확할 수 있음\",19-20,\"aria-labelledby 또는 dl/dt/dd 정의형 리스트 마크업 사용\"\n15,StatsCard.tsx,경미,\"7.4.2 (제목 제공)\",\"값이 레이블보다 먼저 나와 스크린리더 읽기 순서가 '값 → 레이블'이 됨. 맥락 없이 숫자가 먼저 읽힘\",19-20,\"레이블을 먼저 배치하고 CSS order로 시각적 순서 조정, 또는 aria-label로 전체 설명 제공\"\n"}, {"name": "report.html", "type": "text", "content": "<!DOCTYPE html>\n<html lang=\"ko\">\n<head>\n  <meta charset=\"UTF-8\" />\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n  <title>KWCAG 2.2 접근성 검토 리포트 — Navbar.tsx &amp; StatsCard.tsx</title>\n  <style>\n    :root {\n      --color-critical: #dc2626;\n      --color-major: #ea580c;\n      --color-minor: #ca8a04;\n      --bg-critical: #fef2f2;\n      --bg-major: #fff7ed;\n      --bg-minor: #fefce8;\n    }\n    * { margin: 0; padding: 0; box-sizing: border-box; }\n    body {\n      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;\n      color: #18181b;\n      background: #fafafa;\n      line-height: 1.6;\n      padding: 2rem;\n      max-width: 1100px;\n      margin: 0 auto;\n    }\n    h1 { font-size: 1.75rem; margin-bottom: 0.25rem; }\n    .subtitle { color: #71717a; margin-bottom: 2rem; font-size: 0.95rem; }\n    h2 { font-size: 1.3rem; margin: 2rem 0 1rem; border-bottom: 2px solid #e4e4e7; padding-bottom: 0.5rem; }\n    h3 { font-size: 1.1rem; margin: 1.5rem 0 0.5rem; }\n\n    .summary-grid {\n      display: grid;\n      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));\n      gap: 1rem;\n      margin-bottom: 2rem;\n    }\n    .summary-card {\n      background: #fff;\n      border: 1px solid #e4e4e7;\n      border-radius: 12px;\n      padding: 1.25rem;\n      text-align: center;\n    }\n    .summary-card .num { font-size: 2rem; font-weight: 700; }\n    .summary-card .lbl { font-size: 0.85rem; color: #71717a; margin-top: 0.25rem; }\n    .severity-critical .num { color: var(--color-critical); }\n    .severity-major .num { color: var(--color-major); }\n    .severity-minor .num { color: var(--color-minor); }\n\n    table {\n      width: 100%;\n      border-collapse: collapse;\n      background: #fff;\n      border: 1px solid #e4e4e7;\n      border-radius: 8px;\n      overflow: hidden;\n      margin-bottom: 2rem;\n      font-size: 0.9rem;\n    }\n    thead { background: #f4f4f5; }\n    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #e4e4e7; }\n    th { font-weight: 600; white-space: nowrap; }\n    tr:last-child td { border-bottom: none; }\n\n    .badge {\n      display: inline-block;\n      padding: 0.15rem 0.6rem;\n      border-radius: 9999px;\n      font-size: 0.8rem;\n      font-weight: 600;\n    }\n    .badge-critical { background: var(--bg-critical); color: var(--color-critical); }\n    .badge-major { background: var(--bg-major); color: var(--color-major); }\n    .badge-minor { background: var(--bg-minor); color: var(--color-minor); }\n\n    code {\n      background: #f4f4f5;\n      padding: 0.15rem 0.4rem;\n      border-radius: 4px;\n      font-size: 0.85em;\n      font-family: 'Fira Code', monospace;\n    }\n    .rec { color: #166534; font-weight: 500; }\n    .file-tag {\n      display: inline-block;\n      background: #ede9fe;\n      color: #5b21b6;\n      padding: 0.1rem 0.5rem;\n      border-radius: 6px;\n      font-size: 0.8rem;\n      font-weight: 600;\n    }\n    footer {\n      margin-top: 3rem;\n      padding-top: 1rem;\n      border-top: 1px solid #e4e4e7;\n      color: #a1a1aa;\n      font-size: 0.8rem;\n    }\n  </style>\n</head>\n<body>\n\n  <h1>KWCAG 2.2 접근성 검토 리포트</h1>\n  <p class=\"subtitle\">\n    대상 컴포넌트: <code>Navbar.tsx</code>, <code>StatsCard.tsx</code><br />\n    검토일: 2026-03-14 &nbsp;|&nbsp; 기준: 한국형 웹 콘텐츠 접근성 지침 2.2 (KWCAG 2.2)\n  </p>\n\n  <!-- ───── 요약 ───── -->\n  <h2>검토 요약</h2>\n  <div class=\"summary-grid\">\n    <div class=\"summary-card\">\n      <div class=\"num\">15</div>\n      <div class=\"lbl\">총 발견 항목</div>\n    </div>\n    <div class=\"summary-card severity-critical\">\n      <div class=\"num\">5</div>\n      <div class=\"lbl\">중요 (Critical)</div>\n    </div>\n    <div class=\"summary-card severity-major\">\n      <div class=\"num\">5</div>\n      <div class=\"lbl\">보통 (Major)</div>\n    </div>\n    <div class=\"summary-card severity-minor\">\n      <div class=\"num\">5</div>\n      <div class=\"lbl\">경미 (Minor)</div>\n    </div>\n  </div>\n\n  <!-- ───── Navbar.tsx ───── -->\n  <h2><span class=\"file-tag\">Navbar.tsx</span> 검토 결과 (10건)</h2>\n\n  <table>\n    <thead>\n      <tr><th>#</th><th>심각도</th><th>KWCAG 검사항목</th><th>위반 내용</th><th>라인</th><th>권장 수정</th></tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>1</td>\n        <td><span class=\"badge badge-critical\">중요</span></td>\n        <td>7.1.1 적절한 대체 텍스트 제공</td>\n        <td>햄버거 메뉴의 SVG 아이콘에 <code>role=\"img\"</code>와 <code>aria-hidden=\"true\"</code> 또는 <code>&lt;title&gt;</code> 요소가 없음. 스크린리더가 SVG 내부 <code>&lt;path&gt;</code>를 읽으려 시도할 수 있음.</td>\n        <td>65</td>\n        <td class=\"rec\">SVG에 <code>aria-hidden=\"true\"</code> 추가 (버튼의 aria-label이 이미 존재하므로 장식용으로 처리)</td>\n      </tr>\n      <tr>\n        <td>2</td>\n        <td><span class=\"badge badge-critical\">중요</span></td>\n        <td>7.2.1 키보드 접근성</td>\n        <td>햄버거 메뉴 버튼에 <code>aria-expanded</code> 속성이 없어 메뉴의 열림/닫힘 상태를 보조기술이 인식할 수 없음.</td>\n        <td>59-63</td>\n        <td class=\"rec\"><code>aria-expanded={menuOpen}</code> 속성 추가</td>\n      </tr>\n      <tr>\n        <td>3</td>\n        <td><span class=\"badge badge-critical\">중요</span></td>\n        <td>7.2.1 키보드 접근성</td>\n        <td>햄버거 메뉴 <code>aria-label</code>이 <code>\"메뉴 열기\"</code>로 고정됨. 메뉴가 열린 상태에서도 동일한 레이블을 사용하여 현재 상태를 정확히 전달하지 못함.</td>\n        <td>63</td>\n        <td class=\"rec\"><code>aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}</code>로 동적 변경</td>\n      </tr>\n      <tr>\n        <td>4</td>\n        <td><span class=\"badge badge-major\">보통</span></td>\n        <td>7.2.4 반복 영역 건너뛰기</td>\n        <td><code>&lt;nav&gt;</code> 요소에 <code>aria-label</code>이 없음. 페이지에 여러 <code>nav</code> 랜드마크가 있을 경우 구분 불가.</td>\n        <td>23</td>\n        <td class=\"rec\"><code>&lt;nav aria-label=\"주 메뉴\"&gt;</code> 추가</td>\n      </tr>\n      <tr>\n        <td>5</td>\n        <td><span class=\"badge badge-major\">보통</span></td>\n        <td>7.2.4 반복 영역 건너뛰기</td>\n        <td>브레드크럼 영역이 <code>&lt;div&gt;</code>로 마크업됨. 보조기술이 이 영역을 네비게이션 랜드마크로 인식할 수 없음.</td>\n        <td>132</td>\n        <td class=\"rec\"><code>&lt;nav aria-label=\"브레드크럼\"&gt;</code>으로 변경하고, 내부를 <code>&lt;ol&gt;</code> 리스트로 마크업</td>\n      </tr>\n      <tr>\n        <td>6</td>\n        <td><span class=\"badge badge-major\">보통</span></td>\n        <td>7.4.2 제목 제공</td>\n        <td>현재 페이지를 나타내는 네비게이션 링크에 <code>aria-current=\"page\"</code> 속성이 없음. 시각적으로만 파란색으로 구분됨.</td>\n        <td>37-45</td>\n        <td class=\"rec\">활성 링크에 <code>aria-current=\"page\"</code> 속성 추가</td>\n      </tr>\n      <tr>\n        <td>7</td>\n        <td><span class=\"badge badge-minor\">경미</span></td>\n        <td>7.3.2 예측 가능한 기능</td>\n        <td>모바일 메뉴가 열렸을 때 <kbd>Escape</kbd> 키로 닫을 수 없음. 키보드 사용자의 예측 가능한 동작이 보장되지 않음.</td>\n        <td>87-109</td>\n        <td class=\"rec\"><code>useEffect</code>로 Escape 키 이벤트 리스너 추가하여 메뉴 닫기 처리</td>\n      </tr>\n      <tr>\n        <td>8</td>\n        <td><span class=\"badge badge-minor\">경미</span></td>\n        <td>7.2.1 키보드 접근성</td>\n        <td>모바일 메뉴 열림 시 포커스가 메뉴로 이동하지 않고, 닫힘 시 햄버거 버튼으로 포커스가 복귀하지 않음 (포커스 트래핑 부재).</td>\n        <td>87-109</td>\n        <td class=\"rec\">메뉴 열림 시 첫 번째 링크로 포커스 이동, 닫힘 시 트리거 버튼으로 복귀</td>\n      </tr>\n      <tr>\n        <td>9</td>\n        <td><span class=\"badge badge-minor\">경미</span></td>\n        <td>7.2.1 키보드 접근성</td>\n        <td>모바일 메뉴 컨테이너에 <code>role</code> 및 관련 ARIA 속성이 없음. 햄버거 버튼과 메뉴 패널 간 연결이 명시적이지 않음.</td>\n        <td>88</td>\n        <td class=\"rec\">버튼에 <code>aria-controls=\"mobile-menu\"</code>, 패널에 <code>id=\"mobile-menu\"</code> 추가</td>\n      </tr>\n      <tr>\n        <td>10</td>\n        <td><span class=\"badge badge-minor\">경미</span></td>\n        <td>7.1.3 색에 무관한 인식</td>\n        <td>활성 네비게이션 링크가 색상(파란색)으로만 구분됨. 색각 이상 사용자가 현재 페이지를 식별하기 어려울 수 있음.</td>\n        <td>38-39</td>\n        <td class=\"rec\">밑줄, font-weight 변경, 아이콘 등 추가적인 시각적 구분 제공</td>\n      </tr>\n    </tbody>\n  </table>\n\n  <!-- ───── StatsCard.tsx ───── -->\n  <h2><span class=\"file-tag\">StatsCard.tsx</span> 검토 결과 (5건)</h2>\n\n  <table>\n    <thead>\n      <tr><th>#</th><th>심각도</th><th>KWCAG 검사항목</th><th>위반 내용</th><th>라인</th><th>권장 수정</th></tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td>11</td>\n        <td><span class=\"badge badge-critical\">중요</span></td>\n        <td>7.2.1 키보드 접근성</td>\n        <td><code>&lt;div&gt;</code>에 <code>onClick</code> 핸들러가 있으나 <code>role</code>, <code>tabIndex</code>, <code>onKeyDown</code> 속성이 없음. 키보드 사용자가 이 요소와 상호작용할 수 없음.</td>\n        <td>17</td>\n        <td class=\"rec\"><code>role=\"button\" tabIndex={0} onKeyDown={handleKeyDown}</code> 추가 또는 <code>&lt;button&gt;</code> 요소로 변경</td>\n      </tr>\n      <tr>\n        <td>12</td>\n        <td><span class=\"badge badge-critical\">중요</span></td>\n        <td>7.3.4 일관된 식별</td>\n        <td><code>id=\"stat-card\"</code>가 하드코딩됨. 리스트에서 여러 번 렌더링 시 동일 <code>id</code>가 중복되어 HTML 유효성 위반 및 보조기술 참조 오류 발생.</td>\n        <td>13</td>\n        <td class=\"rec\"><code>id={`stat-card-${testId}`}</code> 등 고유한 id 생성 또는 id 속성 제거</td>\n      </tr>\n      <tr>\n        <td>13</td>\n        <td><span class=\"badge badge-major\">보통</span></td>\n        <td>7.1.1 적절한 대체 텍스트 제공</td>\n        <td>클릭 가능한 요소이나 접근 가능한 이름(accessible name)이 없음. 스크린리더 사용자가 이 요소의 목적을 알 수 없음.</td>\n        <td>10-21</td>\n        <td class=\"rec\"><code>aria-label={label}</code> 또는 <code>aria-labelledby</code>로 접근 가능한 이름 제공</td>\n      </tr>\n      <tr>\n        <td>14</td>\n        <td><span class=\"badge badge-major\">보통</span></td>\n        <td>7.4.1 표의 구성</td>\n        <td>통계 수치(<code>value</code>)와 레이블(<code>label</code>)의 관계가 의미적으로 연결되지 않음. 스크린리더 사용자에게 값과 레이블의 관계가 불명확할 수 있음.</td>\n        <td>19-20</td>\n        <td class=\"rec\"><code>aria-labelledby</code> 사용 또는 <code>&lt;dl&gt;/&lt;dt&gt;/&lt;dd&gt;</code> 정의형 리스트 마크업으로 변경</td>\n      </tr>\n      <tr>\n        <td>15</td>\n        <td><span class=\"badge badge-minor\">경미</span></td>\n        <td>7.4.2 제목 제공</td>\n        <td>값이 레이블보다 먼저 마크업에 나와 스크린리더 읽기 순서가 \"값 → 레이블\"이 됨. 맥락 없이 숫자가 먼저 읽힘.</td>\n        <td>19-20</td>\n        <td class=\"rec\">DOM에서 레이블을 먼저 배치하고 CSS <code>order</code>로 시각적 순서 조정, 또는 <code>aria-label</code>로 전체 설명 제공</td>\n      </tr>\n    </tbody>\n  </table>\n\n  <!-- ───── 종합 의견 ───── -->\n  <h2>종합 의견</h2>\n\n  <h3>Navbar.tsx</h3>\n  <p>\n    전반적인 HTML 시맨틱 구조(<code>&lt;nav&gt;</code>, <code>&lt;Link&gt;</code>, <code>&lt;button&gt;</code>)는 양호하나,\n    모바일 햄버거 메뉴의 상태 관리와 관련된 ARIA 속성이 부족합니다.\n    특히 <code>aria-expanded</code> 미사용은 스크린리더 사용자가 메뉴 상태를 파악할 수 없게 만드는 주요 접근성 장벽입니다.\n    브레드크럼 영역의 시맨틱 마크업 개선과, 활성 링크의 <code>aria-current</code> 속성 추가가 필요합니다.\n  </p>\n\n  <h3>StatsCard.tsx</h3>\n  <p>\n    가장 심각한 문제는 <code>&lt;div onClick&gt;</code> 패턴입니다. 키보드 접근이 완전히 차단되어 있으며,\n    KWCAG 2.2의 핵심 원칙인 \"운용의 용이성\"을 위반합니다. 근본적으로 <code>&lt;button&gt;</code> 요소로 변경하는 것이 최선이며,\n    중복 <code>id</code> 문제도 시급히 수정해야 합니다.\n  </p>\n\n  <h3>우선순위 권장 사항</h3>\n  <ol>\n    <li><strong>[즉시]</strong> StatsCard의 <code>&lt;div onClick&gt;</code>를 <code>&lt;button&gt;</code>으로 변경</li>\n    <li><strong>[즉시]</strong> StatsCard의 중복 <code>id</code> 제거 또는 고유값 사용</li>\n    <li><strong>[즉시]</strong> 햄버거 메뉴에 <code>aria-expanded</code> 추가</li>\n    <li><strong>[단기]</strong> 브레드크럼을 <code>&lt;nav&gt;</code> + <code>&lt;ol&gt;</code>로 변경</li>\n    <li><strong>[단기]</strong> 활성 링크에 <code>aria-current=\"page\"</code> 추가</li>\n    <li><strong>[중기]</strong> 모바일 메뉴 포커스 관리 및 Escape 키 지원</li>\n  </ol>\n\n  <footer>\n    <p>본 리포트는 정적 코드 분석 기반으로 작성되었습니다. 실제 렌더링 환경에서의 보조기술 테스트를 추가로 권장합니다.</p>\n    <p>검토 기준: KWCAG 2.2 (한국형 웹 콘텐츠 접근성 지침 2.2) &nbsp;|&nbsp; 생성일: 2026-03-14</p>\n  </footer>\n\n</body>\n</html>\n"}], "grading": {"expectations": [{"text": "Navbar.tsx와 StatsCard.tsx 모두 분석 대상에 포함됨", "passed": true, "evidence": "Navbar.tsx 10건, StatsCard.tsx 5건 분석"}, {"text": "정적분석과 Playwright 두 가지 verdict_method가 리포트에 존재 (브라우저 성공 시)", "passed": false, "evidence": "브라우저 검증 미시도, verdict_method 필드 없음"}, {"text": "❌ 항목에 구체적인 수정 가이드가 포함됨", "passed": true, "evidence": "각 항목에 구체적 수정 제안 포함"}, {"text": "리포트가 한국어로 작성됨", "passed": true, "evidence": "report.html이 한국어로 작성됨"}, {"text": "✅/❌/⚠️/➖/🔵 분류 체계가 올바르게 사용됨", "passed": false, "evidence": "Critical/Major/Minor 분류 사용, ✅/❌/⚠️/➖/🔵 미사용"}]}}], "previous_feedback": {}, "previous_outputs": {}, "benchmark": {"skill_name": "a11y", "iteration": 1, "configurations": [{"name": "with_skill", "evals": [{"eval_name": "orchestrator-full", "pass_rate": 0.875, "passed": 7, "total": 8, "duration_seconds": 719.4, "total_tokens": 64780}, {"eval_name": "two-component", "pass_rate": 0.8, "passed": 4, "total": 5, "duration_seconds": 345.9, "total_tokens": 63234}], "aggregate": {"mean_pass_rate": 0.838, "mean_duration_seconds": 532.6, "mean_tokens": 64007}}, {"name": "without_skill", "evals": [{"eval_name": "orchestrator-full", "pass_rate": 0.25, "passed": 2, "total": 8, "duration_seconds": 99.7, "total_tokens": 20152}, {"eval_name": "two-component", "pass_rate": 0.4, "passed": 2, "total": 5, "duration_seconds": 115.8, "total_tokens": 20115}], "aggregate": {"mean_pass_rate": 0.325, "mean_duration_seconds": 107.8, "mean_tokens": 20134}}], "delta": {"pass_rate": "+51.3%", "duration": "+394.1%", "tokens": "+217.8%"}}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">출력 파일 없음</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "다운로드";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = file.name + " 다운로드";
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "시트: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "스프레드시트 렌더링 오류: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + (summary.total || 0) + '개 중 ' + (summary.passed || 0) + '개 통과, ' + (summary.failed || 0) + '개 실패</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "다운로드";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = file.name + " 다운로드";
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "저장됨";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "제출 시 다운로드됩니다";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>벤치마크 결과</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += metadata.timestamp + " &mdash; ";
+      if (metadata.evals_run) html += "평가: " + metadata.evals_run.join(", ") + " &mdash; ";
+      html += "설정당 " + (metadata.runs_per_configuration || "?") + "회 실행";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+
+      html += "<thead><tr><th>지표</th><th>" + escapeHtml(labelA) + "</th><th>" + escapeHtml(labelB) + "</th><th>차이</th></tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>통과율</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += "<td>" + fmtStat(b.pass_rate, true) + "</td>";
+      html += '<td class="' + deltaClass(delta.pass_rate) + '">' + (delta.pass_rate || "—") + "</td></tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>소요 시간 (초)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += "<td>" + fmtStat(b.time_seconds, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.time_seconds) + '">' + (delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td></tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>토큰</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += "<td>" + fmtStat(b.tokens, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.tokens) + '">' + (delta.tokens || "—") + "</td></tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) => a - b);
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>평가별 상세 내역</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "평가 " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>설정</th><th>실행</th><th>통과율</th>";
+          if (hasTime) html += "<th>소요 시간 (초)</th>";
+          if (hasErrors) html += "<th>실행 중 오류</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + run.run_number + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + (r.passed || 0) + "/" + (r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + (r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>평균</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>검증 항목</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + run.run_number + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>분석 노트</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>

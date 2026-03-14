@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "single-component",
+  "prompt": "StatsCard.tsx 컴포넌트만 KWCAG2.2 정적분석으로 접근성 검토해줘",
+  "assertions": [
+    {"id": "all-33-items-evaluated", "text": "33개 KWCAG2.2 항목이 모두 평가됨 (해당 없는 항목은 ➖)"},
+    {"id": "keyboard-access-issue", "text": "A-10: div onClick 키보드 접근 불가 문제 감지"},
+    {"id": "duplicate-id-issue", "text": "A-32: 리스트 렌더링 시 중복 id 패턴 감지"},
+    {"id": "interactive-semantic-issue", "text": "시맨틱 HTML: 클릭 가능한 div → button 권장 감지"},
+    {"id": "json-array-format", "text": "결과가 JSON 배열 형식으로 반환됨"}
+  ]
+}

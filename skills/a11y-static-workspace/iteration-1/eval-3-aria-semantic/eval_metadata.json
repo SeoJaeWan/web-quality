@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "aria-semantic",
+  "prompt": "Navbar.tsx와 SearchFilter.tsx의 ARIA 속성과 시맨틱 HTML을 정적분석해줘",
+  "assertions": [
+    {"id": "aria-expanded-missing", "text": "A-33: 햄버거 메뉴 버튼에 aria-expanded 누락 감지"},
+    {"id": "aria-pressed-missing", "text": "A-33: 필터 토글 버튼에 aria-pressed 누락 감지"},
+    {"id": "nav-landmark-check", "text": "시맨틱 HTML: nav 요소 사용 여부 평가"},
+    {"id": "icon-button-label", "text": "A-23: 아이콘 버튼의 aria-label 누락 감지"},
+    {"id": "no-browser-dependency", "text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료"}
+  ]
+}

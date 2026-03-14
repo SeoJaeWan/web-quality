@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "a11y-static 스킬의 정적분석이 실행되어 verdict_method='정적분석' 항목이 존재", "passed": true, "evidence": "a11y-static 완료, 33개 KWCAG + 7개 시맨틱 HTML 항목 모두 verdict_method='정적분석'"},
+    {"text": "a11y-browser 스킬의 브라우저 검증이 시도됨 (성공 또는 판정불가)", "passed": true, "evidence": "a11y-browser 시도됨, dev server 시작 실패로 적절히 판정불가 처리"},
+    {"text": "33개 KWCAG2.2 항목이 모두 평가됨 (누락 없음)", "passed": true, "evidence": "33개 KWCAG 항목 전부 포함, 합격률 59%"},
+    {"text": "시맨틱 HTML 섹션이 리포트에 포함됨", "passed": true, "evidence": "7개 시맨틱 HTML 항목 포함"},
+    {"text": "브라우저 검증 항목은 verdict_method='Playwright'로 표시됨 (브라우저 실행 성공 시)", "passed": false, "evidence": "브라우저 실행 실패로 모든 항목이 정적분석으로 처리됨 (기대 동작)"},
+    {"text": "브라우저 판정불가 항목은 정적분석 결과로 fallback됨", "passed": true, "evidence": "브라우저 전체 실패 시 정적분석 결과로 적절히 fallback"},
+    {"text": "report.html 파일이 reports/accessibility/ 디렉토리에 생성됨", "passed": true, "evidence": "with_skill/outputs/report.html 생성됨 (19.7KB 추정)"},
+    {"text": "report.csv 파일이 reports/accessibility/ 디렉토리에 생성됨", "passed": true, "evidence": "with_skill/outputs/report.csv 생성됨"}
+  ]
+}

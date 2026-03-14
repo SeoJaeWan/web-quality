@@ -1,0 +1,121 @@
+{
+  "task": "Verify mobile menu toggle ARIA state changes in Navbar component",
+  "file": "features/next-app/components/Navbar.tsx",
+  "url": "http://localhost:3199/dashboard",
+  "viewport": { "width": 375, "height": 812 },
+  "timestamp": "2026-03-14T01:48:00Z",
+  "summary": "The hamburger menu toggle button is missing critical ARIA state attributes. The `aria-expanded` attribute is absent in all states, and the `aria-label` remains static regardless of menu state.",
+  "checks": [
+    {
+      "id": "aria-expanded-closed",
+      "description": "aria-expanded should be 'false' when mobile menu is closed",
+      "expected": "aria-expanded=\"false\"",
+      "actual": "aria-expanded is missing (null)",
+      "pass": false,
+      "wcag": "WCAG 2.1 SC 4.1.2 (Name, Role, Value)"
+    },
+    {
+      "id": "aria-expanded-open",
+      "description": "aria-expanded should be 'true' when mobile menu is open",
+      "expected": "aria-expanded=\"true\"",
+      "actual": "aria-expanded is missing (null)",
+      "pass": false,
+      "wcag": "WCAG 2.1 SC 4.1.2 (Name, Role, Value)"
+    },
+    {
+      "id": "aria-controls",
+      "description": "aria-controls should reference the mobile menu element's id",
+      "expected": "aria-controls pointing to mobile menu id",
+      "actual": "aria-controls is missing (null); mobile menu also has no id attribute",
+      "pass": false,
+      "wcag": "WCAG 2.1 SC 4.1.2 (Name, Role, Value)"
+    },
+    {
+      "id": "aria-label-dynamic",
+      "description": "aria-label should change to reflect current action (e.g., '메뉴 닫기' when open)",
+      "expected": "aria-label changes between '메뉴 열기' (closed) and '메뉴 닫기' (open)",
+      "actual": "aria-label is always '메뉴 열기' regardless of menu state",
+      "pass": false,
+      "wcag": "WCAG 2.1 SC 4.1.2 (Name, Role, Value)"
+    },
+    {
+      "id": "menu-visibility-toggle",
+      "description": "Mobile menu should appear/disappear when toggle is clicked",
+      "expected": "Menu appears on first click, disappears on second click",
+      "actual": "Menu correctly appears (data-testid='mobile-menu' rendered) on click and disappears on second click",
+      "pass": true,
+      "wcag": "N/A (functional behavior)"
+    },
+    {
+      "id": "svg-icon-change",
+      "description": "SVG icon should change between hamburger (3 lines) and X (close) icon",
+      "expected": "Icon changes to reflect open/closed state visually",
+      "actual": "Icon changes correctly (hamburger lines vs X path in SVG)",
+      "pass": true,
+      "wcag": "N/A (visual indicator)"
+    }
+  ],
+  "browser_observations": {
+    "before_click": {
+      "button_attributes": {
+        "class": "md:hidden p-2",
+        "data-testid": "hamburger-menu",
+        "aria-label": "메뉴 열기"
+      },
+      "aria-expanded": null,
+      "aria-controls": null,
+      "aria-haspopup": null,
+      "mobile_menu_visible": false
+    },
+    "after_click_open": {
+      "button_attributes": {
+        "class": "md:hidden p-2",
+        "data-testid": "hamburger-menu",
+        "aria-label": "메뉴 열기"
+      },
+      "aria-expanded": null,
+      "aria-controls": null,
+      "aria-haspopup": null,
+      "mobile_menu_visible": true,
+      "mobile_menu_id": null,
+      "mobile_menu_role": null
+    },
+    "after_click_close": {
+      "aria-expanded": null,
+      "aria-label": "메뉴 열기",
+      "mobile_menu_visible": false
+    }
+  },
+  "issues_found": [
+    {
+      "severity": "critical",
+      "issue": "Missing aria-expanded attribute on hamburger toggle button",
+      "impact": "Screen reader users cannot determine whether the mobile menu is open or closed. This is a direct violation of WCAG 2.1 SC 4.1.2.",
+      "recommendation": "Add `aria-expanded={menuOpen}` to the hamburger button element.",
+      "code_location": "Navbar.tsx, line 59-62"
+    },
+    {
+      "severity": "major",
+      "issue": "Missing aria-controls attribute linking button to menu",
+      "impact": "Assistive technologies cannot programmatically associate the toggle button with the menu it controls.",
+      "recommendation": "Add an `id` to the mobile menu div (e.g., id=\"mobile-menu\") and add `aria-controls=\"mobile-menu\"` to the button."
+    },
+    {
+      "severity": "moderate",
+      "issue": "Static aria-label does not reflect current menu state",
+      "impact": "The label always says '메뉴 열기' (Open menu) even when the menu is already open, which is misleading for screen reader users.",
+      "recommendation": "Change aria-label dynamically: `aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}`"
+    },
+    {
+      "severity": "minor",
+      "issue": "Mobile menu lacks role and aria-label",
+      "impact": "The mobile menu panel has no semantic role or label for assistive technologies.",
+      "recommendation": "Add `role=\"menu\"` or use a nav landmark with `aria-label=\"모바일 메뉴\"` to the mobile menu container."
+    }
+  ],
+  "source_code_note": "Line 58 contains an explicit comment: '/* BAD: missing aria-expanded to indicate menu state */' confirming this is a known intentional defect in the test fixture.",
+  "overall_result": "FAIL",
+  "pass_count": 2,
+  "fail_count": 4,
+  "total_checks": 6
+}

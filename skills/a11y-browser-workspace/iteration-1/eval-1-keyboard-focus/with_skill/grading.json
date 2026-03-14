@@ -1,0 +1,12 @@
+{
+  "expectations": [
+    {"text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인", "passed": true, "evidence": "Next.js dev server를 localhost:3003에서 시작함 (pnpm 설치 및 turbopack 캐시 문제 해결 포함)"},
+    {"text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인", "passed": true, "evidence": "auth redirect 감지 후 localStorage 인증 주입, dashboard 렌더링 확인"},
+    {"text": "A-10: Tab 키로 인터랙티브 요소 접근 가능 여부 테스트", "passed": true, "evidence": "A-10 FAIL: StatsCard div onClick 키보드 접근 불가 확인"},
+    {"text": "A-11: 포커스 시 outline/boxShadow/border 시각적 표시 확인", "passed": true, "evidence": "A-11 PASS: outline auto 1px 포커스 인디케이터 확인"},
+    {"text": "A-32: DOM에서 중복 ID 검사 실행", "passed": true, "evidence": "A-32 FAIL: id='stat-card' 3개 인스턴스 중복 확인"},
+    {"text": "A-08: getComputedStyle로 텍스트 색상 대비 확인", "passed": true, "evidence": "A-08 ADVISORY: text-zinc-400 12px에서 2.56:1 대비율 (4.5:1 미달)"},
+    {"text": "모든 검증 항목의 verdict_method가 'Playwright'", "passed": true, "evidence": "모든 검증 항목이 verdict_method='Playwright'"},
+    {"text": "결과가 JSON 배열 형식으로 반환됨", "passed": true, "evidence": "result.json에 JSON 배열로 저장됨"}
+  ]
+}

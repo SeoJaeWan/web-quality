@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "Navbar.tsx와 StatsCard.tsx 모두 분석 대상에 포함됨", "passed": true, "evidence": "두 파일 모두 분석 대상으로 포함, 각 파일의 이슈가 결과에 반영됨"},
+    {"text": "정적분석과 Playwright 두 가지 verdict_method가 리포트에 존재 (브라우저 성공 시)", "passed": false, "evidence": "브라우저 실행 실패(dev server 미시작)로 정적분석만. 판정불가 3개 항목 처리"},
+    {"text": "❌ 항목에 구체적인 수정 가이드가 포함됨", "passed": true, "evidence": "A-10, A-17, A-32 등 ❌ 항목에 구체적 코드 수준 수정 가이드 포함"},
+    {"text": "리포트가 한국어로 작성됨", "passed": true, "evidence": "report.html이 한국어로 작성됨"},
+    {"text": "✅/❌/⚠️/➖/🔵 분류 체계가 올바르게 사용됨", "passed": true, "evidence": "모든 항목에 ✅/❌/⚠️/➖/🔵 판정불가 분류 체계 적용됨"}
+  ]
+}

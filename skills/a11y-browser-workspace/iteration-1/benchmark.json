@@ -1,0 +1,79 @@
+{
+  "skill_name": "a11y-browser",
+  "iteration": 1,
+  "configurations": [
+    {
+      "name": "with_skill",
+      "evals": [
+        {
+          "eval_name": "keyboard-focus",
+          "pass_rate": 1.0,
+          "passed": 8,
+          "total": 8,
+          "duration_seconds": 2284.3,
+          "total_tokens": 72866
+        },
+        {
+          "eval_name": "aria-toggle",
+          "pass_rate": 1.0,
+          "passed": 5,
+          "total": 5,
+          "duration_seconds": 450.0,
+          "total_tokens": 31236
+        },
+        {
+          "eval_name": "full-homepage",
+          "pass_rate": 1.0,
+          "passed": 5,
+          "total": 5,
+          "duration_seconds": 466.3,
+          "total_tokens": 27509
+        }
+      ],
+      "aggregate": {
+        "mean_pass_rate": 1.0,
+        "mean_duration_seconds": 1066.9,
+        "mean_tokens": 43870
+      }
+    },
+    {
+      "name": "without_skill",
+      "evals": [
+        {
+          "eval_name": "keyboard-focus",
+          "pass_rate": 0.625,
+          "passed": 5,
+          "total": 8,
+          "duration_seconds": 1720.3,
+          "total_tokens": 65132
+        },
+        {
+          "eval_name": "aria-toggle",
+          "pass_rate": 0.6,
+          "passed": 3,
+          "total": 5,
+          "duration_seconds": 1093.8,
+          "total_tokens": 46543
+        },
+        {
+          "eval_name": "full-homepage",
+          "pass_rate": 0.8,
+          "passed": 4,
+          "total": 5,
+          "duration_seconds": 1732.5,
+          "total_tokens": 84836
+        }
+      ],
+      "aggregate": {
+        "mean_pass_rate": 0.675,
+        "mean_duration_seconds": 1515.5,
+        "mean_tokens": 65504
+      }
+    }
+  ],
+  "delta": {
+    "pass_rate": "+32.5%",
+    "duration": "-29.6%",
+    "tokens": "-33.0%"
+  }
+}

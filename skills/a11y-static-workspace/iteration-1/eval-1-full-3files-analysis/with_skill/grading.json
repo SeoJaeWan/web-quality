@@ -1,0 +1,14 @@
+{
+  "expectations": [
+    {"text": "33개 KWCAG2.2 항목(A-01~A-33)이 모두 평가됨", "passed": true, "evidence": "A-01부터 A-33까지 33개 항목 모두 평가됨 + S-01~S-06 시맨틱 HTML 6개 추가"},
+    {"text": "시맨틱 HTML 항목(S-01+)이 평가됨", "passed": true, "evidence": "S-01~S-06까지 6개 시맨틱 HTML 항목 평가됨"},
+    {"text": "모든 항목의 verdict_method가 '정적분석'임", "passed": true, "evidence": "39개 항목 모두 verdict_method: '정적분석'"},
+    {"text": "dashboard/page.tsx에서 img alt 누락 감지", "passed": true, "evidence": "A-01: page.tsx:83 — <img src='/promo-banner.png'> missing alt attribute"},
+    {"text": "StatsCard.tsx에서 div onClick의 키보드 접근성 문제 감지", "passed": true, "evidence": "A-10: StatsCard.tsx:17 — <div onClick={handleClick}> missing tabIndex, role, onKeyDown"},
+    {"text": "Navbar.tsx 햄버거 메뉴에서 aria-expanded 누락 감지", "passed": true, "evidence": "A-33: Navbar.tsx:59-72 — Hamburger button lacks aria-expanded"},
+    {"text": "StatsCard.tsx에서 중복 id 패턴 감지", "passed": true, "evidence": "A-32: StatsCard.tsx:13 — id='stat-card' hardcoded, 3 instances"},
+    {"text": "발견된 이슈에 파일명:라인번호 참조 포함", "passed": true, "evidence": "page.tsx:83, StatsCard.tsx:17, Navbar.tsx:59-72 등 라인번호 참조 포함"},
+    {"text": "❌/⚠️ 항목에 수정 가이드 포함", "passed": true, "evidence": "모든 ❌/⚠️ 항목에 구체적 fix_guide 포함"},
+    {"text": "kwcag22.md 참조 문서를 읽고 기준에 따라 평가", "passed": true, "evidence": "KWCAG2.2 표준 항목명과 원칙 분류가 참조 문서와 일치"}
+  ]
+}

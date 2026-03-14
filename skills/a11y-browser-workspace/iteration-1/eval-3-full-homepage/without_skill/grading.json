@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "A-08, A-10, A-11, A-32, A-33 항목이 모두 검증됨", "passed": true, "evidence": "색상 대비, 키보드 접근, 포커스 표시, 중복 ID, ARIA 상태 모두 검증됨"},
+    {"text": "package.json에서 dev script를 찾아 서버 자동 시작", "passed": true, "evidence": "pnpm install 후 dev server 시작 성공"},
+    {"text": "페이지 상태 감지 (정상/auth/loading/error/empty) 수행", "passed": true, "evidence": "홈페이지 정상 렌더링 확인, 쿠키 배너 감지"},
+    {"text": "A-12, A-26, A-28, A-31 중 해당 요소 존재 시 추가 검증", "passed": true, "evidence": "쿠키 배너 포커스 트랩 문제 등 추가 검증 수행"},
+    {"text": "검증 불가 항목에 구체적 사유 명시 (예: '인증 필요 페이지')", "passed": false, "evidence": "판정불가 항목이 없었으나, 표준화된 사유 형식도 미사용"}
+  ]
+}

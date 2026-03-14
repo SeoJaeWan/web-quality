@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "two-component",
+  "prompt": "Navbar.tsx와 StatsCard.tsx의 접근성을 KWCAG2.2 기준으로 검토하고 리포트 생성해줘",
+  "assertions": [
+    {"id": "both-files-analyzed", "text": "Navbar.tsx와 StatsCard.tsx 모두 분석 대상에 포함됨"},
+    {"id": "two-verdict-methods-present", "text": "정적분석과 Playwright 두 가지 verdict_method가 리포트에 존재 (브라우저 성공 시)"},
+    {"id": "fix-guides-provided", "text": "❌ 항목에 구체적인 수정 가이드가 포함됨"},
+    {"id": "report-in-korean", "text": "리포트가 한국어로 작성됨"},
+    {"id": "result-classification-correct", "text": "✅/❌/⚠️/➖/🔵 분류 체계가 올바르게 사용됨"}
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "33개 KWCAG2.2 항목이 모두 평가됨 (해당 없는 항목은 ➖)", "passed": true, "evidence": "A-01~A-33 모두 평가됨, 해당 없는 항목은 ➖ 처리 (19개 N/A)"},
+    {"text": "A-10: div onClick 키보드 접근 불가 문제 감지", "passed": true, "evidence": "A-10: StatsCard.tsx:17 — div onClick without tabIndex/role/onKeyDown"},
+    {"text": "A-32: 리스트 렌더링 시 중복 id 패턴 감지", "passed": true, "evidence": "A-32: StatsCard.tsx:12 — id='stat-card' hardcoded, 중복 ID 위반"},
+    {"text": "시맨틱 HTML: 클릭 가능한 div → button 권장 감지", "passed": true, "evidence": "S-01: 클릭 가능한 div onClick → button 변경 권장"},
+    {"text": "결과가 JSON 배열 형식으로 반환됨", "passed": true, "evidence": "35개 항목의 JSON 배열로 반환됨"}
+  ]
+}

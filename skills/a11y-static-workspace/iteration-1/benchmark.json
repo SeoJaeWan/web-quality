@@ -1,0 +1,79 @@
+{
+  "skill_name": "a11y-static",
+  "iteration": 1,
+  "configurations": [
+    {
+      "name": "with_skill",
+      "evals": [
+        {
+          "eval_name": "full-3files-analysis",
+          "pass_rate": 1.0,
+          "passed": 10,
+          "total": 10,
+          "duration_seconds": 140.5,
+          "total_tokens": 40345
+        },
+        {
+          "eval_name": "single-component",
+          "pass_rate": 1.0,
+          "passed": 5,
+          "total": 5,
+          "duration_seconds": 98.3,
+          "total_tokens": 18003
+        },
+        {
+          "eval_name": "aria-semantic",
+          "pass_rate": 1.0,
+          "passed": 5,
+          "total": 5,
+          "duration_seconds": 141.0,
+          "total_tokens": 39986
+        }
+      ],
+      "aggregate": {
+        "mean_pass_rate": 1.0,
+        "mean_duration_seconds": 126.6,
+        "mean_tokens": 32778
+      }
+    },
+    {
+      "name": "without_skill",
+      "evals": [
+        {
+          "eval_name": "full-3files-analysis",
+          "pass_rate": 0.6,
+          "passed": 6,
+          "total": 10,
+          "duration_seconds": 76.7,
+          "total_tokens": 17074
+        },
+        {
+          "eval_name": "single-component",
+          "pass_rate": 0.6,
+          "passed": 3,
+          "total": 5,
+          "duration_seconds": 66.3,
+          "total_tokens": 12326
+        },
+        {
+          "eval_name": "aria-semantic",
+          "pass_rate": 0.8,
+          "passed": 4,
+          "total": 5,
+          "duration_seconds": 66.4,
+          "total_tokens": 15096
+        }
+      ],
+      "aggregate": {
+        "mean_pass_rate": 0.667,
+        "mean_duration_seconds": 69.8,
+        "mean_tokens": 14832
+      }
+    }
+  ],
+  "delta": {
+    "pass_rate": "+33.3%",
+    "duration": "+81.4%",
+    "tokens": "+120.9%"
+  }
+}

@@ -1,0 +1,353 @@
+[
+  {
+    "id": "A-01",
+    "name": "적절한 대체 텍스트 제공",
+    "principle": "인식의 용이성",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "page.tsx:83 — <img src=\"/promo-banner.png\"> missing alt attribute entirely",
+    "fix_guide": "Add descriptive alt text: <img src=\"/promo-banner.png\" alt=\"프로모션 배너\" className=\"mt-6 w-full\" />"
+  },
+  {
+    "id": "A-02",
+    "name": "자막 제공",
+    "principle": "인식의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "No <video> or <audio> elements found in any of the three files.",
+    "fix_guide": "N/A — no multimedia content present."
+  },
+  {
+    "id": "A-03",
+    "name": "표의 구성",
+    "principle": "인식의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "No <table> elements found in any of the three files.",
+    "fix_guide": "N/A — no table content present."
+  },
+  {
+    "id": "A-04",
+    "name": "콘텐츠의 선형 구조",
+    "principle": "인식의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "DOM order follows logical reading order in all three files. No CSS position tricks that break reading sequence.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-05",
+    "name": "명확한 지시 사항 제공",
+    "principle": "인식의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "No instructions that rely solely on color, shape, or position found in any of the three files.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-06",
+    "name": "색에 무관한 콘텐츠 인식",
+    "principle": "인식의 용이성",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "Navbar.tsx:38-39 — Active nav link is distinguished only by color change (text-blue-600 vs text-zinc-600). No additional indicator (underline, icon, font-weight) is provided. Requires runtime visual verification.",
+    "fix_guide": "Add a non-color indicator for the active link, e.g., font-weight-bold, underline, or an aria-current=\"page\" attribute: <Link aria-current={pathname === link.href ? 'page' : undefined} className=\"... underline ...\">"
+  },
+  {
+    "id": "A-07",
+    "name": "자동 재생 금지",
+    "principle": "인식의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "No autoplay attributes or automatic .play() calls found in any of the three files.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-08",
+    "name": "텍스트 콘텐츠의 명도 대비",
+    "principle": "인식의 용이성",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "page.tsx:47 — text-xs text-zinc-400 on white/dark backgrounds. Tailwind zinc-400 (#a1a1aa) on white (#ffffff) yields approximately 2.7:1 contrast ratio, below the 4.5:1 requirement for small text. Similarly, text-zinc-500 (#71717a) on white yields ~4.6:1 which is borderline. Exact contrast depends on the resolved background color at runtime.",
+    "fix_guide": "Use darker text colors for small text. Replace text-zinc-400 with text-zinc-500 or darker to ensure 4.5:1 minimum contrast ratio. Verify with a contrast checker tool at runtime."
+  },
+  {
+    "id": "A-09",
+    "name": "콘텐츠 간의 구분",
+    "principle": "인식의 용이성",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "Requires runtime visual verification. StatsCard uses border for visual separation (border-zinc-200). page.tsx:73 — dynamically inserted recentItems divs use 'border p-2 mt-2' which provides some separation. Manual check recommended.",
+    "fix_guide": "Ensure adjacent content blocks have at least one visual distinction (border, spacing, color). Current implementation appears adequate but needs visual confirmation."
+  },
+  {
+    "id": "A-10",
+    "name": "키보드 사용 보장",
+    "principle": "운용의 용이성",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "StatsCard.tsx:17 — <div onClick={handleClick}> is a non-interactive element with a click handler but no keyboard accessibility. Missing tabIndex, role=\"button\", and onKeyDown handler. Keyboard users cannot activate this control.",
+    "fix_guide": "Either change to a <button> element or add keyboard support: <div role=\"button\" tabIndex={0} onClick={handleClick} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(); }}>"
+  },
+  {
+    "id": "A-11",
+    "name": "초점 이동과 표시",
+    "principle": "운용의 용이성",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "No explicit outline:none or outline:0 found. However, StatsCard.tsx div with onClick has no tabIndex so it never receives focus at all, which is related to A-10. Focus order in Navbar appears logical. No focus trap issues detected statically.",
+    "fix_guide": "Ensure all interactive elements are focusable and have visible focus indicators. After fixing A-10, verify focus styling is present on the StatsCard."
+  },
+  {
+    "id": "A-12",
+    "name": "조작 가능",
+    "principle": "운용의 용이성",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "page.tsx:59-64 — Icon buttons (btn-refresh, btn-settings) contain only 16x16 SVGs with no padding. These may be below the minimum 44x44px touch target size. Exact rendered size depends on padding/styling at runtime.",
+    "fix_guide": "Add minimum sizing to icon buttons: <button className=\"p-2 min-w-[44px] min-h-[44px]\"> to ensure adequate touch target size."
+  },
+  {
+    "id": "A-13",
+    "name": "문자 단축키",
+    "principle": "운용의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "No single-character keyboard shortcut handlers found in any of the three files.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-14",
+    "name": "응답시간 조절",
+    "principle": "운용의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "page.tsx:31 — setTimeout is used for delayed content insertion (500ms), but this is a UI effect, not a time-limited user interaction. No session timeout or time-limited functionality found.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-15",
+    "name": "정지 기능 제공",
+    "principle": "운용의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "No auto-cycling, auto-scrolling, or auto-rotating content found in any of the three files.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-16",
+    "name": "깜박임과 번쩍임 사용 제한",
+    "principle": "운용의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "No flashing or blinking content (3-50Hz) found in any of the three files.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-17",
+    "name": "반복 영역 건너뛰기",
+    "principle": "운용의 용이성",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "No skip navigation link (e.g., <a href=\"#main-content\">) found in Navbar.tsx or page.tsx. The page lacks a mechanism to skip repeated navigation and jump directly to main content.",
+    "fix_guide": "Add a skip navigation link at the very top of the layout: <a href=\"#main-content\" className=\"sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 focus:z-50 focus:p-4 focus:bg-white\">본문 바로가기</a> and add id=\"main-content\" to the <main> element wrapping the dashboard content."
+  },
+  {
+    "id": "A-18",
+    "name": "제목 제공",
+    "principle": "운용의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "page.tsx has logical heading hierarchy: h1 (greeting) -> h2 (빠른 추가) -> h2 (알림). This is correct. Note: <title> tag is typically set in layout.tsx (not in scope). No <iframe> elements found.",
+    "fix_guide": "N/A — heading structure is logical. Verify <title> is set appropriately in the layout file."
+  },
+  {
+    "id": "A-19",
+    "name": "적절한 링크 텍스트",
+    "principle": "운용의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "All links have descriptive text. page.tsx:88-94 — '전체 할 일 목록 보기' is clear. Navbar links ('대시보드', '할 일', '프로필', '로그인', '회원가입') are descriptive. Breadcrumb links use meaningful labels.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-20",
+    "name": "고정된 참조 위치 정보",
+    "principle": "운용의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "Not an e-publication document. This item does not apply.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-21",
+    "name": "단일 포인터 입력 지원",
+    "principle": "운용의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "No multi-pointer or path-based gestures (pinch, swipe, drag) found in any of the three files.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-22",
+    "name": "포인터 입력 취소",
+    "principle": "운용의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "No onMouseDown or onPointerDown immediate execution patterns found. All click handlers use onClick (mouse-up based), which allows cancellation by moving pointer away.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-23",
+    "name": "레이블과 네임",
+    "principle": "운용의 용이성",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "page.tsx:59-60 — <button data-testid=\"btn-refresh\"> contains only an SVG icon with no aria-label, aria-labelledby, or visible text. Screen readers will announce this as an unlabeled button. Same issue at page.tsx:62-63 for btn-settings.",
+    "fix_guide": "Add aria-label to icon-only buttons: <button aria-label=\"새로고침\" data-testid=\"btn-refresh\"> and <button aria-label=\"설정\" data-testid=\"btn-settings\">"
+  },
+  {
+    "id": "A-24",
+    "name": "동작 기반 작동",
+    "principle": "운용의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "No DeviceMotionEvent or DeviceOrientationEvent usage found. No motion-based functionality present.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-25",
+    "name": "기본 언어 표시",
+    "principle": "이해의 용이성",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "The <html lang> attribute is not set in any of these three component files. It is typically set in the root layout (layout.tsx), which is not in scope. Cannot confirm compliance from these files alone.",
+    "fix_guide": "Verify that the root layout.tsx contains <html lang=\"ko\">. If not, add it."
+  },
+  {
+    "id": "A-26",
+    "name": "사용자 요구에 따른 실행",
+    "principle": "이해의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "No unexpected new windows, auto-navigation on select change, or unintended focus changes found. page.tsx:20 router.push on auth failure is a logical redirect, not an unexpected context change.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-27",
+    "name": "찾기 쉬운 도움 정보",
+    "principle": "이해의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "No help information (FAQ, customer support, chatbot) is present in the analyzed files. Requires full-site manual review.",
+    "fix_guide": "N/A — if help info exists elsewhere, ensure it is in a consistent location across pages."
+  },
+  {
+    "id": "A-28",
+    "name": "오류 정정",
+    "principle": "이해의 용이성",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "page.tsx references <TodoForm onSubmit={addTodo} /> but the form's error handling implementation is in a separate file not in scope. Cannot verify error messaging, focus management on error, or aria-invalid usage from these files alone.",
+    "fix_guide": "Verify that TodoForm provides: (1) descriptive error messages, (2) focus moves to the error field, (3) aria-invalid and aria-describedby are used on invalid inputs."
+  },
+  {
+    "id": "A-29",
+    "name": "레이블 제공",
+    "principle": "이해의 용이성",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "No direct <input>, <textarea>, or <select> elements found in the three analyzed files. Form inputs are delegated to <TodoForm> component (not in scope). Cannot verify label provision.",
+    "fix_guide": "Verify that TodoForm and other form components have proper <label> elements or aria-label attributes on all input fields."
+  },
+  {
+    "id": "A-30",
+    "name": "접근 가능한 인증",
+    "principle": "이해의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "No authentication forms (CAPTCHA, puzzle, etc.) found in the analyzed files. Login is handled elsewhere.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-31",
+    "name": "반복 입력 정보",
+    "principle": "이해의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "No multi-step forms requiring repeated input found in the analyzed files.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "A-32",
+    "name": "마크업 오류 방지",
+    "principle": "견고성",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "StatsCard.tsx:13 — id=\"stat-card\" is hardcoded. This component is rendered 3 times on page.tsx:52-54, resulting in 3 elements with duplicate id=\"stat-card\", violating HTML uniqueness requirement. Additionally, page.tsx:73 — recentItems.map() renders <div> elements without a key prop, which is a React/JSX markup issue.",
+    "fix_guide": "Fix duplicate IDs: use dynamic id based on testId prop: id={testId} or remove the id entirely. Fix missing keys: {recentItems.map((item, index) => <div key={item} className=\"border p-2 mt-2\">{item}</div>)}"
+  },
+  {
+    "id": "A-33",
+    "name": "웹 애플리케이션 접근성 준수",
+    "principle": "견고성",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "Navbar.tsx:59-72 — Hamburger button toggles a mobile menu but lacks aria-expanded attribute to communicate menu state to assistive technology. StatsCard.tsx:10-21 — clickable div acts as a custom interactive component without any ARIA role or state.",
+    "fix_guide": "Navbar hamburger: add aria-expanded={menuOpen} to the hamburger button. StatsCard: either use <button> element or add role=\"button\" with appropriate ARIA attributes."
+  },
+  {
+    "id": "S-01",
+    "name": "시맨틱 랜드마크 사용",
+    "principle": "시맨틱 HTML",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "page.tsx — The dashboard page content is wrapped in a plain <div> (line 42) instead of <main>. There is no <header>, <main>, or <footer> landmark in the page component. Navbar.tsx correctly uses <nav> for navigation.",
+    "fix_guide": "Wrap the dashboard page content in <main>: replace the outermost <div> on line 42 with <main id=\"main-content\">. Add <header> and <footer> landmarks as appropriate in the layout."
+  },
+  {
+    "id": "S-02",
+    "name": "인터랙티브 요소의 시맨틱 태그",
+    "principle": "시맨틱 HTML",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "StatsCard.tsx:10-21 — A <div> with onClick handler is used as an interactive element. This should be a <button> or have role=\"button\" with proper keyboard support.",
+    "fix_guide": "Replace <div onClick={handleClick}> with <button onClick={handleClick} className=\"...\" type=\"button\"> or wrap content in a <button> element for native keyboard and screen reader support."
+  },
+  {
+    "id": "S-03",
+    "name": "리스트 구조",
+    "principle": "시맨틱 HTML",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "page.tsx:72-74 — recentItems are rendered as repeated <div> elements. These represent a list of items and would be better expressed as a <ul>/<li> structure. Navbar.tsx:33-46 and 89-100 — Navigation links are rendered as sibling elements without <ul>/<li> list structure.",
+    "fix_guide": "Wrap repeated items in <ul> and each item in <li>: <ul>{recentItems.map(item => <li key={item} className=\"border p-2 mt-2\">{item}</li>)}</ul>. Similarly, wrap nav links in <ul>/<li> within the <nav> element."
+  },
+  {
+    "id": "S-04",
+    "name": "브레드크럼 시맨틱 구조",
+    "principle": "시맨틱 HTML",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "Navbar.tsx:131-147 — Breadcrumbs component uses a plain <div> instead of a <nav aria-label=\"breadcrumb\"> with an <ol> list structure, which is the recommended semantic pattern for breadcrumbs.",
+    "fix_guide": "Use semantic breadcrumb markup: <nav aria-label=\"breadcrumb\"><ol className=\"...\"><li><Link href=\"/\">홈</Link></li><li aria-current=\"page\">대시보드</li></ol></nav>"
+  },
+  {
+    "id": "S-05",
+    "name": "프레젠테이셔널 태그 사용",
+    "principle": "시맨틱 HTML",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": "No presentational tags (<b>, <i>) or consecutive <br><br> patterns found in any of the three files.",
+    "fix_guide": "N/A"
+  },
+  {
+    "id": "S-06",
+    "name": "섹션 구조",
+    "principle": "시맨틱 HTML",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "page.tsx — The dashboard page has distinct content sections (stats, quick add, notifications) separated by <div> wrappers with headings, but none use <section> elements. These are clearly independent content blocks that would benefit from <section> with associated headings.",
+    "fix_guide": "Wrap logical sections: <section aria-labelledby=\"quick-add-heading\"><h2 id=\"quick-add-heading\">빠른 추가</h2>...</section>"
+  }
+]

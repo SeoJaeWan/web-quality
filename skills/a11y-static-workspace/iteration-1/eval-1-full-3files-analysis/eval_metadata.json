@@ -1,0 +1,17 @@
+{
+  "eval_id": 1,
+  "eval_name": "full-3files-analysis",
+  "prompt": "dashboard/page.tsx, StatsCard.tsx, Navbar.tsx의 접근성을 정적분석으로 검토해줘",
+  "assertions": [
+    {"id": "all-33-items-evaluated", "text": "33개 KWCAG2.2 항목(A-01~A-33)이 모두 평가됨"},
+    {"id": "semantic-html-evaluated", "text": "시맨틱 HTML 항목(S-01+)이 평가됨"},
+    {"id": "all-verdict-static", "text": "모든 항목의 verdict_method가 '정적분석'임"},
+    {"id": "img-alt-missing-detected", "text": "dashboard/page.tsx에서 img alt 누락 감지"},
+    {"id": "div-onclick-keyboard-issue", "text": "StatsCard.tsx에서 div onClick의 키보드 접근성 문제 감지"},
+    {"id": "aria-expanded-missing", "text": "Navbar.tsx 햄버거 메뉴에서 aria-expanded 누락 감지"},
+    {"id": "duplicate-id-detected", "text": "StatsCard.tsx에서 중복 id 패턴 감지"},
+    {"id": "file-line-references", "text": "발견된 이슈에 파일명:라인번호 참조 포함"},
+    {"id": "fix-guides-provided", "text": "❌/⚠️ 항목에 수정 가이드 포함"},
+    {"id": "kwcag-reference-read", "text": "kwcag22.md 참조 문서를 읽고 기준에 따라 평가"}
+  ]
+}

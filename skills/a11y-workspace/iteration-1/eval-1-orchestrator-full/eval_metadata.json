@@ -1,0 +1,15 @@
+{
+  "eval_id": 1,
+  "eval_name": "orchestrator-full",
+  "prompt": "변경된 웹 코드의 접근성을 KWCAG2.2 기준으로 검토해줘",
+  "assertions": [
+    {"id": "static-analysis-executed", "text": "a11y-static 스킬의 정적분석이 실행되어 verdict_method='정적분석' 항목이 존재"},
+    {"id": "browser-verification-attempted", "text": "a11y-browser 스킬의 브라우저 검증이 시도됨 (성공 또는 판정불가)"},
+    {"id": "all-33-items-evaluated", "text": "33개 KWCAG2.2 항목이 모두 평가됨 (누락 없음)"},
+    {"id": "semantic-html-section-present", "text": "시맨틱 HTML 섹션이 리포트에 포함됨"},
+    {"id": "merge-browser-wins", "text": "브라우저 검증 항목(A-08,A-10,A-11,A-32,A-33 등)은 verdict_method='Playwright'로 표시됨 (브라우저 실행 성공 시)"},
+    {"id": "merge-pandingbulga-fallback", "text": "브라우저 판정불가 항목은 정적분석 결과로 fallback됨"},
+    {"id": "html-report-generated", "text": "report.html 파일이 reports/accessibility/ 디렉토리에 생성됨"},
+    {"id": "csv-report-generated", "text": "report.csv 파일이 reports/accessibility/ 디렉토리에 생성됨"}
+  ]
+}
