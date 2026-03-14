@@ -34,6 +34,67 @@ def find_line(content: str, pos: int) -> int:
     return content[:pos].count("\n") + 1
 
 
+def find_jsx_tags(content: str, tag_names: list[str]) -> list[tuple[int, int, str]]:
+    """Find JSX/HTML opening tags, properly handling {..} expressions in attributes.
+
+    Unlike a simple regex `<tag[^>]*>`, this handles `>` inside JSX expressions
+    like `{condition > 0 ? "yes" : "no"}` by tracking brace depth.
+
+    Returns list of (start, end, attrs_text) tuples.
+    """
+    results = []
+    pattern = re.compile(r'<(' + '|'.join(tag_names) + r')\b', re.IGNORECASE)
+
+    for m in pattern.finditer(content):
+        start = m.start()
+        i = m.end()
+        length = len(content)
+        brace_depth = 0
+        tag_end = -1
+
+        while i < length:
+            ch = content[i]
+
+            # Track JSX expression braces
+            if ch == '{':
+                brace_depth += 1
+            elif ch == '}':
+                brace_depth -= 1
+            # Skip string literals inside expressions
+            elif ch in ('"', "'") and brace_depth > 0:
+                quote = ch
+                i += 1
+                while i < length and content[i] != quote:
+                    if content[i] == '\\':
+                        i += 1
+                    i += 1
+            elif ch == '`' and brace_depth > 0:
+                i += 1
+                while i < length and content[i] != '`':
+                    if content[i] == '\\':
+                        i += 1
+                    i += 1
+            # `>` only ends the tag when we're not inside an expression
+            elif ch == '>' and brace_depth == 0:
+                tag_end = i + 1
+                break
+            # Self-closing `/>`
+            elif ch == '/' and i + 1 < length and content[i + 1] == '>' and brace_depth == 0:
+                tag_end = i + 2
+                break
+
+            i += 1
+
+        if tag_end > 0:
+            attrs_text = content[m.end():tag_end]
+            # Strip JSX inline comments (// ...) from attrs to prevent
+            # comment text from triggering false matches
+            attrs_text = re.sub(r'//[^\n]*', '', attrs_text)
+            results.append((start, tag_end, attrs_text))
+
+    return results
+
+
 def collect_files(paths: list[str]) -> list[str]:
     """Expand directories and filter to web files."""
     WEB_EXTS = {".html", ".htm", ".tsx", ".jsx", ".ts", ".js", ".vue", ".svelte", ".css", ".scss"}
@@ -56,39 +117,33 @@ def collect_files(paths: list[str]) -> list[str]:
 def scan_a01_alt_text(content: str, fname: str) -> list[dict]:
     """A-01: img without alt, input type=image without alt."""
     findings = []
-    # <img without alt (HTML and JSX)
-    for m in re.finditer(r'<img\b([^>]*?)(/\s*>|>)', content, re.IGNORECASE | re.DOTALL):
-        attrs = m.group(1)
+    # <img without alt (HTML and JSX) — brace-aware
+    for start, end, attrs in find_jsx_tags(content, ["img"]):
         if not re.search(r'\balt\s*=', attrs, re.IGNORECASE):
             findings.append({
                 "item": "A-01", "severity": "error",
-                "file": fname, "line": find_line(content, m.start()),
+                "file": fname, "line": find_line(content, start),
                 "message": "<img> missing alt attribute",
-                "code": m.group(0)[:80]
+                "code": content[start:end][:80]
             })
-    # <input type="image" without alt
-    for m in re.finditer(r'<input\b([^>]*?)(/\s*>|>)', content, re.IGNORECASE | re.DOTALL):
-        attrs = m.group(1)
-        if re.search(r'type\s*=\s*["\']image["\']', attrs, re.IGNORECASE):
-            if not re.search(r'\balt\s*=', attrs, re.IGNORECASE):
-                findings.append({
-                    "item": "A-01", "severity": "error",
-                    "file": fname, "line": find_line(content, m.start()),
-                    "message": "<input type=\"image\"> missing alt attribute",
-                    "code": m.group(0)[:80]
-                })
-    # img with empty alt on potentially meaningful context (candidate for LLM review)
-    for m in re.finditer(r'<img\b([^>]*?)(/\s*>|>)', content, re.IGNORECASE | re.DOTALL):
-        attrs = m.group(1)
-        if re.search(r'alt\s*=\s*["\']["\']', attrs) or re.search(r'alt\s*=\s*\{["\']["\']\}', attrs):
-            # Check if it looks like a meaningful image (has descriptive src)
+        elif re.search(r'alt\s*=\s*["\']["\']', attrs) or re.search(r'alt\s*=\s*\{["\']["\']\}', attrs):
             src_match = re.search(r'src\s*=\s*["\{].*?(chart|graph|logo|icon|banner|hero|photo|product)', attrs, re.IGNORECASE)
             if src_match:
                 findings.append({
                     "item": "A-01", "severity": "candidate",
-                    "file": fname, "line": find_line(content, m.start()),
+                    "file": fname, "line": find_line(content, start),
                     "message": "Potentially meaningful image has empty alt=\"\" — verify if decorative",
-                    "code": m.group(0)[:80]
+                    "code": content[start:end][:80]
+                })
+    # <input type="image" without alt
+    for start, end, attrs in find_jsx_tags(content, ["input"]):
+        if re.search(r'type\s*=\s*["\']image["\']', attrs, re.IGNORECASE):
+            if not re.search(r'\balt\s*=', attrs, re.IGNORECASE):
+                findings.append({
+                    "item": "A-01", "severity": "error",
+                    "file": fname, "line": find_line(content, start),
+                    "message": "<input type=\"image\"> missing alt attribute",
+                    "code": content[start:end][:80]
                 })
     return findings
 
@@ -96,15 +151,16 @@ def scan_a01_alt_text(content: str, fname: str) -> list[dict]:
 def scan_a07_autoplay(content: str, fname: str) -> list[dict]:
     """A-07: autoplay attribute on audio/video."""
     findings = []
-    for m in re.finditer(r'<(audio|video)\b([^>]*?)>', content, re.IGNORECASE | re.DOTALL):
-        attrs = m.group(2)
+    for start, end, attrs in find_jsx_tags(content, ["audio", "video"]):
         if re.search(r'\bautoplay\b', attrs, re.IGNORECASE) or re.search(r'\bautoPlay\b', attrs):
             has_muted = bool(re.search(r'\bmuted\b', attrs, re.IGNORECASE))
+            tag_match = re.match(r'<(\w+)', content[start:])
+            tag_name = tag_match.group(1) if tag_match else "media"
             findings.append({
                 "item": "A-07", "severity": "error" if not has_muted else "candidate",
-                "file": fname, "line": find_line(content, m.start()),
-                "message": f"<{m.group(1)}> has autoplay" + (" (muted)" if has_muted else " without muted"),
-                "code": m.group(0)[:80]
+                "file": fname, "line": find_line(content, start),
+                "message": f"<{tag_name}> has autoplay" + (" (muted)" if has_muted else " without muted"),
+                "code": content[start:end][:80]
             })
     return findings
 
@@ -112,20 +168,21 @@ def scan_a07_autoplay(content: str, fname: str) -> list[dict]:
 def scan_a10_keyboard(content: str, fname: str) -> list[dict]:
     """A-10: Non-interactive elements with click handlers but no keyboard support."""
     findings = []
-    # div/span/li with onClick but no onKeyDown/onKeyPress/onKeyUp and no role="button"
-    pattern = r'<(div|span|li|td|tr)\b([^>]*?on[Cc]lick[^>]*?)>'
-    for m in re.finditer(pattern, content, re.DOTALL):
-        attrs = m.group(2)
+    for start, end, attrs in find_jsx_tags(content, ["div", "span", "li", "td", "tr"]):
+        if not re.search(r'on[Cc]lick', attrs):
+            continue
         has_keyboard = bool(re.search(r'on[Kk]ey(Down|Press|Up)', attrs))
         has_role = bool(re.search(r'role\s*=\s*["\']button["\']', attrs, re.IGNORECASE))
         has_tabindex = bool(re.search(r'tabIndex\s*=\s*["\{]', attrs, re.IGNORECASE))
         if not has_keyboard and not has_role:
+            tag_match = re.match(r'<(\w+)', content[start:])
+            tag_name = tag_match.group(1) if tag_match else "div"
             findings.append({
                 "item": "A-10", "severity": "candidate",
-                "file": fname, "line": find_line(content, m.start()),
-                "message": f"<{m.group(1)}> has onClick without keyboard handler or role=\"button\"" +
+                "file": fname, "line": find_line(content, start),
+                "message": f"<{tag_name}> has onClick without keyboard handler or role=\"button\"" +
                            (" (has tabIndex)" if has_tabindex else ""),
-                "code": m.group(0)[:100]
+                "code": content[start:end][:100]
             })
     return findings
 
@@ -194,14 +251,13 @@ def scan_a18_heading(content: str, fname: str) -> list[dict]:
                 })
             prev_level = level
     # iframe without title
-    for m in re.finditer(r'<iframe\b([^>]*?)>', content, re.IGNORECASE | re.DOTALL):
-        attrs = m.group(1)
+    for start, end, attrs in find_jsx_tags(content, ["iframe"]):
         if not re.search(r'\btitle\s*=', attrs, re.IGNORECASE):
             findings.append({
                 "item": "A-18", "severity": "error",
-                "file": fname, "line": find_line(content, m.start()),
+                "file": fname, "line": find_line(content, start),
                 "message": "<iframe> missing title attribute",
-                "code": m.group(0)[:80]
+                "code": content[start:end][:80]
             })
     return findings
 
@@ -250,14 +306,13 @@ def scan_a25_lang(content: str, fname: str) -> list[dict]:
 def scan_a26_change_on_request(content: str, fname: str) -> list[dict]:
     """A-26: select onChange causing navigation."""
     findings = []
-    for m in re.finditer(r'<select\b([^>]*?)>', content, re.IGNORECASE | re.DOTALL):
-        attrs = m.group(1)
+    for start, end, attrs in find_jsx_tags(content, ["select"]):
         if re.search(r'on[Cc]hange', attrs):
             findings.append({
                 "item": "A-26", "severity": "candidate",
-                "file": fname, "line": find_line(content, m.start()),
+                "file": fname, "line": find_line(content, start),
                 "message": "<select> has onChange — verify it doesn't auto-navigate",
-                "code": m.group(0)[:80]
+                "code": content[start:end][:80]
             })
     return findings
 
@@ -266,9 +321,7 @@ def scan_a29_label(content: str, fname: str) -> list[dict]:
     """A-29: Input elements without associated labels."""
     findings = []
     SKIP_TYPES = {"hidden", "submit", "button", "reset", "image"}
-    for m in re.finditer(r'<input\b([^>]*?)(/\s*>|>)', content, re.IGNORECASE | re.DOTALL):
-        attrs = m.group(1)
-        # Get input type
+    for start, end, attrs in find_jsx_tags(content, ["input"]):
         type_match = re.search(r'type\s*=\s*["\'](\w+)["\']', attrs, re.IGNORECASE)
         input_type = type_match.group(1).lower() if type_match else "text"
         if input_type in SKIP_TYPES:
@@ -276,13 +329,10 @@ def scan_a29_label(content: str, fname: str) -> list[dict]:
         has_label_ref = bool(re.search(r'\bid\s*=', attrs, re.IGNORECASE))
         has_aria = bool(re.search(r'aria-label(ledby)?\s*=', attrs, re.IGNORECASE))
         has_title = bool(re.search(r'\btitle\s*=', attrs, re.IGNORECASE))
-        # Check if wrapped in <label>
-        ctx_start = max(0, m.start() - 100)
-        pre_ctx = content[ctx_start:m.start()]
-        wrapped = bool(re.search(r'<label\b', pre_ctx, re.IGNORECASE))
+        ctx_start = max(0, start - 100)
+        wrapped = bool(re.search(r'<label\b', content[ctx_start:start], re.IGNORECASE))
         if not has_aria and not has_title and not wrapped:
             if has_label_ref:
-                # Has id — check if a <label for="..."> exists
                 id_match = re.search(r'id\s*=\s*["\']([^"\']+)["\']', attrs)
                 if id_match:
                     label_for = re.search(r'<label\b[^>]*\bfor\s*=\s*["\']' + re.escape(id_match.group(1)) + r'["\']', content, re.IGNORECASE)
@@ -290,24 +340,22 @@ def scan_a29_label(content: str, fname: str) -> list[dict]:
                         continue
             findings.append({
                 "item": "A-29", "severity": "error",
-                "file": fname, "line": find_line(content, m.start()),
+                "file": fname, "line": find_line(content, start),
                 "message": f"<input type=\"{input_type}\"> without label, aria-label, or title",
-                "code": m.group(0)[:80]
+                "code": content[start:end][:80]
             })
-    # textarea/select without label
     for tag in ["textarea", "select"]:
-        for m in re.finditer(rf'<{tag}\b([^>]*?)>', content, re.IGNORECASE | re.DOTALL):
-            attrs = m.group(1)
+        for start, end, attrs in find_jsx_tags(content, [tag]):
             has_aria = bool(re.search(r'aria-label(ledby)?\s*=', attrs, re.IGNORECASE))
             has_title = bool(re.search(r'\btitle\s*=', attrs, re.IGNORECASE))
-            ctx_start = max(0, m.start() - 100)
-            wrapped = bool(re.search(r'<label\b', content[ctx_start:m.start()], re.IGNORECASE))
+            ctx_start = max(0, start - 100)
+            wrapped = bool(re.search(r'<label\b', content[ctx_start:start], re.IGNORECASE))
             if not has_aria and not has_title and not wrapped:
                 findings.append({
                     "item": "A-29", "severity": "error",
-                    "file": fname, "line": find_line(content, m.start()),
+                    "file": fname, "line": find_line(content, start),
                     "message": f"<{tag}> without label, aria-label, or title",
-                    "code": m.group(0)[:80]
+                    "code": content[start:end][:80]
                 })
     return findings
 
@@ -421,21 +469,27 @@ def scan_a22_pointer_cancel(content: str, fname: str) -> list[dict]:
 def scan_a23_label_name(content: str, fname: str) -> list[dict]:
     """A-23: Icon buttons without accessible name."""
     findings = []
-    # button with only icon/svg content and no aria-label
-    for m in re.finditer(r'<button\b([^>]*?)>(.*?)</button>', content, re.IGNORECASE | re.DOTALL):
-        attrs = m.group(1)
-        inner = m.group(2).strip()
+    # Find button opening tags, then look for closing </button>
+    for start, tag_end, attrs in find_jsx_tags(content, ["button"]):
         has_aria = bool(re.search(r'aria-label(ledby)?\s*=', attrs, re.IGNORECASE))
         has_title = bool(re.search(r'\btitle\s*=', attrs, re.IGNORECASE))
-        # Check if inner content is only icons/svg (no readable text)
+        if has_aria or has_title:
+            continue
+        # Find closing </button>
+        close_match = re.search(r'</button\s*>', content[tag_end:], re.IGNORECASE)
+        if not close_match:
+            continue
+        inner = content[tag_end:tag_end + close_match.start()].strip()
         text_only = re.sub(r'<[^>]+>', '', inner).strip()
+        # Also strip JSX expressions {variable} which render as text
+        text_only = re.sub(r'\{[^}]*\}', '', text_only).strip()
         is_icon_only = not text_only or all(ord(c) > 0x2000 for c in text_only.replace(' ', ''))
-        if is_icon_only and not has_aria and not has_title and inner:
+        if is_icon_only and inner:
             findings.append({
                 "item": "A-23", "severity": "candidate",
-                "file": fname, "line": find_line(content, m.start()),
+                "file": fname, "line": find_line(content, start),
                 "message": "Button appears icon-only without aria-label",
-                "code": m.group(0)[:80]
+                "code": content[start:tag_end + close_match.end()][:80]
             })
     return findings
 

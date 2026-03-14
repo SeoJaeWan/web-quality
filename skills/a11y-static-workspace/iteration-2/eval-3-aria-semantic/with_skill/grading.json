@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "scripts/scan.py 스크립트가 실행됨", "passed": true, "evidence": "스크립트 실행됨, A-23 candidate(Navbar logout button) 감지 후 LLM이 false positive로 판정"},
+    {"text": "A-23: 아이콘 버튼의 aria-label 누락이 스크립트 또는 LLM에 의해 감지", "passed": true, "evidence": "스크립트가 Navbar.tsx:48을 candidate로 플래그, LLM이 텍스트 '로그아웃' 포함으로 false positive 판정. 햄버거 버튼(line 59)은 aria-label 있음"},
+    {"text": "스크립트의 candidate 결과에 대해 LLM이 맥락 판단을 수행", "passed": true, "evidence": "A-23 candidate를 false positive로 올바르게 dismiss. A-29/A-33 이슈를 맥락 판단으로 감지"},
+    {"text": "시맨틱 HTML: nav 요소 사용 여부 평가", "passed": true, "evidence": "S-03 ⚠️: 브레드크럼 영역에 <nav> 대신 <div> 사용 감지"},
+    {"text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료", "passed": true, "evidence": "브라우저/dev server 미사용, 순수 코드 분석으로 완료"}
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "expectations": [
+    {"text": "scripts/scan.py 스크립트가 실행되어 JSON 결과를 파싱함", "passed": true, "evidence": "transcript에서 scan.py 실행 확인, 결과 JSON 파싱하여 findings 활용"},
+    {"text": "33개 KWCAG2.2 항목(A-01~A-33)이 모두 평가됨", "passed": true, "evidence": "result.json에 A-01~A-33 + S-01~S-07 총 40개 항목 포함"},
+    {"text": "시맨틱 HTML 항목(S-01+)이 평가됨", "passed": true, "evidence": "S-01~S-07 7개 항목 모두 평가됨 (S-03,S-04,S-05 ⚠️)"},
+    {"text": "모든 항목의 verdict_method가 '정적분석'임", "passed": true, "evidence": "모든 항목이 verdict_method='정적분석'"},
+    {"text": "dashboard/page.tsx에서 img alt 누락 감지", "passed": true, "evidence": "A-01 ❌: page.tsx:83 — <img src=\"/promo-banner.png\"> missing alt attribute"},
+    {"text": "StatsCard.tsx에서 div onClick의 키보드 접근성 문제 감지", "passed": true, "evidence": "A-10 ❌: StatsCard.tsx:17 — <div onClick> without tabIndex, role, or onKeyDown"},
+    {"text": "StatsCard.tsx에서 중복 id 패턴 감지", "passed": true, "evidence": "A-32 ❌: StatsCard.tsx:13 — id=\"stat-card\" 하드코딩, 3회 렌더링으로 중복"},
+    {"text": "발견된 이슈에 파일명:라인번호 참조 포함", "passed": true, "evidence": "page.tsx:83, StatsCard.tsx:17, StatsCard.tsx:13 등 라인번호 포함"},
+    {"text": "❌/⚠️ 항목에 kwcag22.md 참조 기반 수정 가이드 포함", "passed": true, "evidence": "A-01,A-10,A-23,A-32 모두 구체적 fix_guide 포함"},
+    {"text": "런타임 항목(A-02,A-04,A-06,A-09,A-15,A-16)이 ➖ N/A (브라우저 검증 대상)으로 표시됨", "passed": true, "evidence": "A-04,A-06,A-09,A-15,A-16,A-20,A-27 모두 '브라우저 검증 대상'으로 표시. A-02는 '비디오/오디오 요소 없음'으로 ➖"}
+  ]
+}
