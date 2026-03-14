@@ -1,79 +1,346 @@
 {
-  "skill_name": "a11y-static",
-  "iteration": 1,
-  "configurations": [
+  "metadata": {
+    "skill_name": "a11y-static",
+    "timestamp": "",
+    "evals_run": [
+      "aria-semantic",
+      "full-3files-analysis",
+      "single-component"
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
     {
-      "name": "with_skill",
-      "evals": [
+      "eval_id": 1,
+      "eval_name": "full-3files-analysis",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 10,
+        "total": 10,
+        "time_seconds": 140.5,
+        "tokens": 40345,
+        "errors": 0
+      },
+      "expectations": [
         {
-          "eval_name": "full-3files-analysis",
-          "pass_rate": 1.0,
-          "passed": 10,
-          "total": 10,
-          "duration_seconds": 140.5,
-          "total_tokens": 40345
+          "text": "33개 KWCAG2.2 항목(A-01~A-33)이 모두 평가됨",
+          "passed": true,
+          "evidence": "A-01부터 A-33까지 33개 항목 모두 평가됨 + S-01~S-06 시맨틱 HTML 6개 추가"
         },
         {
-          "eval_name": "single-component",
-          "pass_rate": 1.0,
-          "passed": 5,
-          "total": 5,
-          "duration_seconds": 98.3,
-          "total_tokens": 18003
+          "text": "시맨틱 HTML 항목(S-01+)이 평가됨",
+          "passed": true,
+          "evidence": "S-01~S-06까지 6개 시맨틱 HTML 항목 평가됨"
         },
         {
-          "eval_name": "aria-semantic",
-          "pass_rate": 1.0,
-          "passed": 5,
-          "total": 5,
-          "duration_seconds": 141.0,
-          "total_tokens": 39986
+          "text": "모든 항목의 verdict_method가 '정적분석'임",
+          "passed": true,
+          "evidence": "39개 항목 모두 verdict_method: '정적분석'"
+        },
+        {
+          "text": "dashboard/page.tsx에서 img alt 누락 감지",
+          "passed": true,
+          "evidence": "A-01: page.tsx:83 — <img src='/promo-banner.png'> missing alt attribute"
+        },
+        {
+          "text": "StatsCard.tsx에서 div onClick의 키보드 접근성 문제 감지",
+          "passed": true,
+          "evidence": "A-10: StatsCard.tsx:17 — <div onClick={handleClick}> missing tabIndex, role, onKeyDown"
+        },
+        {
+          "text": "Navbar.tsx 햄버거 메뉴에서 aria-expanded 누락 감지",
+          "passed": true,
+          "evidence": "A-33: Navbar.tsx:59-72 — Hamburger button lacks aria-expanded"
+        },
+        {
+          "text": "StatsCard.tsx에서 중복 id 패턴 감지",
+          "passed": true,
+          "evidence": "A-32: StatsCard.tsx:13 — id='stat-card' hardcoded, 3 instances"
+        },
+        {
+          "text": "발견된 이슈에 파일명:라인번호 참조 포함",
+          "passed": true,
+          "evidence": "page.tsx:83, StatsCard.tsx:17, Navbar.tsx:59-72 등 라인번호 참조 포함"
+        },
+        {
+          "text": "❌/⚠️ 항목에 수정 가이드 포함",
+          "passed": true,
+          "evidence": "모든 ❌/⚠️ 항목에 구체적 fix_guide 포함"
+        },
+        {
+          "text": "kwcag22.md 참조 문서를 읽고 기준에 따라 평가",
+          "passed": true,
+          "evidence": "KWCAG2.2 표준 항목명과 원칙 분류가 참조 문서와 일치"
         }
-      ],
-      "aggregate": {
-        "mean_pass_rate": 1.0,
-        "mean_duration_seconds": 126.6,
-        "mean_tokens": 32778
-      }
+      ]
     },
     {
-      "name": "without_skill",
-      "evals": [
+      "eval_id": 1,
+      "eval_name": "full-3files-analysis",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6,
+        "passed": 6,
+        "total": 10,
+        "time_seconds": 76.7,
+        "tokens": 17074,
+        "errors": 0
+      },
+      "expectations": [
         {
-          "eval_name": "full-3files-analysis",
-          "pass_rate": 0.6,
-          "passed": 6,
-          "total": 10,
-          "duration_seconds": 76.7,
-          "total_tokens": 17074
+          "text": "33개 KWCAG2.2 항목(A-01~A-33)이 모두 평가됨",
+          "passed": false,
+          "evidence": "18개 항목만 평가됨 (A-01~A-18), KWCAG 표준 코드 미사용 (커스텀 ID 사용)"
         },
         {
-          "eval_name": "single-component",
-          "pass_rate": 0.6,
-          "passed": 3,
-          "total": 5,
-          "duration_seconds": 66.3,
-          "total_tokens": 12326
+          "text": "시맨틱 HTML 항목(S-01+)이 평가됨",
+          "passed": false,
+          "evidence": "시맨틱 HTML 별도 섹션 없음. A-17에서 main landmark 언급만"
         },
         {
-          "eval_name": "aria-semantic",
-          "pass_rate": 0.8,
-          "passed": 4,
-          "total": 5,
-          "duration_seconds": 66.4,
-          "total_tokens": 15096
+          "text": "모든 항목의 verdict_method가 '정적분석'임",
+          "passed": false,
+          "evidence": "verdict_method 필드 자체가 결과에 포함되지 않음"
+        },
+        {
+          "text": "dashboard/page.tsx에서 img alt 누락 감지",
+          "passed": true,
+          "evidence": "A-01: page.tsx:83 <img> missing alt attribute"
+        },
+        {
+          "text": "StatsCard.tsx에서 div onClick의 키보드 접근성 문제 감지",
+          "passed": true,
+          "evidence": "A-07: StatsCard.tsx:17 div onClick without keyboard support"
+        },
+        {
+          "text": "Navbar.tsx 햄버거 메뉴에서 aria-expanded 누락 감지",
+          "passed": true,
+          "evidence": "A-09: hamburger-missing-aria-expanded"
+        },
+        {
+          "text": "StatsCard.tsx에서 중복 id 패턴 감지",
+          "passed": true,
+          "evidence": "A-08: id='stat-card' duplicate ID issue"
+        },
+        {
+          "text": "발견된 이슈에 파일명:라인번호 참조 포함",
+          "passed": true,
+          "evidence": "각 항목에 file, line 필드로 라인번호 포함"
+        },
+        {
+          "text": "❌/⚠️ 항목에 수정 가이드 포함",
+          "passed": true,
+          "evidence": "각 항목에 suggestion 필드로 수정 가이드 포함"
+        },
+        {
+          "text": "kwcag22.md 참조 문서를 읽고 기준에 따라 평가",
+          "passed": false,
+          "evidence": "KWCAG 참조 문서 미사용, WCAG 기준으로 자체 판단"
         }
-      ],
-      "aggregate": {
-        "mean_pass_rate": 0.667,
-        "mean_duration_seconds": 69.8,
-        "mean_tokens": 14832
-      }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "single-component",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "total": 5,
+        "time_seconds": 98.3,
+        "tokens": 18003,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "33개 KWCAG2.2 항목이 모두 평가됨 (해당 없는 항목은 ➖)",
+          "passed": true,
+          "evidence": "A-01~A-33 모두 평가됨, 해당 없는 항목은 ➖ 처리 (19개 N/A)"
+        },
+        {
+          "text": "A-10: div onClick 키보드 접근 불가 문제 감지",
+          "passed": true,
+          "evidence": "A-10: StatsCard.tsx:17 — div onClick without tabIndex/role/onKeyDown"
+        },
+        {
+          "text": "A-32: 리스트 렌더링 시 중복 id 패턴 감지",
+          "passed": true,
+          "evidence": "A-32: StatsCard.tsx:12 — id='stat-card' hardcoded, 중복 ID 위반"
+        },
+        {
+          "text": "시맨틱 HTML: 클릭 가능한 div → button 권장 감지",
+          "passed": true,
+          "evidence": "S-01: 클릭 가능한 div onClick → button 변경 권장"
+        },
+        {
+          "text": "결과가 JSON 배열 형식으로 반환됨",
+          "passed": true,
+          "evidence": "35개 항목의 JSON 배열로 반환됨"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "single-component",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6,
+        "passed": 3,
+        "total": 5,
+        "time_seconds": 66.3,
+        "tokens": 12326,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "33개 KWCAG2.2 항목이 모두 평가됨 (해당 없는 항목은 ➖)",
+          "passed": false,
+          "evidence": "8개 항목만 평가됨, KWCAG 표준 코드 미사용 (A11Y-001~008)"
+        },
+        {
+          "text": "A-10: div onClick 키보드 접근 불가 문제 감지",
+          "passed": true,
+          "evidence": "A11Y-001: div onClick without keyboard support 감지"
+        },
+        {
+          "text": "A-32: 리스트 렌더링 시 중복 id 패턴 감지",
+          "passed": true,
+          "evidence": "A11Y-004: hardcoded id='stat-card' duplicate ID 감지"
+        },
+        {
+          "text": "시맨틱 HTML: 클릭 가능한 div → button 권장 감지",
+          "passed": false,
+          "evidence": "A11Y-003에서 role 누락은 지적했지만 시맨틱 HTML 별도 섹션 없음"
+        },
+        {
+          "text": "결과가 JSON 배열 형식으로 반환됨",
+          "passed": true,
+          "evidence": "8개 항목의 JSON 배열로 반환됨"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "aria-semantic",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "total": 5,
+        "time_seconds": 141.0,
+        "tokens": 39986,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "A-33: 햄버거 메뉴 버튼에 aria-expanded 누락 감지",
+          "passed": true,
+          "evidence": "A-33: Navbar.tsx:59-72 — 햄버거 메뉴 버튼에 aria-expanded 누락, 코드 주석도 확인"
+        },
+        {
+          "text": "A-33: 필터 토글 버튼에 aria-pressed 누락 감지",
+          "passed": true,
+          "evidence": "A-33: SearchFilter.tsx:32-43 — 필터 버튼에 aria-pressed 누락"
+        },
+        {
+          "text": "시맨틱 HTML: nav 요소 사용 여부 평가",
+          "passed": true,
+          "evidence": "S-01: nav 요소 aria-label 누락 지적, S-05: Breadcrumbs nav 미사용 감지"
+        },
+        {
+          "text": "A-23: 아이콘 버튼의 aria-label 누락 감지",
+          "passed": true,
+          "evidence": "A-23: hamburger 버튼 aria-label이 상태에 따라 변하지 않는 문제 감지"
+        },
+        {
+          "text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료",
+          "passed": true,
+          "evidence": "모든 항목 verdict_method='정적분석', 브라우저 의존성 없음"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "aria-semantic",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8,
+        "passed": 4,
+        "total": 5,
+        "time_seconds": 66.4,
+        "tokens": 15096,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "A-33: 햄버거 메뉴 버튼에 aria-expanded 누락 감지",
+          "passed": true,
+          "evidence": "ARIA-01: hamburger button missing aria-expanded"
+        },
+        {
+          "text": "A-33: 필터 토글 버튼에 aria-pressed 누락 감지",
+          "passed": true,
+          "evidence": "ARIA-06: filter toggle buttons missing aria-pressed"
+        },
+        {
+          "text": "시맨틱 HTML: nav 요소 사용 여부 평가",
+          "passed": true,
+          "evidence": "SEM-02: nav lacks aria-label, SEM-03: breadcrumbs using div"
+        },
+        {
+          "text": "A-23: 아이콘 버튼의 aria-label 누락 감지",
+          "passed": false,
+          "evidence": "aria-label 동적 변경 문제(ARIA-03)는 감지했으나 아이콘 버튼 aria-label 누락과는 다른 이슈"
+        },
+        {
+          "text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료",
+          "passed": true,
+          "evidence": "순수 코드 분석만으로 완료, 브라우저 미사용"
+        }
+      ]
     }
   ],
-  "delta": {
-    "pass_rate": "+33.3%",
-    "duration": "+81.4%",
-    "tokens": "+120.9%"
-  }
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0
+      },
+      "time_seconds": {
+        "mean": 126.6,
+        "stddev": 24.5
+      },
+      "tokens": {
+        "mean": 32778,
+        "stddev": 12797.0
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.667,
+        "stddev": 0.115
+      },
+      "time_seconds": {
+        "mean": 69.8,
+        "stddev": 6.0
+      },
+      "tokens": {
+        "mean": 14832,
+        "stddev": 2385.0
+      }
+    },
+    "delta": {
+      "pass_rate": "+33.3%",
+      "time_seconds": "+81.4%",
+      "tokens": "+120.9%"
+    }
+  },
+  "notes": []
 }
