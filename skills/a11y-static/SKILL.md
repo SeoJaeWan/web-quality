@@ -61,6 +61,17 @@ Read each target file **once** and do two things simultaneously:
 The goal is efficiency: trust the script for pattern matching, add human judgment only
 where needed. Do NOT iterate through all 33 items one by one.
 
+**Easily missed items** the script can't detect (watch for these while reading):
+- A-05: Text instructions using only color/position ("빨간 버튼을 누르세요")
+- A-08: Hardcoded CSS color values with insufficient contrast ratio
+- A-12: Interactive elements smaller than 44x44px minimum touch target
+- A-14: setTimeout/setInterval used for session timeout without extension UI
+- A-20: E-publication without page navigation (usually N/A for web apps)
+- A-21: Touch gesture handlers (pinch/swipe) without single-pointer alternative
+- A-24: DeviceMotion/Orientation handlers without button alternative
+- A-30: CAPTCHA without alternative authentication method
+- A-31: Multi-step forms missing autocomplete attributes
+
 ---
 
 ## Step 4. Fix Guide Lookup

@@ -510,6 +510,36 @@ def scan_a28_error_suggestion(content: str, fname: str) -> list[dict]:
     return findings
 
 
+def scan_a31_autocomplete(content: str, fname: str) -> list[dict]:
+    """A-31: Input fields missing autocomplete for common data types."""
+    findings = []
+    AUTOCOMPLETE_FIELDS = {
+        "name": "name", "email": "email", "tel": "tel", "phone": "tel",
+        "address": "street-address", "zip": "postal-code", "postal": "postal-code",
+    }
+    for start, end, attrs in find_jsx_tags(content, ["input"]):
+        type_match = re.search(r'type\s*=\s*["\'](\w+)["\']', attrs, re.IGNORECASE)
+        input_type = type_match.group(1).lower() if type_match else "text"
+        if input_type in ("hidden", "submit", "button", "reset", "checkbox", "radio", "file"):
+            continue
+        has_autocomplete = bool(re.search(r'autoComplete\s*=|autocomplete\s*=', attrs, re.IGNORECASE))
+        if not has_autocomplete:
+            # Check if name/id/placeholder hints at personal data
+            name_match = re.search(r'(?:name|id|placeholder)\s*=\s*["\']([^"\']+)["\']', attrs, re.IGNORECASE)
+            if name_match:
+                field_name = name_match.group(1).lower()
+                for key in AUTOCOMPLETE_FIELDS:
+                    if key in field_name:
+                        findings.append({
+                            "item": "A-31", "severity": "candidate",
+                            "file": fname, "line": find_line(content, start),
+                            "message": f"<input> for '{field_name}' missing autocomplete attribute",
+                            "code": content[start:end][:80]
+                        })
+                        break
+    return findings
+
+
 # ---------------------------------------------------------------------------
 # Semantic HTML scanners
 # ---------------------------------------------------------------------------
@@ -577,6 +607,7 @@ ALL_SCANNERS = [
     scan_a26_change_on_request,
     scan_a28_error_suggestion,
     scan_a29_label,
+    scan_a31_autocomplete,
     scan_a32_parsing,
     scan_a33_aria,
     scan_semantic,

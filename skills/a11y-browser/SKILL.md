@@ -1,6 +1,6 @@
 ---
 name: a11y-browser
-description: Browser-based accessibility verification using agent-browser. Tests keyboard navigation, focus visibility, ARIA state changes, duplicate IDs, and color contrast on a live page. Manages dev server lifecycle automatically. Called by the a11y orchestrator or usable standalone. Use when asked for browser-based accessibility testing, keyboard navigation checks, or ARIA verification.
+description: Browser-based accessibility verification using agent-browser. Tests items that cannot be determined from source code alone — computed color contrast, ARIA state changes on interaction, focus trap behavior, and visual rendering checks. Manages dev server lifecycle automatically. Called by the a11y orchestrator or usable standalone. Use when asked for browser-based accessibility testing, runtime ARIA verification, or contrast checking.
 model: sonnet
 context: fork
 agent: general-purpose
@@ -182,6 +182,9 @@ elements are detected in the page snapshot:
   npx agent-browser eval "JSON.stringify([...document.querySelectorAll('*')].filter(e => {const s=getComputedStyle(e); return s.animationName!=='none'}).slice(0,5).map(e => {const s=getComputedStyle(e); return {tag:e.tagName,animation:s.animationName,duration:s.animationDuration}}))"
   ```
 
+- **A-20 참조 위치**: E-publication/e-book content only — check for page navigation
+  controls and consistent page reference information. Most web apps → `➖ N/A`.
+
 - **A-27 도움 정보**: Navigate to 2+ pages and check help link consistency
   ```bash
   npx agent-browser snapshot -i -c
@@ -218,12 +221,12 @@ Return a JSON object with summary and findings:
   },
   "findings": [
     {
-      "id": "A-10",
-      "name": "키보드 사용 보장",
+      "id": "A-08",
+      "name": "명도 대비",
       "result": "❌",
       "verdict_method": "브라우저 검증",
-      "issue": "StatsCard — div onClick not reachable via Tab",
-      "fix_guide": "Replace <div onClick> with <button> or add tabIndex={0}, role=\"button\", onKeyDown"
+      "issue": "text-zinc-400 on white background — contrast ratio 2.56:1 (requires 4.5:1)",
+      "fix_guide": "Use text-zinc-600 or darker for sufficient contrast"
     }
   ]
 }
