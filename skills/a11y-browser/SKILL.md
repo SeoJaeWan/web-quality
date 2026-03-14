@@ -220,22 +220,36 @@ Verdict method: `브라우저 검증`
 
 ## Output Format
 
-Return results as a JSON array. Each verified item:
+**Only output items with issues** (❌, ⚠️, or 🔵 판정불가). Passing items (✅) and
+N/A items (➖) are omitted — focus on actionable findings only.
+
+Return a JSON object with summary and findings:
 
 ```json
 {
-  "id": "A-10",
-  "name": "키보드 사용 보장",
-  "result": "❌",
-  "verdict_method": "브라우저 검증",
-  "issue": "StatsCard.tsx — div onClick not reachable via Tab, no focus received after 5 Tab presses",
-  "fix_guide": "Replace <div onClick> with <button> or add tabIndex={0}, role=\"button\", onKeyDown"
+  "summary": {
+    "url_tested": "http://localhost:3000/dashboard",
+    "items_verified": 12,
+    "violations": 2,
+    "advisories": 1,
+    "inconclusive": 0
+  },
+  "findings": [
+    {
+      "id": "A-10",
+      "name": "키보드 사용 보장",
+      "result": "❌",
+      "verdict_method": "브라우저 검증",
+      "issue": "StatsCard — div onClick not reachable via Tab",
+      "fix_guide": "Replace <div onClick> with <button> or add tabIndex={0}, role=\"button\", onKeyDown"
+    }
+  ]
 }
 ```
 
-Classification:
-- `✅` Pass / `❌` Fail / `⚠️` Advisory / `➖` N/A
-- `🔵 판정불가` with specific reason when verification was not possible
+- `findings` contains only ❌, ⚠️, and 🔵 items
+- 🔵 판정불가 must include specific reason (e.g., "인증 필요 페이지")
+- If no issues found, return empty `findings: []` with the summary
 
 </Instructions>
 </Skill_Guide>

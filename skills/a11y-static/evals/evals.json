@@ -4,45 +4,43 @@
     {
       "id": 1,
       "prompt": "dashboard/page.tsx, StatsCard.tsx, Navbar.tsx의 접근성을 정적분석으로 검토해줘",
-      "expected_output": "scan.py 스크립트 실행 후 LLM 맥락 판단을 거쳐 33개 KWCAG 항목 + 시맨틱 HTML 평가",
+      "expected_output": "scan.py 스크립트 실행 후 LLM 맥락 판단, 이슈 항목만 출력",
       "files": ["../../features/next-app/app/dashboard/page.tsx", "../../features/next-app/components/StatsCard.tsx", "../../features/next-app/components/Navbar.tsx"],
       "assertions": [
         {"id": "scan-script-executed", "text": "scripts/scan.py 스크립트가 실행되어 JSON 결과를 파싱함"},
-        {"id": "all-33-items-evaluated", "text": "33개 KWCAG2.2 항목(A-01~A-33)이 모두 평가됨"},
-        {"id": "semantic-html-evaluated", "text": "시맨틱 HTML 항목(S-01+)이 평가됨"},
-        {"id": "all-verdict-static", "text": "모든 항목의 verdict_method가 '정적분석'임"},
-        {"id": "img-alt-missing-detected", "text": "dashboard/page.tsx에서 img alt 누락 감지"},
-        {"id": "div-onclick-keyboard-issue", "text": "StatsCard.tsx에서 div onClick의 키보드 접근성 문제 감지"},
-        {"id": "duplicate-id-detected", "text": "StatsCard.tsx에서 중복 id 패턴 감지"},
-        {"id": "file-line-references", "text": "발견된 이슈에 파일명:라인번호 참조 포함"},
-        {"id": "fix-guides-from-reference", "text": "❌/⚠️ 항목에 kwcag22.md 참조 기반 수정 가이드 포함"},
-        {"id": "runtime-items-delegated", "text": "런타임 항목(A-02,A-04,A-06,A-09,A-15,A-16)이 ➖ N/A (브라우저 검증 대상)으로 표시됨"}
+        {"id": "issues-only-output", "text": "출력에 ❌/⚠️ 항목만 포함되고, ✅/➖ 항목은 생략됨"},
+        {"id": "summary-included", "text": "summary 객체에 total_items_checked, violations, advisories 카운트 포함"},
+        {"id": "img-alt-missing-detected", "text": "A-01 ❌: page.tsx에서 img alt 누락 감지"},
+        {"id": "div-onclick-keyboard-issue", "text": "A-10 ❌: StatsCard.tsx에서 div onClick 키보드 접근성 문제 감지"},
+        {"id": "duplicate-id-detected", "text": "A-32 ❌: StatsCard.tsx에서 중복 id 패턴 감지"},
+        {"id": "fix-guides-included", "text": "❌/⚠️ 항목에 수정 가이드 포함"},
+        {"id": "no-passing-items-in-output", "text": "결과에 result=✅ 또는 result=➖ 항목이 없음"}
       ]
     },
     {
       "id": 2,
       "prompt": "StatsCard.tsx 컴포넌트만 KWCAG2.2 정적분석으로 접근성 검토해줘",
-      "expected_output": "스크립트 스캔 + LLM 판단으로 단일 파일 평가",
+      "expected_output": "이슈 항목만 출력, 단일 컴포넌트 분석",
       "files": ["../../features/next-app/components/StatsCard.tsx"],
       "assertions": [
         {"id": "scan-script-executed", "text": "scripts/scan.py 스크립트가 실행됨"},
-        {"id": "all-33-items-evaluated", "text": "33개 KWCAG2.2 항목이 모두 평가됨 (해당 없는 항목은 ➖)"},
+        {"id": "issues-only-output", "text": "출력에 ❌/⚠️ 항목만 포함됨"},
         {"id": "keyboard-access-issue", "text": "A-10: div onClick 키보드 접근 불가 문제 감지"},
-        {"id": "duplicate-id-issue", "text": "A-32: 리스트 렌더링 시 중복 id 패턴 감지"},
-        {"id": "interactive-semantic-issue", "text": "시맨틱 HTML: 클릭 가능한 div → button 권장 감지"},
-        {"id": "json-array-format", "text": "결과가 JSON 배열 형식으로 반환됨"}
+        {"id": "duplicate-id-issue", "text": "A-32: 중복 id 패턴 감지"},
+        {"id": "interactive-semantic-issue", "text": "S-04 ⚠️: 클릭 가능한 div → button 권장"},
+        {"id": "compact-output", "text": "결과 항목 수가 10개 미만 (이슈만 포함)"}
       ]
     },
     {
       "id": 3,
       "prompt": "Navbar.tsx와 SearchFilter.tsx의 ARIA 속성과 시맨틱 HTML을 정적분석해줘",
-      "expected_output": "스크립트가 ARIA 후보 추출 → LLM이 맥락 판단",
+      "expected_output": "ARIA/시맨틱 이슈만 출력",
       "files": ["../../features/next-app/components/Navbar.tsx", "../../features/next-app/components/SearchFilter.tsx"],
       "assertions": [
         {"id": "scan-script-executed", "text": "scripts/scan.py 스크립트가 실행됨"},
-        {"id": "icon-button-label", "text": "A-23: 아이콘 버튼의 aria-label 누락이 스크립트 또는 LLM에 의해 감지"},
-        {"id": "candidate-contextual-review", "text": "스크립트의 candidate 결과에 대해 LLM이 맥락 판단을 수행"},
-        {"id": "nav-landmark-check", "text": "시맨틱 HTML: nav 요소 사용 여부 평가"},
+        {"id": "issues-only-output", "text": "출력에 ❌/⚠️ 항목만 포함됨"},
+        {"id": "a29-label-issue", "text": "A-29: input search에 label/aria-label 누락 감지"},
+        {"id": "a33-aria-issue", "text": "A-33: aria-expanded 또는 aria-pressed 누락 감지"},
         {"id": "no-browser-dependency", "text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료"}
       ]
     }

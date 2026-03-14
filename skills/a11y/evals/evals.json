@@ -4,32 +4,29 @@
     {
       "id": 1,
       "prompt": "변경된 웹 코드의 접근성을 KWCAG2.2 기준으로 검토해줘",
-      "expected_output": "a11y-static(스크립트+LLM)과 a11y-browser(런타임 검증) 결과를 merge하여 HTML+CSV 리포트 생성",
+      "expected_output": "a11y-static + a11y-browser 이슈만 merge하여 이슈 중심 HTML+CSV 리포트 생성",
       "files": ["../../features/next-app/app/dashboard/page.tsx", "../../features/next-app/components/StatsCard.tsx", "../../features/next-app/components/Navbar.tsx"],
       "assertions": [
-        {"id": "static-scan-script-executed", "text": "a11y-static이 scan.py 스크립트를 실행하여 기계적 탐지를 수행"},
-        {"id": "static-analysis-executed", "text": "a11y-static 스킬의 정적분석이 실행되어 verdict_method='정적분석' 항목이 존재"},
-        {"id": "browser-verification-attempted", "text": "a11y-browser 스킬의 브라우저 검증이 시도됨 (성공 또는 판정불가)"},
-        {"id": "all-33-items-evaluated", "text": "33개 KWCAG2.2 항목이 모두 평가됨 (누락 없음)"},
-        {"id": "semantic-html-section-present", "text": "시맨틱 HTML 섹션이 리포트에 포함됨"},
-        {"id": "merge-browser-wins", "text": "브라우저 검증 항목은 verdict_method='브라우저 검증'으로 표시됨 (브라우저 실행 성공 시)"},
-        {"id": "runtime-delegation-works", "text": "정적분석에서 ➖ 처리된 런타임 항목(A-02,A-04 등)이 브라우저에서 검증 시도됨"},
-        {"id": "merge-pandingbulga-fallback", "text": "브라우저 판정불가 항목은 정적분석 결과로 fallback됨"},
-        {"id": "html-report-generated", "text": "report.html 파일이 reports/accessibility/ 디렉토리에 생성됨"},
-        {"id": "csv-report-generated", "text": "report.csv 파일이 reports/accessibility/ 디렉토리에 생성됨"}
+        {"id": "static-analysis-executed", "text": "a11y-static이 실행되어 이슈 findings 반환"},
+        {"id": "browser-verification-attempted", "text": "a11y-browser 브라우저 검증이 시도됨"},
+        {"id": "issues-only-report", "text": "리포트에 ❌/⚠️ 항목만 포함, ✅/➖ 행이 없음"},
+        {"id": "summary-counts", "text": "리포트 상단에 위반/권고 카운트 요약 포함"},
+        {"id": "merge-browser-wins", "text": "동일 항목이 양쪽에 있을 때 브라우저 결과가 우선"},
+        {"id": "html-report-generated", "text": "report.html 파일 생성됨"},
+        {"id": "csv-report-generated", "text": "report.csv 파일 생성됨 (이슈 행만 포함)"}
       ]
     },
     {
       "id": 2,
       "prompt": "Navbar.tsx와 StatsCard.tsx의 접근성을 KWCAG2.2 기준으로 검토하고 리포트 생성해줘",
-      "expected_output": "두 컴포넌트에 대한 통합 접근성 검토, 스크립트 스캔+LLM 판단+브라우저 결과 merge",
+      "expected_output": "두 컴포넌트의 이슈만 포함된 간결한 리포트",
       "files": ["../../features/next-app/components/Navbar.tsx", "../../features/next-app/components/StatsCard.tsx"],
       "assertions": [
-        {"id": "both-files-analyzed", "text": "Navbar.tsx와 StatsCard.tsx 모두 분석 대상에 포함됨"},
-        {"id": "two-verdict-methods-present", "text": "정적분석과 브라우저 검증 두 가지 verdict_method가 리포트에 존재 (브라우저 성공 시)"},
-        {"id": "fix-guides-provided", "text": "❌ 항목에 구체적인 수정 가이드가 포함됨"},
+        {"id": "both-files-analyzed", "text": "Navbar.tsx와 StatsCard.tsx 모두 분석 대상에 포함"},
+        {"id": "issues-only-output", "text": "리포트에 이슈 항목만 포함됨"},
+        {"id": "fix-guides-provided", "text": "❌ 항목에 구체적인 수정 가이드 포함"},
         {"id": "report-in-korean", "text": "리포트가 한국어로 작성됨"},
-        {"id": "result-classification-correct", "text": "✅/❌/⚠️/➖/🔵 분류 체계가 올바르게 사용됨"}
+        {"id": "compact-report", "text": "리포트가 간결 (이슈 중심, 불필요한 통과 항목 없음)"}
       ]
     }
   ]

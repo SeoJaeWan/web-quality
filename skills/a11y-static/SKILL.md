@@ -118,29 +118,37 @@ and add any additional semantic issues noticed while reading the code:
 
 ## Output Format
 
-Return results as a JSON array. Each item:
+**Only output items with issues** (❌ or ⚠️). Passing items (✅) and N/A items (➖) are
+omitted — the purpose is to surface problems, not confirm what's fine. This dramatically
+reduces output size and keeps the focus on actionable findings.
+
+Return a JSON object with a summary and findings array:
 
 ```json
 {
-  "id": "A-01",
-  "name": "대체 텍스트",
-  "principle": "인식의 용이성",
-  "result": "❌",
-  "verdict_method": "정적분석",
-  "issue": "page.tsx:83 — <img> missing alt attribute",
-  "fix_guide": "Add descriptive alt text: <img alt=\"대시보드 통계 아이콘\">"
+  "summary": {
+    "files_reviewed": ["page.tsx", "StatsCard.tsx"],
+    "total_items_checked": 40,
+    "violations": 3,
+    "advisories": 2
+  },
+  "findings": [
+    {
+      "id": "A-01",
+      "name": "대체 텍스트",
+      "result": "❌",
+      "verdict_method": "정적분석",
+      "issue": "page.tsx:83 — <img> missing alt attribute",
+      "fix_guide": "Add descriptive alt text: <img alt=\"대시보드 통계 아이콘\">"
+    }
+  ]
 }
 ```
 
-Semantic HTML items use IDs like `S-01`, `S-02`, etc.
-
-Classification:
-- `✅` Pass: no violation found
-- `❌` Fail: violation found (include filename:line)
-- `⚠️` Advisory: improvement recommended
-- `➖` N/A: relevant element does not exist or item is browser verification target
-
-All items must have `verdict_method: "정적분석"`.
+- `findings` contains only ❌ (violation) and ⚠️ (advisory) items
+- Semantic HTML items use IDs like `S-01`, `S-02`, etc.
+- All items must have `verdict_method: "정적분석"`
+- If no issues found, return empty `findings: []` with the summary
 
 </Instructions>
 </Skill_Guide>
