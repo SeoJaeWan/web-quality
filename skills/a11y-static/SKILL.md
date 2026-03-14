@@ -47,37 +47,19 @@ The script outputs JSON with `summary` and `findings` arrays. Parse the output.
 
 ## Step 3. Contextual Review
 
-Read each target file and review the script's **candidate** findings. The script can detect
-structural patterns but can't judge meaning — that's where LLM judgment adds value.
+Read each target file **once** and do two things simultaneously:
 
-For each candidate, determine the actual verdict:
+1. **Judge script candidates** — the script flags patterns as "candidate" when it can't
+   determine context (e.g., is this image decorative? is this div genuinely interactive?).
+   For each candidate, decide: true issue (❌/⚠️) or false positive (dismiss).
 
-| Candidate Pattern | What to Judge |
-| --- | --- |
-| A-01 empty alt on image | Is the image decorative (alt="" correct) or meaningful (needs description)? |
-| A-03 table without caption/th | Is it a data table (needs structure) or layout table (OK without)? |
-| A-10 div with onClick | Is it genuinely interactive (needs keyboard access) or event delegation? |
-| A-13 single char key handler | Does it have modifier key support or focus-scoped activation? |
-| A-17 missing skip nav | Is this a page/layout that needs skip nav, or a nested component? |
-| A-18 heading skip | Is the skip intentional (component context) or an error? |
-| A-19 vague link text | Does surrounding context clarify the link purpose? |
-| A-22 onMouseDown | Does it execute critical action on down-event, or is it for drag/scroll? |
-| A-23 icon button | Does surrounding context or CSS provide accessible name? |
-| A-26 select onChange | Does it auto-navigate, or just filter/update local state? |
-| A-28 required without error | Does the framework handle errors at a higher level (e.g., form library)? |
-| A-33 role without ARIA | Are the required ARIA attributes provided elsewhere (parent, hook)? |
+2. **Spot additional issues** — while reading the code, note any accessibility problems
+   the script couldn't detect (ARIA misuse, missing aria-expanded on toggles, icon buttons
+   without labels, etc.). Don't exhaustively check every KWCAG item — just flag what you
+   naturally notice in the code. The script already handles the mechanical checks.
 
-Also check items the script cannot detect (need code comprehension):
-- A-05: Instructions using only color/position references
-- A-08: Explicit CSS color/background-color contrast (compute ratio if values are hardcoded)
-- A-14: setTimeout/setInterval for session timeout without extension UI
-- A-21: Touch gesture handlers without single-pointer alternative
-- A-24: DeviceMotion/Orientation handlers without button alternative
-- A-30: CAPTCHA without alternative authentication
-
-Items that require runtime/browser verification — mark as `➖ N/A (브라우저 검증 대상)`:
-- A-02 (자막), A-04 (선형구조), A-06 (색 구분), A-09 (콘텐츠 구분)
-- A-15 (정지 기능), A-16 (깜박임), A-20 (참조 위치), A-27 (도움 정보)
+The goal is efficiency: trust the script for pattern matching, add human judgment only
+where needed. Do NOT iterate through all 33 items one by one.
 
 ---
 

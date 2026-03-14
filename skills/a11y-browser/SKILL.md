@@ -8,9 +8,12 @@ agent: general-purpose
 
 <Skill_Guide>
 <Purpose>
-Verifies interaction-based accessibility items in a real browser using agent-browser CLI.
-Covers dynamic behaviors that static analysis cannot detect: keyboard navigation, focus movement,
-ARIA state changes, duplicate IDs in rendered DOM, and computed color contrast.
+Verifies accessibility items that **cannot be determined from source code alone** using
+agent-browser CLI. Focuses on runtime behaviors: computed color contrast, ARIA state
+changes on interaction, focus trap behavior, and visual rendering checks.
+
+Items detectable from code (keyboard access patterns, outline removal, duplicate IDs)
+are handled by a11y-static's scan script — this skill does not duplicate that work.
 
 Automatically starts the dev server if it's not already running.
 </Purpose>
@@ -100,24 +103,11 @@ Only verify elements that are actually present in the rendered tree.
 
 ## Step 5. Verification Tests
 
-### 5-1. A-10 + A-11: Keyboard & Focus Visible
+Browser verification covers only items that **cannot be determined from source code alone**.
+Items like A-10 (keyboard access), A-11 (focus style), A-32 (duplicate ID) are handled
+by a11y-static's scan script — no need to re-check them here.
 
-After readiness check, use `-i -c` flags for compact interactive-only snapshots:
-
-```bash
-npx agent-browser snapshot -i -c \
-  && npx agent-browser press Tab && npx agent-browser snapshot -i -c \
-  && npx agent-browser press Tab && npx agent-browser snapshot -i -c \
-  && npx agent-browser press Tab && npx agent-browser snapshot -i -c \
-  && npx agent-browser press Tab && npx agent-browser snapshot -i -c \
-  && npx agent-browser press Tab && npx agent-browser snapshot -i -c \
-  && npx agent-browser eval "(() => { const f = document.activeElement; const s = getComputedStyle(f); return JSON.stringify({tag:f.tagName,outline:s.outline,boxShadow:s.boxShadow,border:s.border}); })()"
-```
-
-- A-10: All interactive elements reachable via Tab → `✅` / No focus movement → `❌` / Partial → `⚠️`
-- A-11: outline/boxShadow/border shows visual change → `✅` / No indicator → `❌`
-
-### 5-2. A-08: Color Contrast (Computed)
+### 5-1. A-08: Color Contrast (Computed)
 
 Check contrast on elements with explicit text, replacing Lighthouse's role:
 
@@ -127,15 +117,7 @@ npx agent-browser eval "(() => { const els = document.querySelectorAll('p,span,a
 
 Calculate contrast ratio from the RGB values. WCAG AA requires 4.5:1 for normal text, 3:1 for large text (>=18pt or >=14pt bold).
 
-### 5-3. A-32: Duplicate ID
-
-Confirm suspected duplicate IDs in the actual DOM:
-
-```bash
-npx agent-browser eval "document.querySelectorAll('[id]').length + ' total, duplicates: ' + JSON.stringify([...new Set([...document.querySelectorAll('[id]')].map(e=>e.id).filter((id,i,a)=>a.indexOf(id)!==i))])"
-```
-
-### 5-4. A-33: ARIA State Changes
+### 5-2. A-33: ARIA State Changes
 
 Check ARIA attribute changes before/after interaction:
 
@@ -151,7 +133,7 @@ Replace `@eN` with the element ref from the first snapshot (e.g., hamburger, tog
 - No state change → `⚠️`
 - No interactive elements → `➖`
 
-### 5-5. A-12, A-26, A-28, A-31 (Conditional)
+### 5-3. A-12, A-26, A-28, A-31 (Conditional)
 
 Only test these if relevant elements exist on the page:
 
@@ -160,7 +142,7 @@ Only test these if relevant elements exist on the page:
 - **A-28 Error suggestion**: Form → submit empty → check error message + focus
 - **A-31 Consistent navigation**: Navigate to another page → check nav structure persists
 
-### 5-6. Runtime-Only Items (from static analysis delegation)
+### 5-4. Runtime-Only Items
 
 These items cannot be determined from source code alone — static analysis marks them
 as `➖ N/A (브라우저 검증 대상)` and delegates them here. Only test when relevant
