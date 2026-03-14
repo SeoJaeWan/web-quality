@@ -160,6 +160,55 @@ Only test these if relevant elements exist on the page:
 - **A-28 Error suggestion**: Form → submit empty → check error message + focus
 - **A-31 Consistent navigation**: Navigate to another page → check nav structure persists
 
+### 5-6. Runtime-Only Items (from static analysis delegation)
+
+These items cannot be determined from source code alone — static analysis marks them
+as `➖ N/A (브라우저 검증 대상)` and delegates them here. Only test when relevant
+elements are detected in the page snapshot:
+
+- **A-02 자막 제공**: `<video>` elements → check if `<track>` exists in DOM, verify
+  captions are visible during playback
+  ```bash
+  npx agent-browser eval "JSON.stringify([...document.querySelectorAll('video')].map(v => ({src:v.src,tracks:[...v.querySelectorAll('track')].map(t=>({kind:t.kind,src:t.src}))})))"
+  ```
+
+- **A-04 선형 구조**: Check if visual rendering order matches DOM order
+  ```bash
+  npx agent-browser eval "JSON.stringify([...document.querySelectorAll('button,a,input,[tabindex]')].slice(0,10).map(e => {const r=e.getBoundingClientRect(); return {tag:e.tagName,text:e.textContent?.slice(0,20),top:Math.round(r.top),left:Math.round(r.left)}}))"
+  ```
+  Compare `top`/`left` positions against DOM order — significant mismatches indicate
+  CSS reordering that may confuse screen readers.
+
+- **A-06 색에 무관한 인식**: Check if color is the sole means of conveying information
+  ```bash
+  npx agent-browser eval "JSON.stringify([...document.querySelectorAll('.error,.required,.active,.selected,.invalid')].slice(0,5).map(e => {const s=getComputedStyle(e); return {text:e.textContent?.slice(0,30),color:s.color,bg:s.backgroundColor,hasIcon:!!e.querySelector('svg,img,.icon'),hasBorder:s.borderWidth!=='0px'}}))"
+  ```
+  Elements relying only on color (no icon, border, or text indicator) → `⚠️`
+
+- **A-09 콘텐츠 구분**: Check adjacent content blocks have visual separation
+  ```bash
+  npx agent-browser eval "JSON.stringify([...document.querySelectorAll('section,article,aside,nav')].slice(0,5).map(e => {const s=getComputedStyle(e); return {tag:e.tagName,border:s.border,padding:s.padding,margin:s.margin,bg:s.backgroundColor}}))"
+  ```
+
+- **A-15 정지 기능**: Detect auto-cycling content and check for pause controls
+  ```bash
+  npx agent-browser eval "JSON.stringify({carousels: document.querySelectorAll('[class*=carousel],[class*=slider],[class*=swiper]').length, pauseButtons: document.querySelectorAll('[aria-label*=pause],[aria-label*=stop],[class*=pause]').length, animations: document.querySelectorAll('[style*=animation]').length})"
+  ```
+
+- **A-16 깜박임**: Check for rapid animations
+  ```bash
+  npx agent-browser eval "JSON.stringify([...document.querySelectorAll('*')].filter(e => {const s=getComputedStyle(e); return s.animationName!=='none'}).slice(0,5).map(e => {const s=getComputedStyle(e); return {tag:e.tagName,animation:s.animationName,duration:s.animationDuration}}))"
+  ```
+
+- **A-27 도움 정보**: Navigate to 2+ pages and check help link consistency
+  ```bash
+  npx agent-browser snapshot -i -c
+  ```
+  Note help/support link positions, then navigate to another page and re-snapshot.
+  Compare link positions for consistency.
+
+For items where no relevant elements exist on the page, mark as `➖ N/A`.
+
 ---
 
 ## Step 6. Cross-Validation

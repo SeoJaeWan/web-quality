@@ -4,14 +4,16 @@
     {
       "id": 1,
       "prompt": "변경된 웹 코드의 접근성을 KWCAG2.2 기준으로 검토해줘",
-      "expected_output": "a11y-static과 a11y-browser 두 sub-skill을 모두 실행하고 결과를 merge하여 HTML+CSV 리포트 생성",
+      "expected_output": "a11y-static(스크립트+LLM)과 a11y-browser(런타임 검증) 결과를 merge하여 HTML+CSV 리포트 생성",
       "files": ["../../features/next-app/app/dashboard/page.tsx", "../../features/next-app/components/StatsCard.tsx", "../../features/next-app/components/Navbar.tsx"],
       "assertions": [
+        {"id": "static-scan-script-executed", "text": "a11y-static이 scan.py 스크립트를 실행하여 기계적 탐지를 수행"},
         {"id": "static-analysis-executed", "text": "a11y-static 스킬의 정적분석이 실행되어 verdict_method='정적분석' 항목이 존재"},
         {"id": "browser-verification-attempted", "text": "a11y-browser 스킬의 브라우저 검증이 시도됨 (성공 또는 판정불가)"},
         {"id": "all-33-items-evaluated", "text": "33개 KWCAG2.2 항목이 모두 평가됨 (누락 없음)"},
         {"id": "semantic-html-section-present", "text": "시맨틱 HTML 섹션이 리포트에 포함됨"},
-        {"id": "merge-browser-wins", "text": "브라우저 검증 항목(A-08,A-10,A-11,A-32,A-33 등)은 verdict_method='브라우저 검증'으로 표시됨 (브라우저 실행 성공 시)"},
+        {"id": "merge-browser-wins", "text": "브라우저 검증 항목은 verdict_method='브라우저 검증'으로 표시됨 (브라우저 실행 성공 시)"},
+        {"id": "runtime-delegation-works", "text": "정적분석에서 ➖ 처리된 런타임 항목(A-02,A-04 등)이 브라우저에서 검증 시도됨"},
         {"id": "merge-pandingbulga-fallback", "text": "브라우저 판정불가 항목은 정적분석 결과로 fallback됨"},
         {"id": "html-report-generated", "text": "report.html 파일이 reports/accessibility/ 디렉토리에 생성됨"},
         {"id": "csv-report-generated", "text": "report.csv 파일이 reports/accessibility/ 디렉토리에 생성됨"}
@@ -20,7 +22,7 @@
     {
       "id": 2,
       "prompt": "Navbar.tsx와 StatsCard.tsx의 접근성을 KWCAG2.2 기준으로 검토하고 리포트 생성해줘",
-      "expected_output": "두 컴포넌트에 대한 통합 접근성 검토, 정적분석+브라우저 결과 merge",
+      "expected_output": "두 컴포넌트에 대한 통합 접근성 검토, 스크립트 스캔+LLM 판단+브라우저 결과 merge",
       "files": ["../../features/next-app/components/Navbar.tsx", "../../features/next-app/components/StatsCard.tsx"],
       "assertions": [
         {"id": "both-files-analyzed", "text": "Navbar.tsx와 StatsCard.tsx 모두 분석 대상에 포함됨"},

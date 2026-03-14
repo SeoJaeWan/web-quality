@@ -4,27 +4,28 @@
     {
       "id": 1,
       "prompt": "dashboard/page.tsx, StatsCard.tsx, Navbar.tsx의 접근성을 정적분석으로 검토해줘",
-      "expected_output": "33개 KWCAG 항목 + 시맨틱 HTML을 정적분석으로 평가, JSON 배열 반환",
+      "expected_output": "scan.py 스크립트 실행 후 LLM 맥락 판단을 거쳐 33개 KWCAG 항목 + 시맨틱 HTML 평가",
       "files": ["../../features/next-app/app/dashboard/page.tsx", "../../features/next-app/components/StatsCard.tsx", "../../features/next-app/components/Navbar.tsx"],
       "assertions": [
+        {"id": "scan-script-executed", "text": "scripts/scan.py 스크립트가 실행되어 JSON 결과를 파싱함"},
         {"id": "all-33-items-evaluated", "text": "33개 KWCAG2.2 항목(A-01~A-33)이 모두 평가됨"},
         {"id": "semantic-html-evaluated", "text": "시맨틱 HTML 항목(S-01+)이 평가됨"},
         {"id": "all-verdict-static", "text": "모든 항목의 verdict_method가 '정적분석'임"},
         {"id": "img-alt-missing-detected", "text": "dashboard/page.tsx에서 img alt 누락 감지"},
         {"id": "div-onclick-keyboard-issue", "text": "StatsCard.tsx에서 div onClick의 키보드 접근성 문제 감지"},
-        {"id": "aria-expanded-missing", "text": "Navbar.tsx 햄버거 메뉴에서 aria-expanded 누락 감지"},
         {"id": "duplicate-id-detected", "text": "StatsCard.tsx에서 중복 id 패턴 감지"},
         {"id": "file-line-references", "text": "발견된 이슈에 파일명:라인번호 참조 포함"},
-        {"id": "fix-guides-provided", "text": "❌/⚠️ 항목에 수정 가이드 포함"},
-        {"id": "kwcag-reference-read", "text": "kwcag22.md 참조 문서를 읽고 기준에 따라 평가"}
+        {"id": "fix-guides-from-reference", "text": "❌/⚠️ 항목에 kwcag22.md 참조 기반 수정 가이드 포함"},
+        {"id": "runtime-items-delegated", "text": "런타임 항목(A-02,A-04,A-06,A-09,A-15,A-16)이 ➖ N/A (브라우저 검증 대상)으로 표시됨"}
       ]
     },
     {
       "id": 2,
       "prompt": "StatsCard.tsx 컴포넌트만 KWCAG2.2 정적분석으로 접근성 검토해줘",
-      "expected_output": "단일 파일에 대한 33개 KWCAG 항목 + 시맨틱 HTML 평가",
+      "expected_output": "스크립트 스캔 + LLM 판단으로 단일 파일 평가",
       "files": ["../../features/next-app/components/StatsCard.tsx"],
       "assertions": [
+        {"id": "scan-script-executed", "text": "scripts/scan.py 스크립트가 실행됨"},
         {"id": "all-33-items-evaluated", "text": "33개 KWCAG2.2 항목이 모두 평가됨 (해당 없는 항목은 ➖)"},
         {"id": "keyboard-access-issue", "text": "A-10: div onClick 키보드 접근 불가 문제 감지"},
         {"id": "duplicate-id-issue", "text": "A-32: 리스트 렌더링 시 중복 id 패턴 감지"},
@@ -35,13 +36,13 @@
     {
       "id": 3,
       "prompt": "Navbar.tsx와 SearchFilter.tsx의 ARIA 속성과 시맨틱 HTML을 정적분석해줘",
-      "expected_output": "ARIA 관련 항목과 시맨틱 HTML 집중 분석",
+      "expected_output": "스크립트가 ARIA 후보 추출 → LLM이 맥락 판단",
       "files": ["../../features/next-app/components/Navbar.tsx", "../../features/next-app/components/SearchFilter.tsx"],
       "assertions": [
-        {"id": "aria-expanded-missing", "text": "A-33: 햄버거 메뉴 버튼에 aria-expanded 누락 감지"},
-        {"id": "aria-pressed-missing", "text": "A-33: 필터 토글 버튼에 aria-pressed 누락 감지"},
+        {"id": "scan-script-executed", "text": "scripts/scan.py 스크립트가 실행됨"},
+        {"id": "icon-button-label", "text": "A-23: 아이콘 버튼의 aria-label 누락이 스크립트 또는 LLM에 의해 감지"},
+        {"id": "candidate-contextual-review", "text": "스크립트의 candidate 결과에 대해 LLM이 맥락 판단을 수행"},
         {"id": "nav-landmark-check", "text": "시맨틱 HTML: nav 요소 사용 여부 평가"},
-        {"id": "icon-button-label", "text": "A-23: 아이콘 버튼의 aria-label 누락 감지"},
         {"id": "no-browser-dependency", "text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료"}
       ]
     }

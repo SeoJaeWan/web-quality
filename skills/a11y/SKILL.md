@@ -7,9 +7,11 @@ model: sonnet
 <Skill_Guide>
 <Purpose>
 Orchestrates a complete KWCAG2.2 accessibility review by coordinating two sub-skills:
-- **a11y-static**: Evaluates all 33 KWCAG items + semantic HTML via static code analysis
-- **a11y-browser**: Verifies interaction-based items in a live browser (keyboard, ARIA, contrast, duplicate IDs)
+- **a11y-static**: Script-based scan + LLM contextual judgment on source code (code-determinable items)
+- **a11y-browser**: Live browser verification (interaction, visual rendering, runtime-dependent items)
 
+a11y-static handles items determinable from code, and delegates runtime-dependent items
+(A-02, A-04, A-06, A-09, A-15, A-16, A-20, A-27) to a11y-browser.
 Merges results from both, resolves conflicts (browser wins), and generates HTML + CSV reports in Korean.
 </Purpose>
 
@@ -72,8 +74,9 @@ Both sub-skills return results keyed by KWCAG item ID (A-01 through A-33, plus S
 
 | Source | Items |
 | --- | --- |
-| Static analysis only | A-01 through A-33 (all), S-01+ (semantic) |
-| Browser can override | A-08 (contrast), A-10 (keyboard), A-11 (focus), A-12 (focus order), A-26 (change on request), A-28 (error suggestion), A-31 (consistent nav), A-32 (duplicate ID), A-33 (ARIA state) |
+| Static analysis | Code-determinable items (A-01, A-03, A-05, A-07, A-08, A-10, A-11, A-13, A-14, A-17, A-18, A-19, A-21, A-22, A-23, A-24, A-25, A-26, A-28, A-29, A-30, A-32, A-33), S-01+ (semantic) |
+| Browser verification | Interaction items (A-08, A-10, A-11, A-12, A-26, A-28, A-31, A-32, A-33) + Runtime-only items (A-02, A-04, A-06, A-09, A-15, A-16, A-20, A-27) |
+| Static → Browser delegation | A-02, A-04, A-06, A-09, A-15, A-16, A-20, A-27 are marked `➖ N/A (브라우저 검증 대상)` by static, verified by browser |
 
 ---
 
