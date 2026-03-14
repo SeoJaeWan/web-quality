@@ -1,0 +1,29 @@
+{
+  "expectations": [
+    {
+      "text": "scripts/scan.py 스크립트가 실행됨",
+      "passed": true,
+      "evidence": "scan.py 실행, 4건 findings, 3건 false positive dismiss"
+    },
+    {
+      "text": "출력에 ❌/⚠️ 항목만 포함됨",
+      "passed": true,
+      "evidence": "6건 (3❌ + 3⚠️)"
+    },
+    {
+      "text": "A-29: input search에 label/aria-label 누락 감지",
+      "passed": true,
+      "evidence": "A-29 ❌: SearchFilter.tsx:21"
+    },
+    {
+      "text": "A-33: aria-expanded 또는 aria-pressed 누락 감지",
+      "passed": true,
+      "evidence": "A-33 ❌: Navbar.tsx:59, SearchFilter.tsx:32"
+    },
+    {
+      "text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료",
+      "passed": true,
+      "evidence": "브라우저 미사용"
+    }
+  ]
+}

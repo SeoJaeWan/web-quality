@@ -1,0 +1,34 @@
+{
+  "expectations": [
+    {
+      "text": "A-08: getComputedStyle 기반 contrast ratio 계산이 수행됨",
+      "passed": true,
+      "evidence": "모든 텍스트 contrast 5.25:1 이상 PASS"
+    },
+    {
+      "text": "A-33: 인터랙티브 요소 클릭 전후 ARIA state 확인이 수행됨",
+      "passed": true,
+      "evidence": "토글 요소 없어 N/A"
+    },
+    {
+      "text": "package.json에서 dev script를 찾아 서버 자동 시작",
+      "passed": true,
+      "evidence": "dev server 자동 시작"
+    },
+    {
+      "text": "페이지 상태 감지 (정상/auth/loading/error/empty) 수행",
+      "passed": true,
+      "evidence": "정상 렌더링 확인"
+    },
+    {
+      "text": "A-12, A-26, A-28, A-31 중 해당 요소 존재 시 추가 검증 또는 N/A 처리",
+      "passed": true,
+      "evidence": "A-31 PASS(nav 일관성), 나머지 N/A"
+    },
+    {
+      "text": "이슈 항목만 출력 (✅/➖ 생략)",
+      "passed": true,
+      "evidence": "이슈 0건, 빈 findings"
+    }
+  ]
+}

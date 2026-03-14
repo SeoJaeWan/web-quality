@@ -1,0 +1,27 @@
+{
+  "summary": {
+    "url_tested": "http://localhost:3000/dashboard",
+    "items_verified": 12,
+    "violations": 1,
+    "advisories": 1,
+    "inconclusive": 0
+  },
+  "findings": [
+    {
+      "id": "A-08",
+      "name": "명도 대비",
+      "result": "❌",
+      "verdict_method": "브라우저 검증",
+      "issue": "text-zinc-400 (#9F9FA9) on white (#FFFFFF) — contrast ratio 2.62:1 (requires 4.5:1 for 12px normal text). Affects: date display (data-testid=\"current-date\"), notification timestamps (<time> elements). On alternating blue-tinted row (bg #EFF6FF), ratio drops to 2.41:1.",
+      "fix_guide": "Use text-zinc-600 (#52525C, 7.72:1) or at minimum text-zinc-500 (#71717B, 4.83:1) for sufficient contrast on both white and tinted backgrounds."
+    },
+    {
+      "id": "A-33",
+      "name": "ARIA 상태 변경",
+      "result": "⚠️",
+      "verdict_method": "브라우저 검증",
+      "issue": "hamburger-menu button (aria-label=\"메뉴 열기\") lacks aria-expanded attribute. Clicking the button does not toggle any ARIA state (aria-expanded, aria-pressed, etc.), so assistive technology cannot convey the menu's open/closed state. Additionally, icon-only buttons btn-refresh and btn-settings have no aria-label, making their purpose inaccessible.",
+      "fix_guide": "Add aria-expanded=\"false\" to the hamburger button and toggle it to \"true\" when the mobile nav is open. Add descriptive aria-label attributes to btn-refresh (e.g., \"새로고침\") and btn-settings (e.g., \"설정\")."
+    }
+  ]
+}

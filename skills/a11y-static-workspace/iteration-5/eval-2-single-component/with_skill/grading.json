@@ -1,0 +1,34 @@
+{
+  "expectations": [
+    {
+      "text": "scripts/scan.py 스크립트가 실행됨",
+      "passed": true,
+      "evidence": "scan.py 실행, A-10 candidate 1건 감지"
+    },
+    {
+      "text": "출력에 ❌/⚠️ 항목만 포함됨",
+      "passed": true,
+      "evidence": "3건만 포함 (2❌ + 1⚠️)"
+    },
+    {
+      "text": "A-10: div onClick 키보드 접근 불가 문제 감지",
+      "passed": true,
+      "evidence": "A-10 ❌"
+    },
+    {
+      "text": "A-32: 중복 id 패턴 감지",
+      "passed": true,
+      "evidence": "A-32 ❌"
+    },
+    {
+      "text": "S-04 ⚠️: 클릭 가능한 div → button 권장",
+      "passed": true,
+      "evidence": "S-04 ⚠️"
+    },
+    {
+      "text": "결과 항목 수가 10개 미만 (이슈만 포함)",
+      "passed": true,
+      "evidence": "3건"
+    }
+  ]
+}

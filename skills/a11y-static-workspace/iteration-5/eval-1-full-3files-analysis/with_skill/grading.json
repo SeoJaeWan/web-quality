@@ -1,0 +1,44 @@
+{
+  "expectations": [
+    {
+      "text": "scripts/scan.py 스크립트가 실행되어 JSON 결과를 파싱함",
+      "passed": true,
+      "evidence": "scan.py 실행, 8건 findings 파싱, 2건 false positive dismiss"
+    },
+    {
+      "text": "출력에 ❌/⚠️ 항목만 포함되고, ✅/➖ 항목은 생략됨",
+      "passed": true,
+      "evidence": "10건 이슈만 포함"
+    },
+    {
+      "text": "summary 객체에 total_items_checked, violations, advisories 카운트 포함",
+      "passed": true,
+      "evidence": "total_items_checked=33, violations=5, advisories=5"
+    },
+    {
+      "text": "A-01 ❌: page.tsx에서 img alt 누락 감지",
+      "passed": true,
+      "evidence": "A-01 ❌: page.tsx:83"
+    },
+    {
+      "text": "A-10 ❌: StatsCard.tsx에서 div onClick 키보드 접근성 문제 감지",
+      "passed": true,
+      "evidence": "A-10 ❌: StatsCard.tsx:10"
+    },
+    {
+      "text": "A-32 ❌: StatsCard.tsx에서 중복 id 패턴 감지",
+      "passed": true,
+      "evidence": "A-32 ❌: StatsCard.tsx:13"
+    },
+    {
+      "text": "❌/⚠️ 항목에 수정 가이드 포함",
+      "passed": true,
+      "evidence": "모든 항목에 fix_guide 포함"
+    },
+    {
+      "text": "결과에 result=✅ 또는 result=➖ 항목이 없음",
+      "passed": true,
+      "evidence": "findings에 ❌/⚠️만 존재"
+    }
+  ]
+}

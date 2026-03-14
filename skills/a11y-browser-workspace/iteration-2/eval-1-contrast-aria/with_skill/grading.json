@@ -1,0 +1,39 @@
+{
+  "expectations": [
+    {
+      "text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인",
+      "passed": true,
+      "evidence": "dev server 시작, 인증 후 dashboard 접근"
+    },
+    {
+      "text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인",
+      "passed": true,
+      "evidence": "snapshot 후 auth redirect 감지, 로그인 수행"
+    },
+    {
+      "text": "A-08: getComputedStyle로 텍스트 색상 대비를 확인하고 contrast ratio 계산",
+      "passed": true,
+      "evidence": "A-08 ❌: text-zinc-400 contrast 2.62:1 감지"
+    },
+    {
+      "text": "A-33: 인터랙티브 요소 클릭 전후 snapshot으로 ARIA state 변경 검증",
+      "passed": true,
+      "evidence": "A-33 ⚠️: aria-expanded 누락, aria-label 고정 감지"
+    },
+    {
+      "text": "npx agent-browser 명령어로 검증 수행",
+      "passed": true,
+      "evidence": "agent-browser v0.20.0 사용"
+    },
+    {
+      "text": "모든 검증 항목의 verdict_method가 '브라우저 검증'",
+      "passed": true,
+      "evidence": "verdict_method=브라우저 검증"
+    },
+    {
+      "text": "이슈 항목만 출력 (✅/➖ 생략)",
+      "passed": true,
+      "evidence": "2건 이슈만 출력"
+    }
+  ]
+}

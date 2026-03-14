@@ -1,0 +1,37 @@
+{
+  "summary": {
+    "url_tested": "http://localhost:3000",
+    "viewport": "375x812 (mobile)",
+    "items_verified": 3,
+    "violations": 1,
+    "advisories": 1,
+    "inconclusive": 0
+  },
+  "findings": [
+    {
+      "id": "A-33",
+      "name": "ARIA 상태 변경",
+      "result": "❌",
+      "verdict_method": "브라우저 검증",
+      "issue": "모바일 햄버거 메뉴 버튼에 aria-expanded 속성이 없음. 클릭 전후 모두 aria-expanded 미설정으로 스크린리더 사용자가 메뉴 열림/닫힘 상태를 인식할 수 없음. SVG 아이콘은 변경되지만 접근성 트리에는 상태 변화가 반영되지 않음.",
+      "evidence": {
+        "before_click": "button '메뉴 열기' — aria-expanded 속성 없음",
+        "after_click": "button '메뉴 열기' — aria-expanded 속성 여전히 없음, 모바일 메뉴는 DOM에 렌더링됨",
+        "html_snippet": "<button class=\"md:hidden p-2\" data-testid=\"hamburger-menu\" aria-label=\"메뉴 열기\">..."
+      },
+      "fix_guide": "aria-expanded={menuOpen} 속성을 햄버거 버튼에 추가. 예: <button aria-expanded={menuOpen} aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'} ...>"
+    },
+    {
+      "id": "A-33",
+      "name": "ARIA 레이블 미갱신",
+      "result": "⚠️",
+      "verdict_method": "브라우저 검증",
+      "issue": "메뉴 열림 상태에서도 aria-label이 '메뉴 열기'로 고정되어 있음. 메뉴가 열린 상태에서는 '메뉴 닫기'로 변경되어야 스크린리더 사용자가 현재 상태를 정확히 파악할 수 있음.",
+      "evidence": {
+        "menu_closed": "aria-label='메뉴 열기'",
+        "menu_opened": "aria-label='메뉴 열기' (변경 없음)"
+      },
+      "fix_guide": "aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}로 동적 레이블 적용"
+    }
+  ]
+}

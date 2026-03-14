@@ -1,0 +1,58 @@
+{
+  "summary": {
+    "files_reviewed": ["Navbar.tsx", "SearchFilter.tsx"],
+    "total_items_checked": 40,
+    "violations": 3,
+    "advisories": 3
+  },
+  "findings": [
+    {
+      "id": "A-29",
+      "name": "레이블 제공",
+      "result": "❌",
+      "verdict_method": "정적분석",
+      "issue": "SearchFilter.tsx:21 — <input type=\"search\">에 label, aria-label, title 없이 placeholder만 사용. placeholder는 레이블 대체 불가",
+      "fix_guide": "aria-label 추가: <input type=\"search\" aria-label=\"할 일 검색\" placeholder=\"할 일 검색...\"> 또는 시각적 <label>을 연결"
+    },
+    {
+      "id": "A-33",
+      "name": "웹 애플리케이션 접근성",
+      "result": "❌",
+      "verdict_method": "정적분석",
+      "issue": "Navbar.tsx:59 — 햄버거 메뉴 토글 버튼에 aria-expanded 속성 누락. 메뉴 열림/닫힘 상태를 보조기술에 전달하지 않음",
+      "fix_guide": "aria-expanded 추가: <button aria-label={menuOpen ? \"메뉴 닫기\" : \"메뉴 열기\"} aria-expanded={menuOpen} aria-controls=\"mobile-menu\">"
+    },
+    {
+      "id": "A-33",
+      "name": "웹 애플리케이션 접근성",
+      "result": "❌",
+      "verdict_method": "정적분석",
+      "issue": "SearchFilter.tsx:32 — 필터 토글 버튼 그룹(전체/진행중/완료)에 aria-pressed 속성 누락. 현재 선택된 필터 상태를 보조기술에 전달하지 않음",
+      "fix_guide": "aria-pressed 추가: <button aria-pressed={filter === f.value}>{f.label}</button>"
+    },
+    {
+      "id": "A-23",
+      "name": "레이블과 네임",
+      "result": "⚠️",
+      "verdict_method": "정적분석",
+      "issue": "Navbar.tsx:59 — 햄버거 버튼의 aria-label이 \"메뉴 열기\"로 고정. 메뉴가 열린 상태에서도 동일한 레이블 사용",
+      "fix_guide": "상태에 따라 동적 레이블 제공: aria-label={menuOpen ? \"메뉴 닫기\" : \"메뉴 열기\"}"
+    },
+    {
+      "id": "S-03",
+      "name": "랜드마크 요소",
+      "result": "⚠️",
+      "verdict_method": "정적분석",
+      "issue": "Navbar.tsx:132 — 브레드크럼 영역이 <div>로 마크업됨. <nav> 랜드마크를 사용하면 보조기술이 탐색 영역으로 인식 가능",
+      "fix_guide": "<div> 대신 <nav aria-label=\"breadcrumb\"> 사용: <nav aria-label=\"현재 위치\" className=\"...\">...</nav>"
+    },
+    {
+      "id": "S-05",
+      "name": "목록 구조",
+      "result": "⚠️",
+      "verdict_method": "정적분석",
+      "issue": "Navbar.tsx:132-146 — 브레드크럼 항목이 <span> 나열로 구성됨. 시맨틱하게는 <ol>/<li> 구조가 적절",
+      "fix_guide": "브레드크럼을 순서 있는 목록으로 마크업: <nav aria-label=\"breadcrumb\"><ol><li><a href=\"/\">홈</a></li><li>현재 페이지</li></ol></nav>"
+    }
+  ]
+}

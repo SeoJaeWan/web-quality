@@ -1,0 +1,10 @@
+{
+  "summary": {
+    "url_tested": "http://localhost:3000/",
+    "items_verified": 14,
+    "violations": 0,
+    "advisories": 0,
+    "inconclusive": 0
+  },
+  "findings": []
+}

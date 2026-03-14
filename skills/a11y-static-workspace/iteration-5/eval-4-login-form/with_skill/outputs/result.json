@@ -1,0 +1,42 @@
+{
+  "summary": {
+    "files_reviewed": ["login/page.tsx"],
+    "total_items_checked": 33,
+    "violations": 1,
+    "advisories": 3
+  },
+  "findings": [
+    {
+      "id": "A-28",
+      "name": "오류 정정",
+      "result": "❌",
+      "verdict_method": "정적분석",
+      "issue": "page.tsx:46 — 일반 오류 메시지 <div>에 role=\"alert\" 또는 aria-live=\"assertive\" 없음. page.tsx:54,68 — 유효성 오류 발생 시 입력 필드에 aria-invalid=\"true\" 및 aria-describedby 속성 미제공. 오류 메시지(<p> 태그)와 입력 필드 간 프로그래밍적 연결 없음.",
+      "fix_guide": "오류 메시지 영역에 role=\"alert\" 추가: <div role=\"alert\" className=\"...\">{generalError}</div>. 각 입력 필드에 오류 상태 시 aria-invalid={!!errors.email} 및 aria-describedby=\"email-error\" 추가. 오류 <p> 태그에 id=\"email-error\" 부여하여 입력 필드와 연결."
+    },
+    {
+      "id": "A-31",
+      "name": "반복 입력 정보",
+      "result": "⚠️",
+      "verdict_method": "정적분석",
+      "issue": "page.tsx:54 — <input type=\"email\">에 autocomplete=\"email\" 속성 누락. page.tsx:68 — <input type=\"password\">에 autocomplete=\"current-password\" 속성 누락.",
+      "fix_guide": "로그인 폼 입력 필드에 autocomplete 속성 추가: <input type=\"email\" autocomplete=\"email\">, <input type=\"password\" autocomplete=\"current-password\">. 브라우저 자동 완성을 통해 반복 입력 부담을 줄여줌."
+    },
+    {
+      "id": "S-03",
+      "name": "랜드마크 요소",
+      "result": "⚠️",
+      "verdict_method": "정적분석",
+      "issue": "page.tsx:42 — 페이지 최상위가 <div>로만 구성되어 <main> 랜드마크 없음. 레이아웃 파일에서 제공하지 않는 경우 스크린 리더 사용자가 본문 영역을 식별할 수 없음.",
+      "fix_guide": "최상위 <div className=\"mx-auto mt-20 max-w-md\">를 <main className=\"mx-auto mt-20 max-w-md\">로 변경하거나, 상위 레이아웃에서 <main> 랜드마크를 제공하고 있는지 확인."
+    },
+    {
+      "id": "S-06",
+      "name": "폼 그룹",
+      "result": "⚠️",
+      "verdict_method": "정적분석",
+      "issue": "page.tsx:51 — 로그인 폼의 이메일·비밀번호 필드가 <fieldset>+<legend>로 그룹화되지 않음. 관련 입력 필드의 논리적 그룹핑 부재.",
+      "fix_guide": "<form> 내부에 <fieldset><legend>로그인 정보</legend>...</fieldset>를 추가하여 관련 입력 필드를 그룹화. 시각적 스타일이 불필요하면 CSS로 border 제거 가능."
+    }
+  ]
+}

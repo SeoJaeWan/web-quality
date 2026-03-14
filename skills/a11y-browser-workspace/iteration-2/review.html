@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>평가 리뷰</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" integrity="sha384-EnyY0/GSHQGSxSgMwaIPzSESbqoOLSexfnSMN2AP+39Ckmn92stwABZynq1JyzdT" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #faf9f5;
+      --surface: #ffffff;
+      --border: #e8e6dc;
+      --text: #141413;
+      --text-muted: #b0aea5;
+      --accent: #d97757;
+      --accent-hover: #c4613f;
+      --green: #788c5d;
+      --green-bg: #eef2e8;
+      --red: #c44;
+      --red-bg: #fceaea;
+      --header-bg: #141413;
+      --header-text: #faf9f5;
+      --radius: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---- Header ---- */
+    .header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .header .instructions {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.25rem;
+    }
+    .header .progress {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      text-align: right;
+    }
+
+    /* ---- Main content ---- */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    /* ---- Sections ---- */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      flex-shrink: 0;
+    }
+    .section-header {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.75rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .section-body {
+      padding: 1rem;
+    }
+
+    /* ---- Config badge ---- */
+    .config-badge {
+      display: inline-block;
+      padding: 0.2rem 0.625rem;
+      border-radius: 9999px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-left: 0.75rem;
+      vertical-align: middle;
+    }
+    .config-badge.config-primary {
+      background: rgba(33, 150, 243, 0.12);
+      color: #1976d2;
+    }
+    .config-badge.config-baseline {
+      background: rgba(255, 193, 7, 0.15);
+      color: #f57f17;
+    }
+
+    /* ---- Prompt ---- */
+    .prompt-text {
+      white-space: pre-wrap;
+      font-size: 0.9375rem;
+      line-height: 1.6;
+    }
+
+    /* ---- Outputs ---- */
+    .output-file {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .output-file + .output-file {
+      margin-top: 1rem;
+    }
+    .output-file-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .output-file-header .dl-btn {
+      font-size: 0.7rem;
+      color: var(--accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+    .output-file-header .dl-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .output-file-content {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    .output-file-content pre {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
+    }
+    .output-file-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+    .output-file-content iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+    .output-file-content table {
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+      width: 100%;
+    }
+    .output-file-content table td,
+    .output-file-content table th {
+      border: 1px solid var(--border);
+      padding: 0.375rem 0.5rem;
+      text-align: left;
+    }
+    .output-file-content table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+    .output-file-content .download-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .output-file-content .download-link:hover {
+      background: var(--border);
+    }
+    .empty-state {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    /* ---- Feedback ---- */
+    .prev-feedback {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.625rem 0.75rem;
+      margin-top: 0.75rem;
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .prev-feedback-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      resize: vertical;
+      color: var(--text);
+    }
+    .feedback-textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    .feedback-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      min-height: 1.1em;
+    }
+
+    /* ---- Grades (collapsible) ---- */
+    .grades-toggle {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .grades-toggle:hover {
+      color: var(--accent);
+    }
+    .grades-toggle .arrow {
+      margin-right: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.75rem;
+    }
+    .grades-toggle .arrow.open {
+      transform: rotate(90deg);
+    }
+    .grades-content {
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .grades-content.open {
+      display: block;
+    }
+    .grades-summary {
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .grade-badge {
+      display: inline-block;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .grade-pass { background: var(--green-bg); color: var(--green); }
+    .grade-fail { background: var(--red-bg); color: var(--red); }
+    .assertion-list {
+      list-style: none;
+    }
+    .assertion-item {
+      padding: 0.625rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+    .assertion-item:last-child { border-bottom: none; }
+    .assertion-status {
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .assertion-status.pass { color: var(--green); }
+    .assertion-status.fail { color: var(--red); }
+    .assertion-evidence {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      padding-left: 1.5rem;
+    }
+
+    /* ---- View tabs ---- */
+    .view-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .view-tab {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.625rem 1.25rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .view-tab:hover { color: var(--text); }
+    .view-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .view-panel { display: none; }
+    .view-panel.active { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+
+    /* ---- Benchmark view ---- */
+    .benchmark-view {
+      padding: 1.5rem 2rem;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .benchmark-table {
+      border-collapse: collapse;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .benchmark-table th, .benchmark-table td {
+      padding: 0.625rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    .benchmark-table th {
+      font-family: 'Poppins', sans-serif;
+      background: var(--header-bg);
+      color: var(--header-text);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .benchmark-table tr:hover { background: var(--bg); }
+    .benchmark-table tr.benchmark-row-with { background: rgba(33, 150, 243, 0.06); }
+    .benchmark-table tr.benchmark-row-without { background: rgba(255, 193, 7, 0.06); }
+    .benchmark-table tr.benchmark-row-with:hover { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-without:hover { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-table tr.benchmark-row-avg { font-weight: 600; border-top: 2px solid var(--border); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-with { background: rgba(33, 150, 243, 0.12); }
+    .benchmark-table tr.benchmark-row-avg.benchmark-row-without { background: rgba(255, 193, 7, 0.12); }
+    .benchmark-delta-positive { color: var(--green); font-weight: 600; }
+    .benchmark-delta-negative { color: var(--red); font-weight: 600; }
+    .benchmark-notes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+    }
+    .benchmark-notes h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .benchmark-notes ul {
+      list-style: disc;
+      padding-left: 1.25rem;
+    }
+    .benchmark-notes li {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      margin-bottom: 0.375rem;
+    }
+    .benchmark-empty {
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    /* ---- Navigation ---- */
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .nav-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .done-btn {
+      font-family: 'Poppins', sans-serif;
+      padding: 0.5rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .done-btn:hover {
+      background: var(--bg);
+      border-color: var(--text-muted);
+    }
+    .done-btn.ready {
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+    .done-btn.ready:hover {
+      background: var(--accent-hover);
+    }
+    /* ---- Done overlay ---- */
+    .done-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    .done-overlay.visible {
+      display: flex;
+    }
+    .done-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 2rem 3rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+    }
+    .done-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .done-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .done-card .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    .done-card button {
+      padding: 0.5rem 1.25rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    .done-card button:hover {
+      background: var(--bg);
+    }
+    /* ---- Toast ---- */
+    .toast {
+      position: fixed;
+      bottom: 5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 200;
+    }
+    .toast.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" style="height:100vh; display:flex; flex-direction:column;">
+    <div class="header">
+      <div>
+        <h1>평가 리뷰: <span id="skill-name"></span></h1>
+        <div class="instructions">각 출력을 검토하고 아래에 피드백을 남겨주세요. 화살표 키 또는 버튼으로 이동할 수 있습니다. 완료되면 피드백을 복사하여 Claude Code에 붙여넣으세요.</div>
+      </div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- View tabs (only shown when benchmark data exists) -->
+    <div class="view-tabs" id="view-tabs" style="display:none;">
+      <button class="view-tab active" onclick="switchView('outputs')">출력 결과</button>
+      <button class="view-tab" onclick="switchView('benchmark')">벤치마크</button>
+    </div>
+
+    <!-- Outputs panel (qualitative review) -->
+    <div class="view-panel active" id="panel-outputs">
+    <div class="main">
+      <!-- Prompt -->
+      <div class="section">
+        <div class="section-header">프롬프트 <span class="config-badge" id="config-badge" style="display:none;"></span></div>
+        <div class="section-body">
+          <div class="prompt-text" id="prompt-text"></div>
+        </div>
+      </div>
+
+      <!-- Outputs -->
+      <div class="section">
+        <div class="section-header">출력</div>
+        <div class="section-body" id="outputs-body">
+          <div class="empty-state">출력 파일을 찾을 수 없습니다</div>
+        </div>
+      </div>
+
+      <!-- Previous Output (collapsible) -->
+      <div class="section" id="prev-outputs-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="togglePrevOutputs()">
+            <span class="arrow" id="prev-outputs-arrow">&#9654;</span>
+            이전 출력
+          </div>
+        </div>
+        <div class="grades-content" id="prev-outputs-content"></div>
+      </div>
+
+      <!-- Grades (collapsible) -->
+      <div class="section" id="grades-section" style="display:none;">
+        <div class="section-header">
+          <div class="grades-toggle" onclick="toggleGrades()">
+            <span class="arrow" id="grades-arrow">&#9654;</span>
+            평가 등급
+          </div>
+        </div>
+        <div class="grades-content" id="grades-content"></div>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section">
+        <div class="section-header">피드백</div>
+        <div class="section-body">
+          <textarea
+            class="feedback-textarea"
+            id="feedback"
+            placeholder="이 출력에 대해 어떻게 생각하시나요? 문제점, 제안사항, 또는 잘된 점이 있나요?"
+          ></textarea>
+          <div class="feedback-status" id="feedback-status"></div>
+          <div class="prev-feedback" id="prev-feedback" style="display:none;">
+            <div class="prev-feedback-label">이전 피드백</div>
+            <div id="prev-feedback-text"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav" id="outputs-nav">
+      <button class="nav-btn" id="prev-btn" onclick="navigate(-1)">&#8592; 이전</button>
+      <button class="done-btn" id="done-btn" onclick="showDoneDialog()">모든 리뷰 제출</button>
+      <button class="nav-btn" id="next-btn" onclick="navigate(1)">다음 &#8594;</button>
+    </div>
+    </div><!-- end panel-outputs -->
+
+    <!-- Benchmark panel (quantitative stats) -->
+    <div class="view-panel" id="panel-benchmark">
+      <div class="benchmark-view" id="benchmark-content">
+        <div class="benchmark-empty">벤치마크 데이터가 없습니다. 벤치마크를 실행하면 여기에 정량적 결과가 표시됩니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Done overlay -->
+  <div class="done-overlay" id="done-overlay">
+    <div class="done-card">
+      <h2>리뷰 완료</h2>
+      <p>피드백이 저장되었습니다. Claude Code 세션으로 돌아가서 리뷰가 끝났다고 알려주세요.</p>
+      <div class="btn-row">
+        <button onclick="closeDoneDialog()">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ---- Embedded data (injected by generate_review.py) ----
+    const EMBEDDED_DATA = {"skill_name": "a11y-browser", "runs": [{"id": "eval-1-contrast-aria-with_skill", "prompt": "dashboard 페이지의 색상 대비와 ARIA 상태 변경을 브라우저에서 검증해줘", "eval_id": 1, "outputs": [{"name": "result.json", "type": "text", "content": "{\n  \"summary\": {\n    \"url_tested\": \"http://localhost:3000/dashboard\",\n    \"items_verified\": 12,\n    \"violations\": 1,\n    \"advisories\": 1,\n    \"inconclusive\": 0\n  },\n  \"findings\": [\n    {\n      \"id\": \"A-08\",\n      \"name\": \"명도 대비\",\n      \"result\": \"❌\",\n      \"verdict_method\": \"브라우저 검증\",\n      \"issue\": \"text-zinc-400 (#9F9FA9) on white (#FFFFFF) — contrast ratio 2.62:1 (requires 4.5:1 for 12px normal text). Affects: date display (data-testid=\\\"current-date\\\"), notification timestamps (<time> elements). On alternating blue-tinted row (bg #EFF6FF), ratio drops to 2.41:1.\",\n      \"fix_guide\": \"Use text-zinc-600 (#52525C, 7.72:1) or at minimum text-zinc-500 (#71717B, 4.83:1) for sufficient contrast on both white and tinted backgrounds.\"\n    },\n    {\n      \"id\": \"A-33\",\n      \"name\": \"ARIA 상태 변경\",\n      \"result\": \"⚠️\",\n      \"verdict_method\": \"브라우저 검증\",\n      \"issue\": \"hamburger-menu button (aria-label=\\\"메뉴 열기\\\") lacks aria-expanded attribute. Clicking the button does not toggle any ARIA state (aria-expanded, aria-pressed, etc.), so assistive technology cannot convey the menu's open/closed state. Additionally, icon-only buttons btn-refresh and btn-settings have no aria-label, making their purpose inaccessible.\",\n      \"fix_guide\": \"Add aria-expanded=\\\"false\\\" to the hamburger button and toggle it to \\\"true\\\" when the mobile nav is open. Add descriptive aria-label attributes to btn-refresh (e.g., \\\"새로고침\\\") and btn-settings (e.g., \\\"설정\\\").\"\n    }\n  ]\n}\n"}], "grading": {"expectations": [{"text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인", "passed": true, "evidence": "dev server 시작, 인증 후 dashboard 접근"}, {"text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인", "passed": true, "evidence": "snapshot 후 auth redirect 감지, 로그인 수행"}, {"text": "A-08: getComputedStyle로 텍스트 색상 대비를 확인하고 contrast ratio 계산", "passed": true, "evidence": "A-08 ❌: text-zinc-400 contrast 2.62:1 감지"}, {"text": "A-33: 인터랙티브 요소 클릭 전후 snapshot으로 ARIA state 변경 검증", "passed": true, "evidence": "A-33 ⚠️: aria-expanded 누락, aria-label 고정 감지"}, {"text": "npx agent-browser 명령어로 검증 수행", "passed": true, "evidence": "agent-browser v0.20.0 사용"}, {"text": "모든 검증 항목의 verdict_method가 '브라우저 검증'", "passed": true, "evidence": "verdict_method=브라우저 검증"}, {"text": "이슈 항목만 출력 (✅/➖ 생략)", "passed": true, "evidence": "2건 이슈만 출력"}]}}, {"id": "eval-1-contrast-aria-without_skill", "prompt": "dashboard 페이지의 색상 대비와 ARIA 상태 변경을 브라우저에서 검증해줘", "eval_id": 1, "outputs": [{"name": "result.json", "type": "text", "content": "{\n  \"page\": \"/dashboard\",\n  \"url\": \"http://localhost:3088/dashboard\",\n  \"timestamp\": \"2026-03-14T01:56:56.385Z\",\n  \"summary\": {\n    \"totalTests\": 6,\n    \"passed\": 1,\n    \"failed\": 5,\n    \"issues\": [\n      \"Duplicate IDs: 3 elements share id=\\\"stat-card\\\" (WCAG 4.1.1)\",\n      \"StatsCard divs have onClick but no tabIndex, role, or onKeyDown (WCAG 2.1.1)\",\n      \"Icon buttons (btn-refresh, btn-settings) lack aria-label (WCAG 4.1.2)\",\n      \"Image /promo-banner.png missing alt attribute (WCAG 1.1.1)\",\n      \"Todo input field has focus:outline-none with no alternative focus indicator (WCAG 2.4.7)\"\n    ]\n  },\n  \"tests\": [\n    {\n      \"name\": \"duplicate-ids\",\n      \"description\": \"Check for duplicate ID attributes (WCAG 4.1.1 Parsing)\",\n      \"status\": \"fail\",\n      \"wcag\": \"4.1.1\",\n      \"severity\": \"serious\",\n      \"details\": {\n        \"stat-card\": {\n          \"count\": 3,\n          \"elements\": [\"DIV\", \"DIV\", \"DIV\"],\n          \"explanation\": \"StatsCard component hardcodes id=\\\"stat-card\\\" but is rendered 3 times (stat-total, stat-completed, stat-pending), creating 3 elements with the same ID\"\n        }\n      }\n    },\n    {\n      \"name\": \"keyboard-accessible-click-handlers\",\n      \"description\": \"Elements with click handlers must be keyboard accessible (WCAG 2.1.1 Keyboard)\",\n      \"status\": \"fail\",\n      \"wcag\": \"2.1.1\",\n      \"severity\": \"critical\",\n      \"details\": [\n        {\n          \"tag\": \"DIV\",\n          \"id\": \"stat-card\",\n          \"testId\": \"stat-total\",\n          \"hasTabIndex\": false,\n          \"hasRole\": false,\n          \"hasKeyDown\": false,\n          \"textContent\": \"0전체 할 일\",\n          \"source\": \"react-props\",\n          \"explanation\": \"div with onClick handler but no tabIndex, role='button', or onKeyDown. Keyboard users cannot activate this element.\"\n        },\n        {\n          \"tag\": \"DIV\",\n          \"id\": \"stat-card\",\n          \"testId\": \"stat-completed\",\n          \"hasTabIndex\": false,\n          \"hasRole\": false,\n          \"hasKeyDown\": false,\n          \"textContent\": \"0완료\",\n          \"source\": \"react-props\"\n        },\n        {\n          \"tag\": \"DIV\",\n          \"id\": \"stat-card\",\n          \"testId\": \"stat-pending\",\n          \"hasTabIndex\": false,\n          \"hasRole\": false,\n          \"hasKeyDown\": false,\n          \"textContent\": \"0진행중\",\n          \"source\": \"react-props\"\n        }\n      ]\n    },\n    {\n      \"name\": \"button-accessible-names\",\n      \"description\": \"Icon buttons must have accessible names (WCAG 4.1.2 Name, Role, Value)\",\n      \"status\": \"fail\",\n      \"wcag\": \"4.1.2\",\n      \"severity\": \"critical\",\n      \"details\": [\n        {\n          \"testId\": \"btn-refresh\",\n          \"hasAriaLabel\": false,\n          \"textContent\": \"\",\n          \"explanation\": \"Button contains only an SVG icon with no aria-label, aria-labelledby, or visible text. Screen readers will announce it as an unnamed button.\"\n        },\n        {\n          \"testId\": \"btn-settings\",\n          \"hasAriaLabel\": false,\n          \"textContent\": \"\",\n          \"explanation\": \"Button contains only an SVG icon with no aria-label, aria-labelledby, or visible text.\"\n        }\n      ]\n    },\n    {\n      \"name\": \"image-alt-text\",\n      \"description\": \"Images must have alt text (WCAG 1.1.1 Non-text Content)\",\n      \"status\": \"fail\",\n      \"wcag\": \"1.1.1\",\n      \"severity\": \"critical\",\n      \"details\": [\n        {\n          \"src\": \"/promo-banner.png\",\n          \"hasAlt\": false,\n          \"explanation\": \"Image element lacks alt attribute entirely. Screen readers cannot describe this image.\"\n        }\n      ]\n    },\n    {\n      \"name\": \"focus-visibility\",\n      \"description\": \"Focus indicators must be visible for all interactive elements (WCAG 2.4.7 Focus Visible)\",\n      \"status\": \"fail\",\n      \"wcag\": \"2.4.7\",\n      \"severity\": \"serious\",\n      \"details\": {\n        \"elementsWithoutFocusIndicator\": [\n          {\n            \"tag\": \"input\",\n            \"testId\": \"todo-input\",\n            \"type\": \"text\",\n            \"placeholder\": \"할 일을 입력하세요\",\n            \"focusStyles\": {\n              \"outlineStyle\": \"none\",\n              \"outlineWidth\": \"0px\",\n              \"boxShadow\": \"none\",\n              \"hasVisibleIndicator\": false\n            },\n            \"explanation\": \"The input has class 'focus:outline-none' which removes the default focus outline, and no alternative focus indicator (such as box-shadow or border-color change) is applied via CSS. The 'focus:border-blue-500' class may provide a subtle indicator via border color, but the outline suppression is still problematic.\"\n          }\n        ],\n        \"elementsWithFocusIndicator\": [\n          {\"testId\": \"nav-logo\", \"tag\": \"a\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"nav-dashboard\", \"tag\": \"a\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"nav-todos\", \"tag\": \"a\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"nav-profile\", \"tag\": \"a\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"nav-logout\", \"tag\": \"button\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"btn-refresh\", \"tag\": \"button\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"btn-settings\", \"tag\": \"button\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"todo-add\", \"tag\": \"button\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"go-to-todos\", \"tag\": \"a\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"}\n        ]\n      }\n    },\n    {\n      \"name\": \"tab-order\",\n      \"description\": \"Tab order should follow a logical reading sequence (WCAG 2.4.3 Focus Order)\",\n      \"status\": \"pass\",\n      \"wcag\": \"2.4.3\",\n      \"severity\": \"info\",\n      \"details\": {\n        \"tabSequence\": [\n          {\"tabStop\": 1, \"tag\": \"a\", \"testId\": \"nav-logo\", \"text\": \"TestApp\"},\n          {\"tabStop\": 2, \"tag\": \"a\", \"testId\": \"nav-dashboard\", \"text\": \"대시보드\"},\n          {\"tabStop\": 3, \"tag\": \"a\", \"testId\": \"nav-todos\", \"text\": \"할 일\"},\n          {\"tabStop\": 4, \"tag\": \"a\", \"testId\": \"nav-profile\", \"text\": \"프로필\"},\n          {\"tabStop\": 5, \"tag\": \"button\", \"testId\": \"nav-logout\", \"text\": \"로그아웃\"},\n          {\"tabStop\": 6, \"tag\": \"a\", \"text\": \"홈 (breadcrumb)\"},\n          {\"tabStop\": 7, \"tag\": \"button\", \"testId\": \"btn-refresh\", \"text\": \"(icon only, no label)\"},\n          {\"tabStop\": 8, \"tag\": \"button\", \"testId\": \"btn-settings\", \"text\": \"(icon only, no label)\"},\n          {\"tabStop\": 9, \"tag\": \"input\", \"testId\": \"todo-input\", \"text\": \"할 일을 입력하세요\"},\n          {\"tabStop\": 10, \"tag\": \"button\", \"testId\": \"todo-add\", \"text\": \"추가\"},\n          {\"tabStop\": 11, \"tag\": \"a\", \"testId\": \"go-to-todos\", \"text\": \"전체 할 일 목록 보기 →\"}\n        ],\n        \"totalTabStops\": 11,\n        \"logicalOrder\": true,\n        \"note\": \"Tab order follows DOM order (nav -> breadcrumb -> main content). StatsCard elements with onClick are NOT in the tab order because they lack tabIndex, which is the keyboard accessibility bug.\"\n      }\n    }\n  ],\n  \"sourceFiles\": {\n    \"dashboardPage\": \"features/next-app/app/dashboard/page.tsx\",\n    \"statsCard\": \"features/next-app/components/StatsCard.tsx\"\n  },\n  \"recommendations\": [\n    {\n      \"issue\": \"StatsCard: duplicate id=\\\"stat-card\\\"\",\n      \"fix\": \"Use the testId prop or a unique identifier as the id, e.g., id={testId} instead of id=\\\"stat-card\\\"\",\n      \"file\": \"features/next-app/components/StatsCard.tsx\",\n      \"line\": 12\n    },\n    {\n      \"issue\": \"StatsCard: div with onClick not keyboard accessible\",\n      \"fix\": \"Add role=\\\"button\\\", tabIndex={0}, and an onKeyDown handler that triggers handleClick on Enter/Space\",\n      \"file\": \"features/next-app/components/StatsCard.tsx\",\n      \"line\": 17\n    },\n    {\n      \"issue\": \"Icon buttons without aria-label\",\n      \"fix\": \"Add aria-label to btn-refresh (e.g., aria-label=\\\"새로고침\\\") and btn-settings (e.g., aria-label=\\\"설정\\\")\",\n      \"file\": \"features/next-app/app/dashboard/page.tsx\",\n      \"lines\": [59, 62]\n    },\n    {\n      \"issue\": \"Image missing alt attribute\",\n      \"fix\": \"Add alt attribute to promo-banner.png image, e.g., alt=\\\"프로모션 배너\\\" or alt=\\\"\\\" if decorative\",\n      \"file\": \"features/next-app/app/dashboard/page.tsx\",\n      \"line\": 83\n    },\n    {\n      \"issue\": \"Todo input removes focus outline\",\n      \"fix\": \"Replace focus:outline-none with a visible focus indicator, e.g., focus:ring-2 focus:ring-blue-500\",\n      \"file\": \"features/next-app/components/TodoForm.tsx\"\n    }\n  ]\n}\n"}], "grading": {"expectations": [{"text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인", "passed": true, "evidence": "dev server 시작 및 대시보드 접근 성공"}, {"text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인", "passed": false, "evidence": "snapshot -c 명령어 미사용, Playwright MCP 도구로 직접 접근"}, {"text": "A-10: Tab 키로 인터랙티브 요소 접근 가능 여부 테스트", "passed": true, "evidence": "StatsCard div onClick 키보드 접근 불가 확인"}, {"text": "A-11: 포커스 시 outline/boxShadow/border 시각적 표시 확인", "passed": true, "evidence": "focus:outline-none 문제 감지, focus:border-blue-500 대체 스타일 확인"}, {"text": "A-32: DOM에서 중복 ID 검사 실행", "passed": true, "evidence": "id='stat-card' 3개 중복 ID 확인"}, {"text": "A-08: getComputedStyle로 텍스트 색상 대비 확인", "passed": false, "evidence": "색상 대비 검사 미수행"}, {"text": "모든 검증 항목의 verdict_method가 'Playwright'", "passed": false, "evidence": "verdict_method 필드 없음, 자체 형식 사용"}, {"text": "결과가 JSON 배열 형식으로 반환됨", "passed": true, "evidence": "result.json에 JSON 배열로 저장됨"}]}}, {"id": "eval-2-aria-toggle-with_skill", "prompt": "Navbar의 모바일 메뉴 토글이 ARIA 상태 변경을 올바르게 하는지 브라우저에서 확인해줘", "eval_id": 2, "outputs": [{"name": "result.json", "type": "text", "content": "{\n  \"summary\": {\n    \"url_tested\": \"http://localhost:3000\",\n    \"viewport\": \"375x812 (mobile)\",\n    \"items_verified\": 3,\n    \"violations\": 1,\n    \"advisories\": 1,\n    \"inconclusive\": 0\n  },\n  \"findings\": [\n    {\n      \"id\": \"A-33\",\n      \"name\": \"ARIA 상태 변경\",\n      \"result\": \"❌\",\n      \"verdict_method\": \"브라우저 검증\",\n      \"issue\": \"모바일 햄버거 메뉴 버튼에 aria-expanded 속성이 없음. 클릭 전후 모두 aria-expanded 미설정으로 스크린리더 사용자가 메뉴 열림/닫힘 상태를 인식할 수 없음. SVG 아이콘은 변경되지만 접근성 트리에는 상태 변화가 반영되지 않음.\",\n      \"evidence\": {\n        \"before_click\": \"button '메뉴 열기' — aria-expanded 속성 없음\",\n        \"after_click\": \"button '메뉴 열기' — aria-expanded 속성 여전히 없음, 모바일 메뉴는 DOM에 렌더링됨\",\n        \"html_snippet\": \"<button class=\\\"md:hidden p-2\\\" data-testid=\\\"hamburger-menu\\\" aria-label=\\\"메뉴 열기\\\">...\"\n      },\n      \"fix_guide\": \"aria-expanded={menuOpen} 속성을 햄버거 버튼에 추가. 예: <button aria-expanded={menuOpen} aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'} ...>\"\n    },\n    {\n      \"id\": \"A-33\",\n      \"name\": \"ARIA 레이블 미갱신\",\n      \"result\": \"⚠️\",\n      \"verdict_method\": \"브라우저 검증\",\n      \"issue\": \"메뉴 열림 상태에서도 aria-label이 '메뉴 열기'로 고정되어 있음. 메뉴가 열린 상태에서는 '메뉴 닫기'로 변경되어야 스크린리더 사용자가 현재 상태를 정확히 파악할 수 있음.\",\n      \"evidence\": {\n        \"menu_closed\": \"aria-label='메뉴 열기'\",\n        \"menu_opened\": \"aria-label='메뉴 열기' (변경 없음)\"\n      },\n      \"fix_guide\": \"aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}로 동적 레이블 적용\"\n    }\n  ]\n}\n"}], "grading": {"expectations": [{"text": "페이지 상태 확인 후 적절한 처리 (정상/auth redirect/에러 등)", "passed": true, "evidence": "모바일 뷰포트 설정, localStorage 인증 주입"}, {"text": "A-33: 클릭 전후 snapshot으로 ARIA 상태 변경 확인", "passed": true, "evidence": "A-33 ❌: aria-expanded 누락 감지"}, {"text": "검증 시 -i -c 플래그로 compact interactive snapshot 사용", "passed": true, "evidence": "snapshot -i -c 사용"}, {"text": "npx agent-browser 명령어로 검증 수행", "passed": true, "evidence": "agent-browser v0.20.0"}, {"text": "인증 리다이렉트 발생 시 적절히 처리 (판정불가 또는 공유 요소 검증)", "passed": true, "evidence": "localStorage 인증 주입으로 처리"}, {"text": "이슈 항목만 출력 (✅/➖ 생략)", "passed": true, "evidence": "2건 이슈만 출력"}]}}, {"id": "eval-2-aria-toggle-without_skill", "prompt": "Navbar의 모바일 메뉴 토글이 ARIA 상태 변경을 올바르게 하는지 브라우저에서 확인해줘", "eval_id": 2, "outputs": [{"name": "result.json", "type": "text", "content": "{\n  \"task\": \"Verify mobile menu toggle ARIA state changes in Navbar component\",\n  \"file\": \"features/next-app/components/Navbar.tsx\",\n  \"url\": \"http://localhost:3199/dashboard\",\n  \"viewport\": { \"width\": 375, \"height\": 812 },\n  \"timestamp\": \"2026-03-14T01:48:00Z\",\n  \"summary\": \"The hamburger menu toggle button is missing critical ARIA state attributes. The `aria-expanded` attribute is absent in all states, and the `aria-label` remains static regardless of menu state.\",\n  \"checks\": [\n    {\n      \"id\": \"aria-expanded-closed\",\n      \"description\": \"aria-expanded should be 'false' when mobile menu is closed\",\n      \"expected\": \"aria-expanded=\\\"false\\\"\",\n      \"actual\": \"aria-expanded is missing (null)\",\n      \"pass\": false,\n      \"wcag\": \"WCAG 2.1 SC 4.1.2 (Name, Role, Value)\"\n    },\n    {\n      \"id\": \"aria-expanded-open\",\n      \"description\": \"aria-expanded should be 'true' when mobile menu is open\",\n      \"expected\": \"aria-expanded=\\\"true\\\"\",\n      \"actual\": \"aria-expanded is missing (null)\",\n      \"pass\": false,\n      \"wcag\": \"WCAG 2.1 SC 4.1.2 (Name, Role, Value)\"\n    },\n    {\n      \"id\": \"aria-controls\",\n      \"description\": \"aria-controls should reference the mobile menu element's id\",\n      \"expected\": \"aria-controls pointing to mobile menu id\",\n      \"actual\": \"aria-controls is missing (null); mobile menu also has no id attribute\",\n      \"pass\": false,\n      \"wcag\": \"WCAG 2.1 SC 4.1.2 (Name, Role, Value)\"\n    },\n    {\n      \"id\": \"aria-label-dynamic\",\n      \"description\": \"aria-label should change to reflect current action (e.g., '메뉴 닫기' when open)\",\n      \"expected\": \"aria-label changes between '메뉴 열기' (closed) and '메뉴 닫기' (open)\",\n      \"actual\": \"aria-label is always '메뉴 열기' regardless of menu state\",\n      \"pass\": false,\n      \"wcag\": \"WCAG 2.1 SC 4.1.2 (Name, Role, Value)\"\n    },\n    {\n      \"id\": \"menu-visibility-toggle\",\n      \"description\": \"Mobile menu should appear/disappear when toggle is clicked\",\n      \"expected\": \"Menu appears on first click, disappears on second click\",\n      \"actual\": \"Menu correctly appears (data-testid='mobile-menu' rendered) on click and disappears on second click\",\n      \"pass\": true,\n      \"wcag\": \"N/A (functional behavior)\"\n    },\n    {\n      \"id\": \"svg-icon-change\",\n      \"description\": \"SVG icon should change between hamburger (3 lines) and X (close) icon\",\n      \"expected\": \"Icon changes to reflect open/closed state visually\",\n      \"actual\": \"Icon changes correctly (hamburger lines vs X path in SVG)\",\n      \"pass\": true,\n      \"wcag\": \"N/A (visual indicator)\"\n    }\n  ],\n  \"browser_observations\": {\n    \"before_click\": {\n      \"button_attributes\": {\n        \"class\": \"md:hidden p-2\",\n        \"data-testid\": \"hamburger-menu\",\n        \"aria-label\": \"메뉴 열기\"\n      },\n      \"aria-expanded\": null,\n      \"aria-controls\": null,\n      \"aria-haspopup\": null,\n      \"mobile_menu_visible\": false\n    },\n    \"after_click_open\": {\n      \"button_attributes\": {\n        \"class\": \"md:hidden p-2\",\n        \"data-testid\": \"hamburger-menu\",\n        \"aria-label\": \"메뉴 열기\"\n      },\n      \"aria-expanded\": null,\n      \"aria-controls\": null,\n      \"aria-haspopup\": null,\n      \"mobile_menu_visible\": true,\n      \"mobile_menu_id\": null,\n      \"mobile_menu_role\": null\n    },\n    \"after_click_close\": {\n      \"aria-expanded\": null,\n      \"aria-label\": \"메뉴 열기\",\n      \"mobile_menu_visible\": false\n    }\n  },\n  \"issues_found\": [\n    {\n      \"severity\": \"critical\",\n      \"issue\": \"Missing aria-expanded attribute on hamburger toggle button\",\n      \"impact\": \"Screen reader users cannot determine whether the mobile menu is open or closed. This is a direct violation of WCAG 2.1 SC 4.1.2.\",\n      \"recommendation\": \"Add `aria-expanded={menuOpen}` to the hamburger button element.\",\n      \"code_location\": \"Navbar.tsx, line 59-62\"\n    },\n    {\n      \"severity\": \"major\",\n      \"issue\": \"Missing aria-controls attribute linking button to menu\",\n      \"impact\": \"Assistive technologies cannot programmatically associate the toggle button with the menu it controls.\",\n      \"recommendation\": \"Add an `id` to the mobile menu div (e.g., id=\\\"mobile-menu\\\") and add `aria-controls=\\\"mobile-menu\\\"` to the button.\"\n    },\n    {\n      \"severity\": \"moderate\",\n      \"issue\": \"Static aria-label does not reflect current menu state\",\n      \"impact\": \"The label always says '메뉴 열기' (Open menu) even when the menu is already open, which is misleading for screen reader users.\",\n      \"recommendation\": \"Change aria-label dynamically: `aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}`\"\n    },\n    {\n      \"severity\": \"minor\",\n      \"issue\": \"Mobile menu lacks role and aria-label\",\n      \"impact\": \"The mobile menu panel has no semantic role or label for assistive technologies.\",\n      \"recommendation\": \"Add `role=\\\"menu\\\"` or use a nav landmark with `aria-label=\\\"모바일 메뉴\\\"` to the mobile menu container.\"\n    }\n  ],\n  \"source_code_note\": \"Line 58 contains an explicit comment: '/* BAD: missing aria-expanded to indicate menu state */' confirming this is a known intentional defect in the test fixture.\",\n  \"overall_result\": \"FAIL\",\n  \"pass_count\": 2,\n  \"fail_count\": 4,\n  \"total_checks\": 6\n}\n"}], "grading": {"expectations": [{"text": "페이지 상태 확인 후 적절한 처리 (정상/auth redirect/에러 등)", "passed": true, "evidence": "인증 설정 후 /dashboard 접근, 모바일 뷰포트 설정"}, {"text": "A-33: 클릭 전후 snapshot으로 ARIA 상태 변경 확인", "passed": true, "evidence": "클릭 전후 aria-expanded 미설정 확인 → FAIL 판정"}, {"text": "검증 시 -i -c 플래그로 compact interactive snapshot 사용", "passed": false, "evidence": "agent-browser 미사용, Playwright MCP 도구로 직접 접근"}, {"text": "npx agent-browser 명령어로 검증 수행", "passed": false, "evidence": "Playwright MCP 사용, agent-browser 미사용"}, {"text": "인증 리다이렉트 발생 시 적절히 처리 (판정불가 또는 공유 요소 검증)", "passed": true, "evidence": "localStorage에 인증 토큰 주입하여 적절히 처리"}]}}, {"id": "eval-3-full-homepage-with_skill", "prompt": "홈페이지의 접근성을 브라우저에서 검증해줘 (대비, ARIA 동작, 런타임 항목)", "eval_id": 3, "outputs": [{"name": "result.json", "type": "text", "content": "{\n  \"summary\": {\n    \"url_tested\": \"http://localhost:3000/\",\n    \"items_verified\": 14,\n    \"violations\": 0,\n    \"advisories\": 0,\n    \"inconclusive\": 0\n  },\n  \"findings\": []\n}\n"}], "grading": {"expectations": [{"text": "A-08: getComputedStyle 기반 contrast ratio 계산이 수행됨", "passed": true, "evidence": "모든 텍스트 contrast 5.25:1 이상 PASS"}, {"text": "A-33: 인터랙티브 요소 클릭 전후 ARIA state 확인이 수행됨", "passed": true, "evidence": "토글 요소 없어 N/A"}, {"text": "package.json에서 dev script를 찾아 서버 자동 시작", "passed": true, "evidence": "dev server 자동 시작"}, {"text": "페이지 상태 감지 (정상/auth/loading/error/empty) 수행", "passed": true, "evidence": "정상 렌더링 확인"}, {"text": "A-12, A-26, A-28, A-31 중 해당 요소 존재 시 추가 검증 또는 N/A 처리", "passed": true, "evidence": "A-31 PASS(nav 일관성), 나머지 N/A"}, {"text": "이슈 항목만 출력 (✅/➖ 생략)", "passed": true, "evidence": "이슈 0건, 빈 findings"}]}}, {"id": "eval-3-full-homepage-without_skill", "prompt": "홈페이지의 접근성을 브라우저에서 검증해줘 (대비, ARIA 동작, 런타임 항목)", "eval_id": 3, "outputs": [{"name": "result.json", "type": "text", "content": "{\n  \"audit\": \"Homepage Full Accessibility Verification\",\n  \"url\": \"http://localhost:3111/\",\n  \"page\": \"features/next-app/app/page.tsx\",\n  \"timestamp\": \"2026-03-14T02:00:00Z\",\n  \"summary\": {\n    \"totalIssues\": 8,\n    \"critical\": 1,\n    \"serious\": 2,\n    \"moderate\": 3,\n    \"minor\": 2\n  },\n  \"categories\": {\n    \"keyboard\": {\n      \"status\": \"fail\",\n      \"tabOrder\": [\n        { \"step\": 1, \"element\": \"a[data-testid=\\\"nav-logo\\\"]\", \"text\": \"TestApp\", \"href\": \"/\", \"focusVisible\": true },\n        { \"step\": 2, \"element\": \"a[data-testid=\\\"nav-login\\\"]\", \"text\": \"로그인\", \"href\": \"/login\", \"focusVisible\": true },\n        { \"step\": 3, \"element\": \"a[data-testid=\\\"nav-signup\\\"]\", \"text\": \"회원가입\", \"href\": \"/signup\", \"focusVisible\": true },\n        { \"step\": 4, \"element\": \"a[data-testid=\\\"home-login\\\"]\", \"text\": \"로그인\", \"href\": \"/login\", \"focusVisible\": true },\n        { \"step\": 5, \"element\": \"a[data-testid=\\\"home-signup\\\"]\", \"text\": \"회원가입\", \"href\": \"/signup\", \"focusVisible\": true },\n        { \"step\": 6, \"element\": \"nextjs-portal (dev tools)\", \"text\": \"\", \"href\": null, \"focusVisible\": false },\n        { \"step\": 7, \"element\": \"button[data-testid=\\\"cookie-accept\\\"]\", \"text\": \"동의\", \"href\": null, \"focusVisible\": true }\n      ],\n      \"issues\": [\n        {\n          \"id\": \"keyboard-1\",\n          \"issue\": \"Cookie banner overlay does not trap focus\",\n          \"description\": \"The cookie banner renders a full-screen semi-transparent overlay (bg-black/30, z-50) that visually blocks the page content. However, keyboard Tab navigation passes through elements behind the overlay (nav links, main CTA buttons) before reaching the cookie accept button. Users can interact with obscured elements via keyboard.\",\n          \"severity\": \"critical\",\n          \"wcag\": \"2.4.3 Focus Order / 2.1.2 No Keyboard Trap (inverse)\",\n          \"element\": \"div[data-testid=\\\"cookie-banner\\\"]\",\n          \"recommendation\": \"Implement focus trapping within the cookie banner when it is visible. Focus should move only between the banner text and the accept button until dismissed.\"\n        }\n      ]\n    },\n    \"focusVisibility\": {\n      \"status\": \"pass\",\n      \"details\": \"All interactive elements (links and buttons) show a visible focus indicator using the browser default outline (auto 1px). Focus ring is visible on all 7 focusable elements tested.\",\n      \"issues\": [],\n      \"note\": \"Focus indicators rely on browser defaults rather than custom styles. While functional, custom focus styles would improve visual consistency.\"\n    },\n    \"colorContrast\": {\n      \"status\": \"pass\",\n      \"details\": \"All text elements pass WCAG AA contrast requirements. The blue buttons (bg-blue-600 / lab(44.06 29.03 -86.04)) with white text achieve approximately 8.59:1 contrast ratio, well above the 4.5:1 AA requirement for normal text.\",\n      \"checkedElements\": [\n        { \"element\": \"h1 \\\"TestApp\\\"\", \"fg\": \"rgb(24,24,27) on rgb(250,250,250)\", \"ratio\": \"17.93:1\", \"passes\": true },\n        { \"element\": \"p (description)\", \"fg\": \"rgb(82,82,91) on rgb(250,250,250)\", \"ratio\": \"7.16:1\", \"passes\": true },\n        { \"element\": \"a[data-testid=\\\"nav-logo\\\"]\", \"fg\": \"rgb(24,24,27) on rgb(255,255,255)\", \"ratio\": \"17.93:1\", \"passes\": true },\n        { \"element\": \"a[data-testid=\\\"nav-login\\\"]\", \"fg\": \"rgb(82,82,91) on rgb(255,255,255)\", \"ratio\": \"7.16:1\", \"passes\": true },\n        { \"element\": \"a[data-testid=\\\"home-login\\\"]\", \"fg\": \"rgb(255,255,255) on bg-blue-600 lab(44.06 29.03 -86.04)\", \"ratio\": \"~8.59:1\", \"passes\": true },\n        { \"element\": \"a[data-testid=\\\"home-signup\\\"]\", \"fg\": \"rgb(63,63,70) on rgb(255,255,255)\", \"ratio\": \"8.48:1\", \"passes\": true },\n        { \"element\": \"button[data-testid=\\\"cookie-accept\\\"]\", \"fg\": \"rgb(255,255,255) on bg-blue-600 lab(44.06 29.03 -86.04)\", \"ratio\": \"~8.59:1\", \"passes\": true },\n        { \"element\": \"p (cookie text)\", \"fg\": \"rgb(63,63,70) on rgb(255,255,255)\", \"ratio\": \"8.48:1\", \"passes\": true }\n      ],\n      \"issues\": []\n    },\n    \"duplicateIds\": {\n      \"status\": \"pass\",\n      \"totalIdsOnPage\": 1,\n      \"duplicates\": {},\n      \"hasDuplicates\": false,\n      \"issues\": []\n    },\n    \"aria\": {\n      \"status\": \"fail\",\n      \"issues\": [\n        {\n          \"id\": \"aria-1\",\n          \"element\": \"div[data-testid=\\\"cookie-banner\\\"]\",\n          \"issue\": \"Cookie banner overlay lacks role=\\\"dialog\\\" and aria-modal=\\\"true\\\"\",\n          \"description\": \"The cookie banner creates a full-screen overlay (fixed inset-0 z-50 bg-black/30) that blocks page interaction, behaving as a modal dialog. However, it is rendered as a plain div without role=\\\"dialog\\\" or aria-modal=\\\"true\\\". Screen readers will not announce it as a dialog or understand the modal context.\",\n          \"severity\": \"serious\",\n          \"wcag\": \"4.1.2 Name, Role, Value\",\n          \"recommendation\": \"Add role=\\\"dialog\\\" aria-modal=\\\"true\\\" aria-label=\\\"쿠키 동의\\\" to the cookie banner container.\"\n        },\n        {\n          \"id\": \"aria-2\",\n          \"element\": \"div[data-testid=\\\"cookie-banner\\\"]\",\n          \"issue\": \"Cookie banner lacks accessible name\",\n          \"description\": \"The cookie banner has no aria-label or aria-labelledby attribute, so screen readers cannot provide a meaningful label when entering the region.\",\n          \"severity\": \"moderate\",\n          \"wcag\": \"4.1.2 Name, Role, Value\",\n          \"recommendation\": \"Add aria-label=\\\"쿠키 사용 동의\\\" to the banner container.\"\n        },\n        {\n          \"id\": \"aria-3\",\n          \"element\": \"nav[data-testid=\\\"navbar\\\"]\",\n          \"issue\": \"Navigation landmark lacks aria-label\",\n          \"description\": \"The main navigation bar uses a <nav> element but does not have an aria-label or aria-labelledby attribute. While there is only one nav on the unauthenticated homepage, adding a label improves screen reader experience.\",\n          \"severity\": \"moderate\",\n          \"wcag\": \"1.3.1 Info and Relationships\",\n          \"recommendation\": \"Add aria-label=\\\"메인 네비게이션\\\" to the nav element.\"\n        },\n        {\n          \"id\": \"aria-4\",\n          \"element\": \"div[role=\\\"alert\\\"]\",\n          \"issue\": \"Empty live region (role=alert) present in DOM\",\n          \"description\": \"An empty element with role=\\\"alert\\\" exists in the DOM. While it appears to be a placeholder for error messages, its presence may cause some screen readers to announce an empty alert on page load.\",\n          \"severity\": \"minor\",\n          \"wcag\": \"4.1.3 Status Messages\",\n          \"recommendation\": \"Conditionally render the alert element only when there is content to display, or use aria-live on a persistent container instead.\"\n        },\n        {\n          \"id\": \"aria-5\",\n          \"element\": \"button[data-testid=\\\"hamburger-menu\\\"] (mobile only)\",\n          \"issue\": \"Hamburger menu button missing aria-expanded\",\n          \"description\": \"The mobile hamburger menu button has aria-label=\\\"메뉴 열기\\\" but lacks aria-expanded to indicate whether the mobile menu is open or closed. The aria-label also does not dynamically change between open/close states. (Identified from source code review; button only visible on mobile viewport.)\",\n          \"severity\": \"moderate\",\n          \"wcag\": \"4.1.2 Name, Role, Value\",\n          \"recommendation\": \"Add aria-expanded={menuOpen} to the hamburger button and update aria-label dynamically.\"\n        }\n      ]\n    },\n    \"semantics\": {\n      \"status\": \"pass\",\n      \"language\": {\n        \"lang\": \"ko\",\n        \"hasLang\": true,\n        \"correct\": true\n      },\n      \"headings\": {\n        \"structure\": [\n          { \"level\": 1, \"text\": \"TestApp\" }\n        ],\n        \"multipleH1\": false,\n        \"skippedLevels\": false\n      },\n      \"landmarks\": {\n        \"nav\": 1,\n        \"main\": 1,\n        \"hasProperStructure\": true\n      },\n      \"links\": {\n        \"total\": 5,\n        \"emptyLinks\": 0\n      },\n      \"issues\": []\n    }\n  },\n  \"overallAssessment\": {\n    \"grade\": \"B-\",\n    \"passedChecks\": [\"Color contrast (WCAG AA)\", \"Duplicate IDs\", \"Focus visibility\", \"Language attribute\", \"Heading hierarchy\", \"Landmark structure\", \"Link text\"],\n    \"failedChecks\": [\"Cookie banner focus trap\", \"Cookie banner ARIA dialog role\", \"Navigation aria-label\", \"Hamburger aria-expanded (mobile)\"],\n    \"topPriorityFixes\": [\n      \"1. Add focus trapping to cookie banner overlay to prevent keyboard users from reaching obscured content\",\n      \"2. Add role=\\\"dialog\\\" aria-modal=\\\"true\\\" aria-label=\\\"쿠키 사용 동의\\\" to cookie banner\",\n      \"3. Add aria-label to nav element\",\n      \"4. Add aria-expanded to hamburger menu button (mobile)\",\n      \"5. Conditionally render empty alert element\"\n    ]\n  }\n}\n"}], "grading": {"expectations": [{"text": "A-08, A-10, A-11, A-32, A-33 항목이 모두 검증됨", "passed": true, "evidence": "색상 대비, 키보드 접근, 포커스 표시, 중복 ID, ARIA 상태 모두 검증됨"}, {"text": "package.json에서 dev script를 찾아 서버 자동 시작", "passed": true, "evidence": "pnpm install 후 dev server 시작 성공"}, {"text": "페이지 상태 감지 (정상/auth/loading/error/empty) 수행", "passed": true, "evidence": "홈페이지 정상 렌더링 확인, 쿠키 배너 감지"}, {"text": "A-12, A-26, A-28, A-31 중 해당 요소 존재 시 추가 검증", "passed": true, "evidence": "쿠키 배너 포커스 트랩 문제 등 추가 검증 수행"}, {"text": "검증 불가 항목에 구체적 사유 명시 (예: '인증 필요 페이지')", "passed": false, "evidence": "판정불가 항목이 없었으나, 표준화된 사유 형식도 미사용"}]}}], "previous_feedback": {}, "previous_outputs": {"eval-1-keyboard-focus-with_skill": [{"name": "result.json", "type": "text", "content": "[\n  {\n    \"id\": \"A-10\",\n    \"name\": \"키보드 사용 보장\",\n    \"result\": \"❌\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"StatsCard.tsx — 3개의 StatsCard가 <div onClick>으로 구현되어 있으나 tabIndex, role, onKeyDown이 없어 Tab 키로 접근 불가. 12회 Tab 키 입력 후에도 StatsCard에 포커스가 이동하지 않음. Tab 순서: TestApp → 대시보드 → 할 일 → 프로필 → 로그아웃 → 홈 → icon button(refresh) → icon button(settings) → textbox → 추가 → 전체 할 일 목록 보기 → 동의 — StatsCard는 완전히 건너뜀\",\n    \"fix_guide\": \"StatsCard의 <div onClick>을 <button>으로 변경하거나, tabIndex={0}, role=\\\"button\\\", onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(); }}를 추가\"\n  },\n  {\n    \"id\": \"A-11\",\n    \"name\": \"포커스 표시\",\n    \"result\": \"✅\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"키보드로 접근 가능한 모든 요소(link, button, input)에 outline: rgb(16, 16, 16) auto 1px가 표시됨. 브라우저 기본 포커스 인디케이터가 정상 작동. 단, StatsCard는 키보드 접근이 불가하므로 포커스 표시 확인 불가\",\n    \"fix_guide\": \"현재 키보드 접근 가능한 요소들의 포커스 표시는 정상. StatsCard가 키보드 접근 가능하게 수정된 후 포커스 표시도 함께 확인 필요\"\n  },\n  {\n    \"id\": \"A-08\",\n    \"name\": \"색상 대비\",\n    \"result\": \"⚠️\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"page.tsx — 날짜 텍스트(text-zinc-400, 12px)의 명도 대비가 약 2.56:1로 WCAG AA 기준 4.5:1 미달. 나머지 텍스트는 적합: 추가/동의 버튼(흰색 on 파란색) 7.66:1, 알림 텍스트(rgb(23,23,23) on 흰색) 17.93:1, zinc-500 텍스트(14px) 4.83:1\",\n    \"fix_guide\": \"날짜 텍스트의 text-zinc-400을 text-zinc-500 이상으로 변경하여 4.5:1 이상 대비 확보\"\n  },\n  {\n    \"id\": \"A-32\",\n    \"name\": \"중복 ID\",\n    \"result\": \"❌\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"StatsCard.tsx — id=\\\"stat-card\\\"가 3개의 StatsCard 인스턴스에서 중복 사용됨. DOM에서 총 4개의 id 속성 중 \\\"stat-card\\\"가 중복으로 감지됨\",\n    \"fix_guide\": \"StatsCard에서 고정 id=\\\"stat-card\\\"를 제거하거나, props로 전달받은 testId를 id로 사용: id={testId}\"\n  },\n  {\n    \"id\": \"A-33\",\n    \"name\": \"ARIA 상태 변경\",\n    \"result\": \"➖\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"대시보드 페이지에 aria-expanded, aria-selected, aria-checked, aria-pressed 속성을 가진 요소가 없음. 토글, 아코디언, 체크박스 등 ARIA 상태 변경이 필요한 인터랙티브 요소가 존재하지 않음\",\n    \"fix_guide\": \"해당 없음 — 현재 페이지에 ARIA 상태 변경이 필요한 요소가 없음\"\n  },\n  {\n    \"id\": \"A-12\",\n    \"name\": \"초점 이동 순서\",\n    \"result\": \"➖\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"모달, 팝업, 대화상자 등 포커스 트랩이 필요한 요소가 대시보드 페이지에 존재하지 않음\",\n    \"fix_guide\": \"해당 없음\"\n  },\n  {\n    \"id\": \"A-26\",\n    \"name\": \"요청에 의한 변경\",\n    \"result\": \"➖\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"대시보드 페이지에 <select> 요소가 없어 자동 네비게이션 검증 대상 없음\",\n    \"fix_guide\": \"해당 없음\"\n  },\n  {\n    \"id\": \"A-28\",\n    \"name\": \"오류 수정 제안\",\n    \"result\": \"⚠️\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"TodoForm에서 빈 입력 상태로 '추가' 버튼 클릭 시 아무런 에러 메시지가 표시되지 않고 폼이 조용히 실패함. 사용자에게 입력이 필요하다는 피드백이 없음\",\n    \"fix_guide\": \"빈 입력 제출 시 \\\"할 일을 입력해주세요\\\" 등의 오류 메시지를 표시하고, 포커스를 입력 필드로 이동시키는 것을 권장\"\n  }\n]\n"}], "eval-1-keyboard-focus-without_skill": [{"name": "result.json", "type": "text", "content": "{\n  \"page\": \"/dashboard\",\n  \"url\": \"http://localhost:3088/dashboard\",\n  \"timestamp\": \"2026-03-14T01:56:56.385Z\",\n  \"summary\": {\n    \"totalTests\": 6,\n    \"passed\": 1,\n    \"failed\": 5,\n    \"issues\": [\n      \"Duplicate IDs: 3 elements share id=\\\"stat-card\\\" (WCAG 4.1.1)\",\n      \"StatsCard divs have onClick but no tabIndex, role, or onKeyDown (WCAG 2.1.1)\",\n      \"Icon buttons (btn-refresh, btn-settings) lack aria-label (WCAG 4.1.2)\",\n      \"Image /promo-banner.png missing alt attribute (WCAG 1.1.1)\",\n      \"Todo input field has focus:outline-none with no alternative focus indicator (WCAG 2.4.7)\"\n    ]\n  },\n  \"tests\": [\n    {\n      \"name\": \"duplicate-ids\",\n      \"description\": \"Check for duplicate ID attributes (WCAG 4.1.1 Parsing)\",\n      \"status\": \"fail\",\n      \"wcag\": \"4.1.1\",\n      \"severity\": \"serious\",\n      \"details\": {\n        \"stat-card\": {\n          \"count\": 3,\n          \"elements\": [\"DIV\", \"DIV\", \"DIV\"],\n          \"explanation\": \"StatsCard component hardcodes id=\\\"stat-card\\\" but is rendered 3 times (stat-total, stat-completed, stat-pending), creating 3 elements with the same ID\"\n        }\n      }\n    },\n    {\n      \"name\": \"keyboard-accessible-click-handlers\",\n      \"description\": \"Elements with click handlers must be keyboard accessible (WCAG 2.1.1 Keyboard)\",\n      \"status\": \"fail\",\n      \"wcag\": \"2.1.1\",\n      \"severity\": \"critical\",\n      \"details\": [\n        {\n          \"tag\": \"DIV\",\n          \"id\": \"stat-card\",\n          \"testId\": \"stat-total\",\n          \"hasTabIndex\": false,\n          \"hasRole\": false,\n          \"hasKeyDown\": false,\n          \"textContent\": \"0전체 할 일\",\n          \"source\": \"react-props\",\n          \"explanation\": \"div with onClick handler but no tabIndex, role='button', or onKeyDown. Keyboard users cannot activate this element.\"\n        },\n        {\n          \"tag\": \"DIV\",\n          \"id\": \"stat-card\",\n          \"testId\": \"stat-completed\",\n          \"hasTabIndex\": false,\n          \"hasRole\": false,\n          \"hasKeyDown\": false,\n          \"textContent\": \"0완료\",\n          \"source\": \"react-props\"\n        },\n        {\n          \"tag\": \"DIV\",\n          \"id\": \"stat-card\",\n          \"testId\": \"stat-pending\",\n          \"hasTabIndex\": false,\n          \"hasRole\": false,\n          \"hasKeyDown\": false,\n          \"textContent\": \"0진행중\",\n          \"source\": \"react-props\"\n        }\n      ]\n    },\n    {\n      \"name\": \"button-accessible-names\",\n      \"description\": \"Icon buttons must have accessible names (WCAG 4.1.2 Name, Role, Value)\",\n      \"status\": \"fail\",\n      \"wcag\": \"4.1.2\",\n      \"severity\": \"critical\",\n      \"details\": [\n        {\n          \"testId\": \"btn-refresh\",\n          \"hasAriaLabel\": false,\n          \"textContent\": \"\",\n          \"explanation\": \"Button contains only an SVG icon with no aria-label, aria-labelledby, or visible text. Screen readers will announce it as an unnamed button.\"\n        },\n        {\n          \"testId\": \"btn-settings\",\n          \"hasAriaLabel\": false,\n          \"textContent\": \"\",\n          \"explanation\": \"Button contains only an SVG icon with no aria-label, aria-labelledby, or visible text.\"\n        }\n      ]\n    },\n    {\n      \"name\": \"image-alt-text\",\n      \"description\": \"Images must have alt text (WCAG 1.1.1 Non-text Content)\",\n      \"status\": \"fail\",\n      \"wcag\": \"1.1.1\",\n      \"severity\": \"critical\",\n      \"details\": [\n        {\n          \"src\": \"/promo-banner.png\",\n          \"hasAlt\": false,\n          \"explanation\": \"Image element lacks alt attribute entirely. Screen readers cannot describe this image.\"\n        }\n      ]\n    },\n    {\n      \"name\": \"focus-visibility\",\n      \"description\": \"Focus indicators must be visible for all interactive elements (WCAG 2.4.7 Focus Visible)\",\n      \"status\": \"fail\",\n      \"wcag\": \"2.4.7\",\n      \"severity\": \"serious\",\n      \"details\": {\n        \"elementsWithoutFocusIndicator\": [\n          {\n            \"tag\": \"input\",\n            \"testId\": \"todo-input\",\n            \"type\": \"text\",\n            \"placeholder\": \"할 일을 입력하세요\",\n            \"focusStyles\": {\n              \"outlineStyle\": \"none\",\n              \"outlineWidth\": \"0px\",\n              \"boxShadow\": \"none\",\n              \"hasVisibleIndicator\": false\n            },\n            \"explanation\": \"The input has class 'focus:outline-none' which removes the default focus outline, and no alternative focus indicator (such as box-shadow or border-color change) is applied via CSS. The 'focus:border-blue-500' class may provide a subtle indicator via border color, but the outline suppression is still problematic.\"\n          }\n        ],\n        \"elementsWithFocusIndicator\": [\n          {\"testId\": \"nav-logo\", \"tag\": \"a\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"nav-dashboard\", \"tag\": \"a\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"nav-todos\", \"tag\": \"a\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"nav-profile\", \"tag\": \"a\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"nav-logout\", \"tag\": \"button\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"btn-refresh\", \"tag\": \"button\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"btn-settings\", \"tag\": \"button\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"todo-add\", \"tag\": \"button\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"},\n          {\"testId\": \"go-to-todos\", \"tag\": \"a\", \"outlineStyle\": \"auto\", \"outlineWidth\": \"1px\"}\n        ]\n      }\n    },\n    {\n      \"name\": \"tab-order\",\n      \"description\": \"Tab order should follow a logical reading sequence (WCAG 2.4.3 Focus Order)\",\n      \"status\": \"pass\",\n      \"wcag\": \"2.4.3\",\n      \"severity\": \"info\",\n      \"details\": {\n        \"tabSequence\": [\n          {\"tabStop\": 1, \"tag\": \"a\", \"testId\": \"nav-logo\", \"text\": \"TestApp\"},\n          {\"tabStop\": 2, \"tag\": \"a\", \"testId\": \"nav-dashboard\", \"text\": \"대시보드\"},\n          {\"tabStop\": 3, \"tag\": \"a\", \"testId\": \"nav-todos\", \"text\": \"할 일\"},\n          {\"tabStop\": 4, \"tag\": \"a\", \"testId\": \"nav-profile\", \"text\": \"프로필\"},\n          {\"tabStop\": 5, \"tag\": \"button\", \"testId\": \"nav-logout\", \"text\": \"로그아웃\"},\n          {\"tabStop\": 6, \"tag\": \"a\", \"text\": \"홈 (breadcrumb)\"},\n          {\"tabStop\": 7, \"tag\": \"button\", \"testId\": \"btn-refresh\", \"text\": \"(icon only, no label)\"},\n          {\"tabStop\": 8, \"tag\": \"button\", \"testId\": \"btn-settings\", \"text\": \"(icon only, no label)\"},\n          {\"tabStop\": 9, \"tag\": \"input\", \"testId\": \"todo-input\", \"text\": \"할 일을 입력하세요\"},\n          {\"tabStop\": 10, \"tag\": \"button\", \"testId\": \"todo-add\", \"text\": \"추가\"},\n          {\"tabStop\": 11, \"tag\": \"a\", \"testId\": \"go-to-todos\", \"text\": \"전체 할 일 목록 보기 →\"}\n        ],\n        \"totalTabStops\": 11,\n        \"logicalOrder\": true,\n        \"note\": \"Tab order follows DOM order (nav -> breadcrumb -> main content). StatsCard elements with onClick are NOT in the tab order because they lack tabIndex, which is the keyboard accessibility bug.\"\n      }\n    }\n  ],\n  \"sourceFiles\": {\n    \"dashboardPage\": \"features/next-app/app/dashboard/page.tsx\",\n    \"statsCard\": \"features/next-app/components/StatsCard.tsx\"\n  },\n  \"recommendations\": [\n    {\n      \"issue\": \"StatsCard: duplicate id=\\\"stat-card\\\"\",\n      \"fix\": \"Use the testId prop or a unique identifier as the id, e.g., id={testId} instead of id=\\\"stat-card\\\"\",\n      \"file\": \"features/next-app/components/StatsCard.tsx\",\n      \"line\": 12\n    },\n    {\n      \"issue\": \"StatsCard: div with onClick not keyboard accessible\",\n      \"fix\": \"Add role=\\\"button\\\", tabIndex={0}, and an onKeyDown handler that triggers handleClick on Enter/Space\",\n      \"file\": \"features/next-app/components/StatsCard.tsx\",\n      \"line\": 17\n    },\n    {\n      \"issue\": \"Icon buttons without aria-label\",\n      \"fix\": \"Add aria-label to btn-refresh (e.g., aria-label=\\\"새로고침\\\") and btn-settings (e.g., aria-label=\\\"설정\\\")\",\n      \"file\": \"features/next-app/app/dashboard/page.tsx\",\n      \"lines\": [59, 62]\n    },\n    {\n      \"issue\": \"Image missing alt attribute\",\n      \"fix\": \"Add alt attribute to promo-banner.png image, e.g., alt=\\\"프로모션 배너\\\" or alt=\\\"\\\" if decorative\",\n      \"file\": \"features/next-app/app/dashboard/page.tsx\",\n      \"line\": 83\n    },\n    {\n      \"issue\": \"Todo input removes focus outline\",\n      \"fix\": \"Replace focus:outline-none with a visible focus indicator, e.g., focus:ring-2 focus:ring-blue-500\",\n      \"file\": \"features/next-app/components/TodoForm.tsx\"\n    }\n  ]\n}\n"}], "eval-2-aria-toggle-with_skill": [{"name": "result.json", "type": "text", "content": "[\n  {\n    \"id\": \"A-33\",\n    \"name\": \"ARIA 상태 변경\",\n    \"result\": \"❌\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"Navbar.tsx — 모바일 햄버거 버튼(data-testid=\\\"hamburger-menu\\\")에 aria-expanded 속성이 없음. 메뉴가 열린 상태에서도 aria-expanded가 null이며, aria-label도 \\\"메뉴 열기\\\"로 고정되어 메뉴 상태 변화를 반영하지 않음. 스크린 리더 사용자가 메뉴의 열림/닫힘 상태를 알 수 없음.\",\n    \"fix_guide\": \"1. 버튼에 aria-expanded={menuOpen} 추가: <button aria-expanded={menuOpen} aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}>\\n2. 모바일 메뉴 영역에 id를 부여하고 버튼에 aria-controls 속성으로 연결: aria-controls=\\\"mobile-menu\\\"\\n3. 메뉴가 열릴 때 aria-label을 '메뉴 닫기'로, 닫힐 때 '메뉴 열기'로 동적 변경\"\n  },\n  {\n    \"id\": \"A-10\",\n    \"name\": \"키보드 사용 보장\",\n    \"result\": \"✅\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"Navbar의 모든 인터랙티브 요소(로고 링크, 햄버거 버튼)에 Tab 키로 접근 가능. 버튼은 <button> 요소로 구현되어 있어 키보드 접근성이 보장됨.\",\n    \"fix_guide\": null\n  },\n  {\n    \"id\": \"A-11\",\n    \"name\": \"포커스 표시\",\n    \"result\": \"⚠️\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"햄버거 버튼 포커스 시 outline이 'rgb(23, 23, 23) none 0px'으로 확인됨. outline 스타일이 none으로 설정되어 있어 시각적 포커스 표시가 불명확할 수 있음. boxShadow와 border도 시각적 변화 없음.\",\n    \"fix_guide\": \"햄버거 버튼에 focus-visible 스타일 추가: className에 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500' 추가\"\n  },\n  {\n    \"id\": \"A-32\",\n    \"name\": \"중복 ID\",\n    \"result\": \"✅\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"페이지에 ID가 있는 요소가 1개('_R_')만 있으며, 중복 ID 없음.\",\n    \"fix_guide\": null\n  },\n  {\n    \"id\": \"A-08\",\n    \"name\": \"명암 대비\",\n    \"result\": \"➖\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"Navbar 요소들의 배경색이 모두 transparent(rgba(0,0,0,0))로 보고되어 정확한 대비 계산이 어려움. 상위 요소에서 white 배경을 상속받으므로 실제 대비는 충분할 것으로 추정되나, computed style만으로는 정확한 판정 불가.\",\n    \"fix_guide\": null\n  }\n]\n"}], "eval-2-aria-toggle-without_skill": [{"name": "result.json", "type": "text", "content": "{\n  \"task\": \"Verify mobile menu toggle ARIA state changes in Navbar component\",\n  \"file\": \"features/next-app/components/Navbar.tsx\",\n  \"url\": \"http://localhost:3199/dashboard\",\n  \"viewport\": { \"width\": 375, \"height\": 812 },\n  \"timestamp\": \"2026-03-14T01:48:00Z\",\n  \"summary\": \"The hamburger menu toggle button is missing critical ARIA state attributes. The `aria-expanded` attribute is absent in all states, and the `aria-label` remains static regardless of menu state.\",\n  \"checks\": [\n    {\n      \"id\": \"aria-expanded-closed\",\n      \"description\": \"aria-expanded should be 'false' when mobile menu is closed\",\n      \"expected\": \"aria-expanded=\\\"false\\\"\",\n      \"actual\": \"aria-expanded is missing (null)\",\n      \"pass\": false,\n      \"wcag\": \"WCAG 2.1 SC 4.1.2 (Name, Role, Value)\"\n    },\n    {\n      \"id\": \"aria-expanded-open\",\n      \"description\": \"aria-expanded should be 'true' when mobile menu is open\",\n      \"expected\": \"aria-expanded=\\\"true\\\"\",\n      \"actual\": \"aria-expanded is missing (null)\",\n      \"pass\": false,\n      \"wcag\": \"WCAG 2.1 SC 4.1.2 (Name, Role, Value)\"\n    },\n    {\n      \"id\": \"aria-controls\",\n      \"description\": \"aria-controls should reference the mobile menu element's id\",\n      \"expected\": \"aria-controls pointing to mobile menu id\",\n      \"actual\": \"aria-controls is missing (null); mobile menu also has no id attribute\",\n      \"pass\": false,\n      \"wcag\": \"WCAG 2.1 SC 4.1.2 (Name, Role, Value)\"\n    },\n    {\n      \"id\": \"aria-label-dynamic\",\n      \"description\": \"aria-label should change to reflect current action (e.g., '메뉴 닫기' when open)\",\n      \"expected\": \"aria-label changes between '메뉴 열기' (closed) and '메뉴 닫기' (open)\",\n      \"actual\": \"aria-label is always '메뉴 열기' regardless of menu state\",\n      \"pass\": false,\n      \"wcag\": \"WCAG 2.1 SC 4.1.2 (Name, Role, Value)\"\n    },\n    {\n      \"id\": \"menu-visibility-toggle\",\n      \"description\": \"Mobile menu should appear/disappear when toggle is clicked\",\n      \"expected\": \"Menu appears on first click, disappears on second click\",\n      \"actual\": \"Menu correctly appears (data-testid='mobile-menu' rendered) on click and disappears on second click\",\n      \"pass\": true,\n      \"wcag\": \"N/A (functional behavior)\"\n    },\n    {\n      \"id\": \"svg-icon-change\",\n      \"description\": \"SVG icon should change between hamburger (3 lines) and X (close) icon\",\n      \"expected\": \"Icon changes to reflect open/closed state visually\",\n      \"actual\": \"Icon changes correctly (hamburger lines vs X path in SVG)\",\n      \"pass\": true,\n      \"wcag\": \"N/A (visual indicator)\"\n    }\n  ],\n  \"browser_observations\": {\n    \"before_click\": {\n      \"button_attributes\": {\n        \"class\": \"md:hidden p-2\",\n        \"data-testid\": \"hamburger-menu\",\n        \"aria-label\": \"메뉴 열기\"\n      },\n      \"aria-expanded\": null,\n      \"aria-controls\": null,\n      \"aria-haspopup\": null,\n      \"mobile_menu_visible\": false\n    },\n    \"after_click_open\": {\n      \"button_attributes\": {\n        \"class\": \"md:hidden p-2\",\n        \"data-testid\": \"hamburger-menu\",\n        \"aria-label\": \"메뉴 열기\"\n      },\n      \"aria-expanded\": null,\n      \"aria-controls\": null,\n      \"aria-haspopup\": null,\n      \"mobile_menu_visible\": true,\n      \"mobile_menu_id\": null,\n      \"mobile_menu_role\": null\n    },\n    \"after_click_close\": {\n      \"aria-expanded\": null,\n      \"aria-label\": \"메뉴 열기\",\n      \"mobile_menu_visible\": false\n    }\n  },\n  \"issues_found\": [\n    {\n      \"severity\": \"critical\",\n      \"issue\": \"Missing aria-expanded attribute on hamburger toggle button\",\n      \"impact\": \"Screen reader users cannot determine whether the mobile menu is open or closed. This is a direct violation of WCAG 2.1 SC 4.1.2.\",\n      \"recommendation\": \"Add `aria-expanded={menuOpen}` to the hamburger button element.\",\n      \"code_location\": \"Navbar.tsx, line 59-62\"\n    },\n    {\n      \"severity\": \"major\",\n      \"issue\": \"Missing aria-controls attribute linking button to menu\",\n      \"impact\": \"Assistive technologies cannot programmatically associate the toggle button with the menu it controls.\",\n      \"recommendation\": \"Add an `id` to the mobile menu div (e.g., id=\\\"mobile-menu\\\") and add `aria-controls=\\\"mobile-menu\\\"` to the button.\"\n    },\n    {\n      \"severity\": \"moderate\",\n      \"issue\": \"Static aria-label does not reflect current menu state\",\n      \"impact\": \"The label always says '메뉴 열기' (Open menu) even when the menu is already open, which is misleading for screen reader users.\",\n      \"recommendation\": \"Change aria-label dynamically: `aria-label={menuOpen ? '메뉴 닫기' : '메뉴 열기'}`\"\n    },\n    {\n      \"severity\": \"minor\",\n      \"issue\": \"Mobile menu lacks role and aria-label\",\n      \"impact\": \"The mobile menu panel has no semantic role or label for assistive technologies.\",\n      \"recommendation\": \"Add `role=\\\"menu\\\"` or use a nav landmark with `aria-label=\\\"모바일 메뉴\\\"` to the mobile menu container.\"\n    }\n  ],\n  \"source_code_note\": \"Line 58 contains an explicit comment: '/* BAD: missing aria-expanded to indicate menu state */' confirming this is a known intentional defect in the test fixture.\",\n  \"overall_result\": \"FAIL\",\n  \"pass_count\": 2,\n  \"fail_count\": 4,\n  \"total_checks\": 6\n}\n"}], "eval-3-full-homepage-with_skill": [{"name": "result.json", "type": "text", "content": "[\n  {\n    \"id\": \"A-10\",\n    \"name\": \"키보드 사용 보장\",\n    \"result\": \"✅\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"All 6 interactive elements (3 nav links, 2 main CTA links, 1 button) are reachable via Tab key. Focus moves sequentially through each element.\",\n    \"fix_guide\": null\n  },\n  {\n    \"id\": \"A-11\",\n    \"name\": \"초점 표시\",\n    \"result\": \"✅\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"Focused element (A tag) shows outline: 'rgb(16, 16, 16) auto 1px'. Default browser focus indicator is visible on all interactive elements.\",\n    \"fix_guide\": null\n  },\n  {\n    \"id\": \"A-08\",\n    \"name\": \"콘텐츠 명도 대비\",\n    \"result\": \"✅\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"All text elements pass WCAG AA contrast requirements. Measured pairs: text-zinc-900 on white (~17:1), text-zinc-600 on white (~9:1), text-zinc-700 on white (~11:1), white on bg-blue-600 (~5.9:1), text-blue-600 on white (~5.9:1). All exceed 4.5:1 for normal text (14px) and 3:1 for large text (36px heading).\",\n    \"fix_guide\": null\n  },\n  {\n    \"id\": \"A-32\",\n    \"name\": \"중복 ID 금지\",\n    \"result\": \"✅\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"DOM contains 1 element with an id attribute. No duplicate IDs found.\",\n    \"fix_guide\": null\n  },\n  {\n    \"id\": \"A-33\",\n    \"name\": \"ARIA 상태 변경\",\n    \"result\": \"⚠️\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"Hamburger menu button ('메뉴 열기') toggles mobile navigation visibility on click, but does not have aria-expanded attribute to communicate open/closed state to assistive technology. The button label also does not change to '메뉴 닫기' when expanded.\",\n    \"fix_guide\": \"Add aria-expanded={isOpen} to the hamburger menu button element and toggle the accessible label between '메뉴 열기' and '메뉴 닫기' based on menu state.\"\n  },\n  {\n    \"id\": \"A-12\",\n    \"name\": \"초점 이동 순서\",\n    \"result\": \"➖\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"Homepage does not contain modal or popup triggers. Hamburger menu uses a disclosure pattern where focus remaining on the trigger button is acceptable behavior.\",\n    \"fix_guide\": null\n  },\n  {\n    \"id\": \"A-26\",\n    \"name\": \"요청에 의한 변경\",\n    \"result\": \"➖\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"No <select> elements present on the homepage.\",\n    \"fix_guide\": null\n  },\n  {\n    \"id\": \"A-28\",\n    \"name\": \"오류 정정 방법 제공\",\n    \"result\": \"➖\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"No form elements present on the homepage.\",\n    \"fix_guide\": null\n  },\n  {\n    \"id\": \"A-31\",\n    \"name\": \"일관된 내비게이션\",\n    \"result\": \"✅\",\n    \"verdict_method\": \"Playwright\",\n    \"issue\": \"Navigation structure (TestApp logo link + navigation links) persists consistently when navigating between homepage and other pages (할 일 page verified). Same nav bar structure with identical link order.\",\n    \"fix_guide\": null\n  }\n]\n"}], "eval-3-full-homepage-without_skill": [{"name": "result.json", "type": "text", "content": "{\n  \"audit\": \"Homepage Full Accessibility Verification\",\n  \"url\": \"http://localhost:3111/\",\n  \"page\": \"features/next-app/app/page.tsx\",\n  \"timestamp\": \"2026-03-14T02:00:00Z\",\n  \"summary\": {\n    \"totalIssues\": 8,\n    \"critical\": 1,\n    \"serious\": 2,\n    \"moderate\": 3,\n    \"minor\": 2\n  },\n  \"categories\": {\n    \"keyboard\": {\n      \"status\": \"fail\",\n      \"tabOrder\": [\n        { \"step\": 1, \"element\": \"a[data-testid=\\\"nav-logo\\\"]\", \"text\": \"TestApp\", \"href\": \"/\", \"focusVisible\": true },\n        { \"step\": 2, \"element\": \"a[data-testid=\\\"nav-login\\\"]\", \"text\": \"로그인\", \"href\": \"/login\", \"focusVisible\": true },\n        { \"step\": 3, \"element\": \"a[data-testid=\\\"nav-signup\\\"]\", \"text\": \"회원가입\", \"href\": \"/signup\", \"focusVisible\": true },\n        { \"step\": 4, \"element\": \"a[data-testid=\\\"home-login\\\"]\", \"text\": \"로그인\", \"href\": \"/login\", \"focusVisible\": true },\n        { \"step\": 5, \"element\": \"a[data-testid=\\\"home-signup\\\"]\", \"text\": \"회원가입\", \"href\": \"/signup\", \"focusVisible\": true },\n        { \"step\": 6, \"element\": \"nextjs-portal (dev tools)\", \"text\": \"\", \"href\": null, \"focusVisible\": false },\n        { \"step\": 7, \"element\": \"button[data-testid=\\\"cookie-accept\\\"]\", \"text\": \"동의\", \"href\": null, \"focusVisible\": true }\n      ],\n      \"issues\": [\n        {\n          \"id\": \"keyboard-1\",\n          \"issue\": \"Cookie banner overlay does not trap focus\",\n          \"description\": \"The cookie banner renders a full-screen semi-transparent overlay (bg-black/30, z-50) that visually blocks the page content. However, keyboard Tab navigation passes through elements behind the overlay (nav links, main CTA buttons) before reaching the cookie accept button. Users can interact with obscured elements via keyboard.\",\n          \"severity\": \"critical\",\n          \"wcag\": \"2.4.3 Focus Order / 2.1.2 No Keyboard Trap (inverse)\",\n          \"element\": \"div[data-testid=\\\"cookie-banner\\\"]\",\n          \"recommendation\": \"Implement focus trapping within the cookie banner when it is visible. Focus should move only between the banner text and the accept button until dismissed.\"\n        }\n      ]\n    },\n    \"focusVisibility\": {\n      \"status\": \"pass\",\n      \"details\": \"All interactive elements (links and buttons) show a visible focus indicator using the browser default outline (auto 1px). Focus ring is visible on all 7 focusable elements tested.\",\n      \"issues\": [],\n      \"note\": \"Focus indicators rely on browser defaults rather than custom styles. While functional, custom focus styles would improve visual consistency.\"\n    },\n    \"colorContrast\": {\n      \"status\": \"pass\",\n      \"details\": \"All text elements pass WCAG AA contrast requirements. The blue buttons (bg-blue-600 / lab(44.06 29.03 -86.04)) with white text achieve approximately 8.59:1 contrast ratio, well above the 4.5:1 AA requirement for normal text.\",\n      \"checkedElements\": [\n        { \"element\": \"h1 \\\"TestApp\\\"\", \"fg\": \"rgb(24,24,27) on rgb(250,250,250)\", \"ratio\": \"17.93:1\", \"passes\": true },\n        { \"element\": \"p (description)\", \"fg\": \"rgb(82,82,91) on rgb(250,250,250)\", \"ratio\": \"7.16:1\", \"passes\": true },\n        { \"element\": \"a[data-testid=\\\"nav-logo\\\"]\", \"fg\": \"rgb(24,24,27) on rgb(255,255,255)\", \"ratio\": \"17.93:1\", \"passes\": true },\n        { \"element\": \"a[data-testid=\\\"nav-login\\\"]\", \"fg\": \"rgb(82,82,91) on rgb(255,255,255)\", \"ratio\": \"7.16:1\", \"passes\": true },\n        { \"element\": \"a[data-testid=\\\"home-login\\\"]\", \"fg\": \"rgb(255,255,255) on bg-blue-600 lab(44.06 29.03 -86.04)\", \"ratio\": \"~8.59:1\", \"passes\": true },\n        { \"element\": \"a[data-testid=\\\"home-signup\\\"]\", \"fg\": \"rgb(63,63,70) on rgb(255,255,255)\", \"ratio\": \"8.48:1\", \"passes\": true },\n        { \"element\": \"button[data-testid=\\\"cookie-accept\\\"]\", \"fg\": \"rgb(255,255,255) on bg-blue-600 lab(44.06 29.03 -86.04)\", \"ratio\": \"~8.59:1\", \"passes\": true },\n        { \"element\": \"p (cookie text)\", \"fg\": \"rgb(63,63,70) on rgb(255,255,255)\", \"ratio\": \"8.48:1\", \"passes\": true }\n      ],\n      \"issues\": []\n    },\n    \"duplicateIds\": {\n      \"status\": \"pass\",\n      \"totalIdsOnPage\": 1,\n      \"duplicates\": {},\n      \"hasDuplicates\": false,\n      \"issues\": []\n    },\n    \"aria\": {\n      \"status\": \"fail\",\n      \"issues\": [\n        {\n          \"id\": \"aria-1\",\n          \"element\": \"div[data-testid=\\\"cookie-banner\\\"]\",\n          \"issue\": \"Cookie banner overlay lacks role=\\\"dialog\\\" and aria-modal=\\\"true\\\"\",\n          \"description\": \"The cookie banner creates a full-screen overlay (fixed inset-0 z-50 bg-black/30) that blocks page interaction, behaving as a modal dialog. However, it is rendered as a plain div without role=\\\"dialog\\\" or aria-modal=\\\"true\\\". Screen readers will not announce it as a dialog or understand the modal context.\",\n          \"severity\": \"serious\",\n          \"wcag\": \"4.1.2 Name, Role, Value\",\n          \"recommendation\": \"Add role=\\\"dialog\\\" aria-modal=\\\"true\\\" aria-label=\\\"쿠키 동의\\\" to the cookie banner container.\"\n        },\n        {\n          \"id\": \"aria-2\",\n          \"element\": \"div[data-testid=\\\"cookie-banner\\\"]\",\n          \"issue\": \"Cookie banner lacks accessible name\",\n          \"description\": \"The cookie banner has no aria-label or aria-labelledby attribute, so screen readers cannot provide a meaningful label when entering the region.\",\n          \"severity\": \"moderate\",\n          \"wcag\": \"4.1.2 Name, Role, Value\",\n          \"recommendation\": \"Add aria-label=\\\"쿠키 사용 동의\\\" to the banner container.\"\n        },\n        {\n          \"id\": \"aria-3\",\n          \"element\": \"nav[data-testid=\\\"navbar\\\"]\",\n          \"issue\": \"Navigation landmark lacks aria-label\",\n          \"description\": \"The main navigation bar uses a <nav> element but does not have an aria-label or aria-labelledby attribute. While there is only one nav on the unauthenticated homepage, adding a label improves screen reader experience.\",\n          \"severity\": \"moderate\",\n          \"wcag\": \"1.3.1 Info and Relationships\",\n          \"recommendation\": \"Add aria-label=\\\"메인 네비게이션\\\" to the nav element.\"\n        },\n        {\n          \"id\": \"aria-4\",\n          \"element\": \"div[role=\\\"alert\\\"]\",\n          \"issue\": \"Empty live region (role=alert) present in DOM\",\n          \"description\": \"An empty element with role=\\\"alert\\\" exists in the DOM. While it appears to be a placeholder for error messages, its presence may cause some screen readers to announce an empty alert on page load.\",\n          \"severity\": \"minor\",\n          \"wcag\": \"4.1.3 Status Messages\",\n          \"recommendation\": \"Conditionally render the alert element only when there is content to display, or use aria-live on a persistent container instead.\"\n        },\n        {\n          \"id\": \"aria-5\",\n          \"element\": \"button[data-testid=\\\"hamburger-menu\\\"] (mobile only)\",\n          \"issue\": \"Hamburger menu button missing aria-expanded\",\n          \"description\": \"The mobile hamburger menu button has aria-label=\\\"메뉴 열기\\\" but lacks aria-expanded to indicate whether the mobile menu is open or closed. The aria-label also does not dynamically change between open/close states. (Identified from source code review; button only visible on mobile viewport.)\",\n          \"severity\": \"moderate\",\n          \"wcag\": \"4.1.2 Name, Role, Value\",\n          \"recommendation\": \"Add aria-expanded={menuOpen} to the hamburger button and update aria-label dynamically.\"\n        }\n      ]\n    },\n    \"semantics\": {\n      \"status\": \"pass\",\n      \"language\": {\n        \"lang\": \"ko\",\n        \"hasLang\": true,\n        \"correct\": true\n      },\n      \"headings\": {\n        \"structure\": [\n          { \"level\": 1, \"text\": \"TestApp\" }\n        ],\n        \"multipleH1\": false,\n        \"skippedLevels\": false\n      },\n      \"landmarks\": {\n        \"nav\": 1,\n        \"main\": 1,\n        \"hasProperStructure\": true\n      },\n      \"links\": {\n        \"total\": 5,\n        \"emptyLinks\": 0\n      },\n      \"issues\": []\n    }\n  },\n  \"overallAssessment\": {\n    \"grade\": \"B-\",\n    \"passedChecks\": [\"Color contrast (WCAG AA)\", \"Duplicate IDs\", \"Focus visibility\", \"Language attribute\", \"Heading hierarchy\", \"Landmark structure\", \"Link text\"],\n    \"failedChecks\": [\"Cookie banner focus trap\", \"Cookie banner ARIA dialog role\", \"Navigation aria-label\", \"Hamburger aria-expanded (mobile)\"],\n    \"topPriorityFixes\": [\n      \"1. Add focus trapping to cookie banner overlay to prevent keyboard users from reaching obscured content\",\n      \"2. Add role=\\\"dialog\\\" aria-modal=\\\"true\\\" aria-label=\\\"쿠키 사용 동의\\\" to cookie banner\",\n      \"3. Add aria-label to nav element\",\n      \"4. Add aria-expanded to hamburger menu button (mobile)\",\n      \"5. Conditionally render empty alert element\"\n    ]\n  }\n}\n"}]}, "benchmark": {"metadata": {"skill_name": "a11y-browser", "timestamp": "2026-03-14", "evals_run": ["contrast-aria", "aria-toggle", "full-homepage"], "runs_per_configuration": 1}, "runs": [{"eval_id": 1, "eval_name": "contrast-aria", "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 7, "total": 7, "time_seconds": 832.7, "tokens": 59291, "errors": 0}, "expectations": [{"text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인", "passed": true, "evidence": "dev server 시작, 인증 후 dashboard 접근"}, {"text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인", "passed": true, "evidence": "snapshot 후 auth redirect 감지, 로그인 수행"}, {"text": "A-08: getComputedStyle로 텍스트 색상 대비를 확인하고 contrast ratio 계산", "passed": true, "evidence": "A-08 ❌: text-zinc-400 contrast 2.62:1 감지"}, {"text": "A-33: 인터랙티브 요소 클릭 전후 snapshot으로 ARIA state 변경 검증", "passed": true, "evidence": "A-33 ⚠️: aria-expanded 누락, aria-label 고정 감지"}, {"text": "npx agent-browser 명령어로 검증 수행", "passed": true, "evidence": "agent-browser v0.20.0 사용"}, {"text": "모든 검증 항목의 verdict_method가 '브라우저 검증'", "passed": true, "evidence": "verdict_method=브라우저 검증"}, {"text": "이슈 항목만 출력 (✅/➖ 생략)", "passed": true, "evidence": "2건 이슈만 출력"}]}, {"eval_id": 1, "eval_name": "contrast-aria", "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.625, "passed": 5, "total": 8, "time_seconds": 1720.3, "tokens": 65132, "errors": 0}, "expectations": [{"text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인", "passed": true, "evidence": "dev server 시작 및 대시보드 접근 성공"}, {"text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인", "passed": false, "evidence": "snapshot -c 명령어 미사용, Playwright MCP 도구로 직접 접근"}, {"text": "A-10: Tab 키로 인터랙티브 요소 접근 가능 여부 테스트", "passed": true, "evidence": "StatsCard div onClick 키보드 접근 불가 확인"}, {"text": "A-11: 포커스 시 outline/boxShadow/border 시각적 표시 확인", "passed": true, "evidence": "focus:outline-none 문제 감지, focus:border-blue-500 대체 스타일 확인"}, {"text": "A-32: DOM에서 중복 ID 검사 실행", "passed": true, "evidence": "id='stat-card' 3개 중복 ID 확인"}, {"text": "A-08: getComputedStyle로 텍스트 색상 대비 확인", "passed": false, "evidence": "색상 대비 검사 미수행"}, {"text": "모든 검증 항목의 verdict_method가 'Playwright'", "passed": false, "evidence": "verdict_method 필드 없음, 자체 형식 사용"}, {"text": "결과가 JSON 배열 형식으로 반환됨", "passed": true, "evidence": "result.json에 JSON 배열로 저장됨"}]}, {"eval_id": 2, "eval_name": "aria-toggle", "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "total": 6, "time_seconds": 717.5, "tokens": 35748, "errors": 0}, "expectations": [{"text": "페이지 상태 확인 후 적절한 처리 (정상/auth redirect/에러 등)", "passed": true, "evidence": "모바일 뷰포트 설정, localStorage 인증 주입"}, {"text": "A-33: 클릭 전후 snapshot으로 ARIA 상태 변경 확인", "passed": true, "evidence": "A-33 ❌: aria-expanded 누락 감지"}, {"text": "검증 시 -i -c 플래그로 compact interactive snapshot 사용", "passed": true, "evidence": "snapshot -i -c 사용"}, {"text": "npx agent-browser 명령어로 검증 수행", "passed": true, "evidence": "agent-browser v0.20.0"}, {"text": "인증 리다이렉트 발생 시 적절히 처리 (판정불가 또는 공유 요소 검증)", "passed": true, "evidence": "localStorage 인증 주입으로 처리"}, {"text": "이슈 항목만 출력 (✅/➖ 생략)", "passed": true, "evidence": "2건 이슈만 출력"}]}, {"eval_id": 2, "eval_name": "aria-toggle", "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.6, "passed": 3, "total": 5, "time_seconds": 1093.8, "tokens": 46543, "errors": 0}, "expectations": [{"text": "페이지 상태 확인 후 적절한 처리 (정상/auth redirect/에러 등)", "passed": true, "evidence": "인증 설정 후 /dashboard 접근, 모바일 뷰포트 설정"}, {"text": "A-33: 클릭 전후 snapshot으로 ARIA 상태 변경 확인", "passed": true, "evidence": "클릭 전후 aria-expanded 미설정 확인 → FAIL 판정"}, {"text": "검증 시 -i -c 플래그로 compact interactive snapshot 사용", "passed": false, "evidence": "agent-browser 미사용, Playwright MCP 도구로 직접 접근"}, {"text": "npx agent-browser 명령어로 검증 수행", "passed": false, "evidence": "Playwright MCP 사용, agent-browser 미사용"}, {"text": "인증 리다이렉트 발생 시 적절히 처리 (판정불가 또는 공유 요소 검증)", "passed": true, "evidence": "localStorage에 인증 토큰 주입하여 적절히 처리"}]}, {"eval_id": 3, "eval_name": "full-homepage", "configuration": "with_skill", "run_number": 1, "result": {"pass_rate": 1.0, "passed": 6, "total": 6, "time_seconds": 580.0, "tokens": 35108, "errors": 0}, "expectations": [{"text": "A-08: getComputedStyle 기반 contrast ratio 계산이 수행됨", "passed": true, "evidence": "모든 텍스트 contrast 5.25:1 이상 PASS"}, {"text": "A-33: 인터랙티브 요소 클릭 전후 ARIA state 확인이 수행됨", "passed": true, "evidence": "토글 요소 없어 N/A"}, {"text": "package.json에서 dev script를 찾아 서버 자동 시작", "passed": true, "evidence": "dev server 자동 시작"}, {"text": "페이지 상태 감지 (정상/auth/loading/error/empty) 수행", "passed": true, "evidence": "정상 렌더링 확인"}, {"text": "A-12, A-26, A-28, A-31 중 해당 요소 존재 시 추가 검증 또는 N/A 처리", "passed": true, "evidence": "A-31 PASS(nav 일관성), 나머지 N/A"}, {"text": "이슈 항목만 출력 (✅/➖ 생략)", "passed": true, "evidence": "이슈 0건, 빈 findings"}]}, {"eval_id": 3, "eval_name": "full-homepage", "configuration": "without_skill", "run_number": 1, "result": {"pass_rate": 0.8, "passed": 4, "total": 5, "time_seconds": 1732.5, "tokens": 84836, "errors": 0}, "expectations": [{"text": "A-08, A-10, A-11, A-32, A-33 항목이 모두 검증됨", "passed": true, "evidence": "색상 대비, 키보드 접근, 포커스 표시, 중복 ID, ARIA 상태 모두 검증됨"}, {"text": "package.json에서 dev script를 찾아 서버 자동 시작", "passed": true, "evidence": "pnpm install 후 dev server 시작 성공"}, {"text": "페이지 상태 감지 (정상/auth/loading/error/empty) 수행", "passed": true, "evidence": "홈페이지 정상 렌더링 확인, 쿠키 배너 감지"}, {"text": "A-12, A-26, A-28, A-31 중 해당 요소 존재 시 추가 검증", "passed": true, "evidence": "쿠키 배너 포커스 트랩 문제 등 추가 검증 수행"}, {"text": "검증 불가 항목에 구체적 사유 명시 (예: '인증 필요 페이지')", "passed": false, "evidence": "판정불가 항목이 없었으나, 표준화된 사유 형식도 미사용"}]}], "run_summary": {"with_skill": {"pass_rate": {"mean": 1.0, "stddev": 0.0}, "time_seconds": {"mean": 710.067, "stddev": 126.514}, "tokens": {"mean": 43382.333, "stddev": 13781.025}}, "without_skill": {"pass_rate": {"mean": 0.675, "stddev": 0.109}, "time_seconds": {"mean": 1515.533, "stddev": 365.283}, "tokens": {"mean": 65503.667, "stddev": 19149.205}}, "delta": {"pass_rate": "+48.1%", "time_seconds": "-53.1%", "tokens": "-33.8%"}}, "notes": []}};
+
+    // ---- State ----
+    let feedbackMap = {};  // run_id -> feedback text
+    let currentIndex = 0;
+    let visitedRuns = new Set();
+
+    // ---- Init ----
+    async function init() {
+      // Load saved feedback from server — but only if this isn't a fresh
+      // iteration (indicated by previous_feedback being present). When
+      // previous feedback exists, the feedback.json on disk is stale from
+      // the prior iteration and should not pre-fill the textareas.
+      const hasPrevious = Object.keys(EMBEDDED_DATA.previous_feedback || {}).length > 0
+        || Object.keys(EMBEDDED_DATA.previous_outputs || {}).length > 0;
+      if (!hasPrevious) {
+        try {
+          const resp = await fetch("/api/feedback");
+          const data = await resp.json();
+          if (data.reviews) {
+            for (const r of data.reviews) feedbackMap[r.run_id] = r.feedback;
+          }
+        } catch { /* first run, no feedback yet */ }
+      }
+
+      document.getElementById("skill-name").textContent = EMBEDDED_DATA.skill_name;
+      showRun(0);
+
+      // Wire up feedback auto-save
+      const textarea = document.getElementById("feedback");
+      let saveTimeout = null;
+      textarea.addEventListener("input", () => {
+        clearTimeout(saveTimeout);
+        document.getElementById("feedback-status").textContent = "";
+        saveTimeout = setTimeout(() => saveCurrentFeedback(), 800);
+      });
+    }
+
+    // ---- Navigation ----
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < EMBEDDED_DATA.runs.length) {
+        saveCurrentFeedback();
+        showRun(newIndex);
+      }
+    }
+
+    function updateNavButtons() {
+      document.getElementById("prev-btn").disabled = currentIndex === 0;
+      document.getElementById("next-btn").disabled =
+        currentIndex === EMBEDDED_DATA.runs.length - 1;
+    }
+
+    // ---- Show a run ----
+    function showRun(index) {
+      currentIndex = index;
+      const run = EMBEDDED_DATA.runs[index];
+
+      // Progress
+      document.getElementById("progress").textContent =
+        `${index + 1} of ${EMBEDDED_DATA.runs.length}`;
+
+      // Prompt
+      document.getElementById("prompt-text").textContent = run.prompt;
+
+      // Config badge
+      const badge = document.getElementById("config-badge");
+      const configMatch = run.id.match(/(with_skill|without_skill|new_skill|old_skill)/);
+      if (configMatch) {
+        const config = configMatch[1];
+        const isBaseline = config === "without_skill" || config === "old_skill";
+        badge.textContent = config.replace(/_/g, " ");
+        badge.className = "config-badge " + (isBaseline ? "config-baseline" : "config-primary");
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+
+      // Outputs
+      renderOutputs(run);
+
+      // Previous outputs
+      renderPrevOutputs(run);
+
+      // Grades
+      renderGrades(run);
+
+      // Previous feedback
+      const prevFb = (EMBEDDED_DATA.previous_feedback || {})[run.id];
+      const prevEl = document.getElementById("prev-feedback");
+      if (prevFb) {
+        document.getElementById("prev-feedback-text").textContent = prevFb;
+        prevEl.style.display = "block";
+      } else {
+        prevEl.style.display = "none";
+      }
+
+      // Feedback
+      document.getElementById("feedback").value = feedbackMap[run.id] || "";
+      document.getElementById("feedback-status").textContent = "";
+
+      updateNavButtons();
+
+      // Track visited runs and promote done button when all visited
+      visitedRuns.add(index);
+      const doneBtn = document.getElementById("done-btn");
+      if (visitedRuns.size >= EMBEDDED_DATA.runs.length) {
+        doneBtn.classList.add("ready");
+      }
+
+      // Scroll main content to top
+      document.querySelector(".main").scrollTop = 0;
+    }
+
+    // ---- Render outputs ----
+    function renderOutputs(run) {
+      const container = document.getElementById("outputs-body");
+      container.innerHTML = "";
+
+      const outputs = run.outputs || [];
+      if (outputs.length === 0) {
+        container.innerHTML = '<div class="empty-state">출력 파일 없음</div>';
+        return;
+      }
+
+      for (const file of outputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        // Always show file header with download link
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "다운로드";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const content = document.createElement("div");
+        content.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          content.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          content.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          content.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(content, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = file.name + " 다운로드";
+          content.appendChild(a);
+        } else if (file.type === "error") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          pre.style.color = "var(--red)";
+          content.appendChild(pre);
+        }
+
+        fileDiv.appendChild(content);
+        container.appendChild(fileDiv);
+      }
+    }
+
+    // ---- XLSX rendering via SheetJS ----
+    function renderXlsx(container, b64Data) {
+      try {
+        const raw = Uint8Array.from(atob(b64Data), c => c.charCodeAt(0));
+        const wb = XLSX.read(raw, { type: "array" });
+
+        for (let i = 0; i < wb.SheetNames.length; i++) {
+          const sheetName = wb.SheetNames[i];
+          const ws = wb.Sheets[sheetName];
+
+          if (wb.SheetNames.length > 1) {
+            const sheetLabel = document.createElement("div");
+            sheetLabel.style.cssText =
+              "font-weight:600; font-size:0.8rem; color:#b0aea5; margin-top:0.5rem; margin-bottom:0.25rem;";
+            sheetLabel.textContent = "시트: " + sheetName;
+            container.appendChild(sheetLabel);
+          }
+
+          const htmlStr = XLSX.utils.sheet_to_html(ws, { editable: false });
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = htmlStr;
+          container.appendChild(wrapper);
+        }
+      } catch (err) {
+        container.textContent = "스프레드시트 렌더링 오류: " + err.message;
+      }
+    }
+
+    // ---- Grades ----
+    function renderGrades(run) {
+      const section = document.getElementById("grades-section");
+      const content = document.getElementById("grades-content");
+
+      if (!run.grading) {
+        section.style.display = "none";
+        return;
+      }
+
+      const grading = run.grading;
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("grades-arrow").classList.remove("open");
+
+      const summary = grading.summary || {};
+      const expectations = grading.expectations || [];
+
+      let html = '<div style="padding: 1rem;">';
+
+      // Summary line
+      const passRate = summary.pass_rate != null
+        ? Math.round(summary.pass_rate * 100) + "%"
+        : "?";
+      const badgeClass = summary.pass_rate >= 0.8 ? "grade-pass" : summary.pass_rate >= 0.5 ? "" : "grade-fail";
+      html += '<div class="grades-summary">';
+      html += '<span class="grade-badge ' + badgeClass + '">' + passRate + '</span>';
+      html += '<span>' + (summary.total || 0) + '개 중 ' + (summary.passed || 0) + '개 통과, ' + (summary.failed || 0) + '개 실패</span>';
+      html += '</div>';
+
+      // Assertions list
+      html += '<ul class="assertion-list">';
+      for (const exp of expectations) {
+        const statusClass = exp.passed ? "pass" : "fail";
+        const statusIcon = exp.passed ? "\u2713" : "\u2717";
+        html += '<li class="assertion-item">';
+        html += '<span class="assertion-status ' + statusClass + '">' + statusIcon + '</span>';
+        html += '<span>' + escapeHtml(exp.text) + '</span>';
+        if (exp.evidence) {
+          html += '<div class="assertion-evidence">' + escapeHtml(exp.evidence) + '</div>';
+        }
+        html += '</li>';
+      }
+      html += '</ul>';
+
+      html += '</div>';
+      content.innerHTML = html;
+    }
+
+    function toggleGrades() {
+      const content = document.getElementById("grades-content");
+      const arrow = document.getElementById("grades-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Previous outputs (collapsible) ----
+    function renderPrevOutputs(run) {
+      const section = document.getElementById("prev-outputs-section");
+      const content = document.getElementById("prev-outputs-content");
+      const prevOutputs = (EMBEDDED_DATA.previous_outputs || {})[run.id];
+
+      if (!prevOutputs || prevOutputs.length === 0) {
+        section.style.display = "none";
+        return;
+      }
+
+      section.style.display = "block";
+      // Reset to collapsed
+      content.classList.remove("open");
+      document.getElementById("prev-outputs-arrow").classList.remove("open");
+
+      // Render the files into the content area
+      content.innerHTML = "";
+      const wrapper = document.createElement("div");
+      wrapper.style.padding = "1rem";
+
+      for (const file of prevOutputs) {
+        const fileDiv = document.createElement("div");
+        fileDiv.className = "output-file";
+
+        const header = document.createElement("div");
+        header.className = "output-file-header";
+        const nameSpan = document.createElement("span");
+        nameSpan.textContent = file.name;
+        header.appendChild(nameSpan);
+        const dlBtn = document.createElement("a");
+        dlBtn.className = "dl-btn";
+        dlBtn.textContent = "다운로드";
+        dlBtn.download = file.name;
+        dlBtn.href = getDownloadUri(file);
+        header.appendChild(dlBtn);
+        fileDiv.appendChild(header);
+
+        const fc = document.createElement("div");
+        fc.className = "output-file-content";
+
+        if (file.type === "text") {
+          const pre = document.createElement("pre");
+          pre.textContent = file.content;
+          fc.appendChild(pre);
+        } else if (file.type === "image") {
+          const img = document.createElement("img");
+          img.src = file.data_uri;
+          img.alt = file.name;
+          fc.appendChild(img);
+        } else if (file.type === "pdf") {
+          const iframe = document.createElement("iframe");
+          iframe.src = file.data_uri;
+          fc.appendChild(iframe);
+        } else if (file.type === "xlsx") {
+          renderXlsx(fc, file.data_b64);
+        } else if (file.type === "binary") {
+          const a = document.createElement("a");
+          a.className = "download-link";
+          a.href = file.data_uri;
+          a.download = file.name;
+          a.textContent = file.name + " 다운로드";
+          fc.appendChild(a);
+        }
+
+        fileDiv.appendChild(fc);
+        wrapper.appendChild(fileDiv);
+      }
+
+      content.appendChild(wrapper);
+    }
+
+    function togglePrevOutputs() {
+      const content = document.getElementById("prev-outputs-content");
+      const arrow = document.getElementById("prev-outputs-arrow");
+      content.classList.toggle("open");
+      arrow.classList.toggle("open");
+    }
+
+    // ---- Feedback (saved to server -> feedback.json) ----
+    function saveCurrentFeedback() {
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // Build reviews array from map
+      const reviews = [];
+      for (const [run_id, feedback] of Object.entries(feedbackMap)) {
+        if (feedback.trim()) {
+          reviews.push({ run_id, feedback, timestamp: new Date().toISOString() });
+        }
+      }
+
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reviews, status: "in_progress" }),
+      }).then(() => {
+        document.getElementById("feedback-status").textContent = "저장됨";
+      }).catch(() => {
+        // Static mode or server unavailable — no-op on auto-save,
+        // feedback will be downloaded on final submit
+        document.getElementById("feedback-status").textContent = "제출 시 다운로드됩니다";
+      });
+    }
+
+    // ---- Done ----
+    function showDoneDialog() {
+      // Save current textarea to feedbackMap (but don't POST yet)
+      const run = EMBEDDED_DATA.runs[currentIndex];
+      const text = document.getElementById("feedback").value;
+      if (text.trim() === "") {
+        delete feedbackMap[run.id];
+      } else {
+        feedbackMap[run.id] = text;
+      }
+
+      // POST once with status: complete — include ALL runs so the model
+      // can distinguish "no feedback" (looks good) from "not reviewed"
+      const reviews = [];
+      const ts = new Date().toISOString();
+      for (const r of EMBEDDED_DATA.runs) {
+        reviews.push({ run_id: r.id, feedback: feedbackMap[r.id] || "", timestamp: ts });
+      }
+      const payload = JSON.stringify({ reviews, status: "complete" }, null, 2);
+      fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+      }).then(() => {
+        document.getElementById("done-overlay").classList.add("visible");
+      }).catch(() => {
+        // Server not available (static mode) — download as file
+        const blob = new Blob([payload], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "feedback.json";
+        a.click();
+        URL.revokeObjectURL(url);
+        document.getElementById("done-overlay").classList.add("visible");
+      });
+    }
+
+    function closeDoneDialog() {
+      // Reset status back to in_progress
+      saveCurrentFeedback();
+      document.getElementById("done-overlay").classList.remove("visible");
+    }
+
+    // ---- Toast ----
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      setTimeout(() => toast.classList.remove("visible"), 2000);
+    }
+
+    // ---- Keyboard nav ----
+    document.addEventListener("keydown", (e) => {
+      // Don't capture when typing in textarea
+      if (e.target.tagName === "TEXTAREA") return;
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        e.preventDefault();
+        navigate(-1);
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        e.preventDefault();
+        navigate(1);
+      }
+    });
+
+    // ---- Util ----
+    function getDownloadUri(file) {
+      if (file.data_uri) return file.data_uri;
+      if (file.data_b64) return "data:application/octet-stream;base64," + file.data_b64;
+      if (file.type === "text") return "data:text/plain;charset=utf-8," + encodeURIComponent(file.content);
+      return "#";
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ---- View switching ----
+    function switchView(view) {
+      document.querySelectorAll(".view-tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".view-panel").forEach(p => p.classList.remove("active"));
+      document.querySelector(`[onclick="switchView('${view}')"]`).classList.add("active");
+      document.getElementById("panel-" + view).classList.add("active");
+    }
+
+    // ---- Benchmark rendering ----
+    function renderBenchmark() {
+      const data = EMBEDDED_DATA.benchmark;
+      if (!data) return;
+
+      // Show the tabs
+      document.getElementById("view-tabs").style.display = "flex";
+
+      const container = document.getElementById("benchmark-content");
+      const summary = data.run_summary || {};
+      const metadata = data.metadata || {};
+      const notes = data.notes || [];
+
+      let html = "";
+
+      // Header
+      html += "<h2 style='font-family: Poppins, sans-serif; margin-bottom: 0.5rem;'>벤치마크 결과</h2>";
+      html += "<p style='color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.25rem;'>";
+      if (metadata.skill_name) html += "<strong>" + escapeHtml(metadata.skill_name) + "</strong> &mdash; ";
+      if (metadata.timestamp) html += metadata.timestamp + " &mdash; ";
+      if (metadata.evals_run) html += "평가: " + metadata.evals_run.join(", ") + " &mdash; ";
+      html += "설정당 " + (metadata.runs_per_configuration || "?") + "회 실행";
+      html += "</p>";
+
+      // Summary table
+      html += '<table class="benchmark-table">';
+
+      function fmtStat(stat, pct) {
+        if (!stat) return "—";
+        const suffix = pct ? "%" : "";
+        const m = pct ? (stat.mean * 100).toFixed(0) : stat.mean.toFixed(1);
+        const s = pct ? (stat.stddev * 100).toFixed(0) : stat.stddev.toFixed(1);
+        return m + suffix + " ± " + s + suffix;
+      }
+
+      function deltaClass(val) {
+        if (!val) return "";
+        const n = parseFloat(val);
+        if (n > 0) return "benchmark-delta-positive";
+        if (n < 0) return "benchmark-delta-negative";
+        return "";
+      }
+
+      // Discover config names dynamically (everything except "delta")
+      const configs = Object.keys(summary).filter(k => k !== "delta");
+      const configA = configs[0] || "config_a";
+      const configB = configs[1] || "config_b";
+      const labelA = configA.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const labelB = configB.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      const a = summary[configA] || {};
+      const b = summary[configB] || {};
+      const delta = summary.delta || {};
+
+      html += "<thead><tr><th>지표</th><th>" + escapeHtml(labelA) + "</th><th>" + escapeHtml(labelB) + "</th><th>차이</th></tr></thead>";
+      html += "<tbody>";
+
+      html += "<tr><td><strong>통과율</strong></td>";
+      html += "<td>" + fmtStat(a.pass_rate, true) + "</td>";
+      html += "<td>" + fmtStat(b.pass_rate, true) + "</td>";
+      html += '<td class="' + deltaClass(delta.pass_rate) + '">' + (delta.pass_rate || "—") + "</td></tr>";
+
+      // Time (only show row if data exists)
+      if (a.time_seconds || b.time_seconds) {
+        html += "<tr><td><strong>소요 시간 (초)</strong></td>";
+        html += "<td>" + fmtStat(a.time_seconds, false) + "</td>";
+        html += "<td>" + fmtStat(b.time_seconds, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.time_seconds) + '">' + (delta.time_seconds ? delta.time_seconds + "s" : "—") + "</td></tr>";
+      }
+
+      // Tokens (only show row if data exists)
+      if (a.tokens || b.tokens) {
+        html += "<tr><td><strong>토큰</strong></td>";
+        html += "<td>" + fmtStat(a.tokens, false) + "</td>";
+        html += "<td>" + fmtStat(b.tokens, false) + "</td>";
+        html += '<td class="' + deltaClass(delta.tokens) + '">' + (delta.tokens || "—") + "</td></tr>";
+      }
+
+      html += "</tbody></table>";
+
+      // Per-eval breakdown (if runs data available)
+      const runs = data.runs || [];
+      if (runs.length > 0) {
+        const evalIds = [...new Set(runs.map(r => r.eval_id))].sort((a, b) => a - b);
+
+        html += "<h3 style='font-family: Poppins, sans-serif; margin-bottom: 0.75rem;'>평가별 상세 내역</h3>";
+
+        const hasTime = runs.some(r => r.result && r.result.time_seconds != null);
+        const hasErrors = runs.some(r => r.result && r.result.errors > 0);
+
+        for (const evalId of evalIds) {
+          const evalRuns = runs.filter(r => r.eval_id === evalId);
+          const evalName = evalRuns[0] && evalRuns[0].eval_name ? evalRuns[0].eval_name : "평가 " + evalId;
+
+          html += "<h4 style='font-family: Poppins, sans-serif; margin: 1rem 0 0.5rem; color: var(--text);'>" + escapeHtml(evalName) + "</h4>";
+          html += '<table class="benchmark-table">';
+          html += "<thead><tr><th>설정</th><th>실행</th><th>통과율</th>";
+          if (hasTime) html += "<th>소요 시간 (초)</th>";
+          if (hasErrors) html += "<th>실행 중 오류</th>";
+          html += "</tr></thead>";
+          html += "<tbody>";
+
+          // Group by config and render with average rows
+          const configGroups = [...new Set(evalRuns.map(r => r.configuration))];
+          for (let ci = 0; ci < configGroups.length; ci++) {
+            const config = configGroups[ci];
+            const configRuns = evalRuns.filter(r => r.configuration === config);
+            if (configRuns.length === 0) continue;
+
+            const rowClass = ci === 0 ? "benchmark-row-with" : "benchmark-row-without";
+            const configLabel = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+            for (const run of configRuns) {
+              const r = run.result || {};
+              const prClass = r.pass_rate >= 0.8 ? "benchmark-delta-positive" : r.pass_rate < 0.5 ? "benchmark-delta-negative" : "";
+              html += '<tr class="' + rowClass + '">';
+              html += "<td>" + configLabel + "</td>";
+              html += "<td>" + run.run_number + "</td>";
+              html += '<td class="' + prClass + '">' + ((r.pass_rate || 0) * 100).toFixed(0) + "% (" + (r.passed || 0) + "/" + (r.total || 0) + ")</td>";
+              if (hasTime) html += "<td>" + (r.time_seconds != null ? r.time_seconds.toFixed(1) : "—") + "</td>";
+              if (hasErrors) html += "<td>" + (r.errors || 0) + "</td>";
+              html += "</tr>";
+            }
+
+            // Average row
+            const rates = configRuns.map(r => (r.result || {}).pass_rate || 0);
+            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgPrClass = avgRate >= 0.8 ? "benchmark-delta-positive" : avgRate < 0.5 ? "benchmark-delta-negative" : "";
+            html += '<tr class="benchmark-row-avg ' + rowClass + '">';
+            html += "<td>" + configLabel + "</td>";
+            html += "<td>평균</td>";
+            html += '<td class="' + avgPrClass + '">' + (avgRate * 100).toFixed(0) + "%</td>";
+            if (hasTime) {
+              const times = configRuns.map(r => (r.result || {}).time_seconds).filter(t => t != null);
+              html += "<td>" + (times.length ? (times.reduce((a, b) => a + b, 0) / times.length).toFixed(1) : "—") + "</td>";
+            }
+            if (hasErrors) html += "<td></td>";
+            html += "</tr>";
+          }
+          html += "</tbody></table>";
+
+          // Per-assertion detail for this eval
+          const runsWithExpectations = {};
+          for (const config of configGroups) {
+            runsWithExpectations[config] = evalRuns.filter(r => r.configuration === config && r.expectations && r.expectations.length > 0);
+          }
+          const hasAnyExpectations = Object.values(runsWithExpectations).some(runs => runs.length > 0);
+          if (hasAnyExpectations) {
+            // Collect all unique assertion texts across all configs
+            const allAssertions = [];
+            const seen = new Set();
+            for (const config of configGroups) {
+              for (const run of runsWithExpectations[config]) {
+                for (const exp of (run.expectations || [])) {
+                  if (!seen.has(exp.text)) {
+                    seen.add(exp.text);
+                    allAssertions.push(exp.text);
+                  }
+                }
+              }
+            }
+
+            html += '<table class="benchmark-table" style="margin-top: 0.5rem;">';
+            html += "<thead><tr><th>검증 항목</th>";
+            for (const config of configGroups) {
+              const label = config.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+              html += "<th>" + escapeHtml(label) + "</th>";
+            }
+            html += "</tr></thead><tbody>";
+
+            for (const assertionText of allAssertions) {
+              html += "<tr><td>" + escapeHtml(assertionText) + "</td>";
+
+              for (const config of configGroups) {
+                html += "<td>";
+                for (const run of runsWithExpectations[config]) {
+                  const exp = (run.expectations || []).find(e => e.text === assertionText);
+                  if (exp) {
+                    const cls = exp.passed ? "benchmark-delta-positive" : "benchmark-delta-negative";
+                    const icon = exp.passed ? "\u2713" : "\u2717";
+                    html += '<span class="' + cls + '" title="Run ' + run.run_number + ': ' + escapeHtml(exp.evidence || "") + '">' + icon + "</span> ";
+                  } else {
+                    html += "— ";
+                  }
+                }
+                html += "</td>";
+              }
+              html += "</tr>";
+            }
+            html += "</tbody></table>";
+          }
+        }
+      }
+
+      // Notes
+      if (notes.length > 0) {
+        html += '<div class="benchmark-notes">';
+        html += "<h3>분석 노트</h3>";
+        html += "<ul>";
+        for (const note of notes) {
+          html += "<li>" + escapeHtml(note) + "</li>";
+        }
+        html += "</ul></div>";
+      }
+
+      container.innerHTML = html;
+    }
+
+    // ---- Start ----
+    init();
+    renderBenchmark();
+  </script>
+</body>
+</html>

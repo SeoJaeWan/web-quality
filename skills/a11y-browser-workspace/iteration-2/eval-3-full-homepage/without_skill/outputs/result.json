@@ -1,0 +1,153 @@
+{
+  "audit": "Homepage Full Accessibility Verification",
+  "url": "http://localhost:3111/",
+  "page": "features/next-app/app/page.tsx",
+  "timestamp": "2026-03-14T02:00:00Z",
+  "summary": {
+    "totalIssues": 8,
+    "critical": 1,
+    "serious": 2,
+    "moderate": 3,
+    "minor": 2
+  },
+  "categories": {
+    "keyboard": {
+      "status": "fail",
+      "tabOrder": [
+        { "step": 1, "element": "a[data-testid=\"nav-logo\"]", "text": "TestApp", "href": "/", "focusVisible": true },
+        { "step": 2, "element": "a[data-testid=\"nav-login\"]", "text": "로그인", "href": "/login", "focusVisible": true },
+        { "step": 3, "element": "a[data-testid=\"nav-signup\"]", "text": "회원가입", "href": "/signup", "focusVisible": true },
+        { "step": 4, "element": "a[data-testid=\"home-login\"]", "text": "로그인", "href": "/login", "focusVisible": true },
+        { "step": 5, "element": "a[data-testid=\"home-signup\"]", "text": "회원가입", "href": "/signup", "focusVisible": true },
+        { "step": 6, "element": "nextjs-portal (dev tools)", "text": "", "href": null, "focusVisible": false },
+        { "step": 7, "element": "button[data-testid=\"cookie-accept\"]", "text": "동의", "href": null, "focusVisible": true }
+      ],
+      "issues": [
+        {
+          "id": "keyboard-1",
+          "issue": "Cookie banner overlay does not trap focus",
+          "description": "The cookie banner renders a full-screen semi-transparent overlay (bg-black/30, z-50) that visually blocks the page content. However, keyboard Tab navigation passes through elements behind the overlay (nav links, main CTA buttons) before reaching the cookie accept button. Users can interact with obscured elements via keyboard.",
+          "severity": "critical",
+          "wcag": "2.4.3 Focus Order / 2.1.2 No Keyboard Trap (inverse)",
+          "element": "div[data-testid=\"cookie-banner\"]",
+          "recommendation": "Implement focus trapping within the cookie banner when it is visible. Focus should move only between the banner text and the accept button until dismissed."
+        }
+      ]
+    },
+    "focusVisibility": {
+      "status": "pass",
+      "details": "All interactive elements (links and buttons) show a visible focus indicator using the browser default outline (auto 1px). Focus ring is visible on all 7 focusable elements tested.",
+      "issues": [],
+      "note": "Focus indicators rely on browser defaults rather than custom styles. While functional, custom focus styles would improve visual consistency."
+    },
+    "colorContrast": {
+      "status": "pass",
+      "details": "All text elements pass WCAG AA contrast requirements. The blue buttons (bg-blue-600 / lab(44.06 29.03 -86.04)) with white text achieve approximately 8.59:1 contrast ratio, well above the 4.5:1 AA requirement for normal text.",
+      "checkedElements": [
+        { "element": "h1 \"TestApp\"", "fg": "rgb(24,24,27) on rgb(250,250,250)", "ratio": "17.93:1", "passes": true },
+        { "element": "p (description)", "fg": "rgb(82,82,91) on rgb(250,250,250)", "ratio": "7.16:1", "passes": true },
+        { "element": "a[data-testid=\"nav-logo\"]", "fg": "rgb(24,24,27) on rgb(255,255,255)", "ratio": "17.93:1", "passes": true },
+        { "element": "a[data-testid=\"nav-login\"]", "fg": "rgb(82,82,91) on rgb(255,255,255)", "ratio": "7.16:1", "passes": true },
+        { "element": "a[data-testid=\"home-login\"]", "fg": "rgb(255,255,255) on bg-blue-600 lab(44.06 29.03 -86.04)", "ratio": "~8.59:1", "passes": true },
+        { "element": "a[data-testid=\"home-signup\"]", "fg": "rgb(63,63,70) on rgb(255,255,255)", "ratio": "8.48:1", "passes": true },
+        { "element": "button[data-testid=\"cookie-accept\"]", "fg": "rgb(255,255,255) on bg-blue-600 lab(44.06 29.03 -86.04)", "ratio": "~8.59:1", "passes": true },
+        { "element": "p (cookie text)", "fg": "rgb(63,63,70) on rgb(255,255,255)", "ratio": "8.48:1", "passes": true }
+      ],
+      "issues": []
+    },
+    "duplicateIds": {
+      "status": "pass",
+      "totalIdsOnPage": 1,
+      "duplicates": {},
+      "hasDuplicates": false,
+      "issues": []
+    },
+    "aria": {
+      "status": "fail",
+      "issues": [
+        {
+          "id": "aria-1",
+          "element": "div[data-testid=\"cookie-banner\"]",
+          "issue": "Cookie banner overlay lacks role=\"dialog\" and aria-modal=\"true\"",
+          "description": "The cookie banner creates a full-screen overlay (fixed inset-0 z-50 bg-black/30) that blocks page interaction, behaving as a modal dialog. However, it is rendered as a plain div without role=\"dialog\" or aria-modal=\"true\". Screen readers will not announce it as a dialog or understand the modal context.",
+          "severity": "serious",
+          "wcag": "4.1.2 Name, Role, Value",
+          "recommendation": "Add role=\"dialog\" aria-modal=\"true\" aria-label=\"쿠키 동의\" to the cookie banner container."
+        },
+        {
+          "id": "aria-2",
+          "element": "div[data-testid=\"cookie-banner\"]",
+          "issue": "Cookie banner lacks accessible name",
+          "description": "The cookie banner has no aria-label or aria-labelledby attribute, so screen readers cannot provide a meaningful label when entering the region.",
+          "severity": "moderate",
+          "wcag": "4.1.2 Name, Role, Value",
+          "recommendation": "Add aria-label=\"쿠키 사용 동의\" to the banner container."
+        },
+        {
+          "id": "aria-3",
+          "element": "nav[data-testid=\"navbar\"]",
+          "issue": "Navigation landmark lacks aria-label",
+          "description": "The main navigation bar uses a <nav> element but does not have an aria-label or aria-labelledby attribute. While there is only one nav on the unauthenticated homepage, adding a label improves screen reader experience.",
+          "severity": "moderate",
+          "wcag": "1.3.1 Info and Relationships",
+          "recommendation": "Add aria-label=\"메인 네비게이션\" to the nav element."
+        },
+        {
+          "id": "aria-4",
+          "element": "div[role=\"alert\"]",
+          "issue": "Empty live region (role=alert) present in DOM",
+          "description": "An empty element with role=\"alert\" exists in the DOM. While it appears to be a placeholder for error messages, its presence may cause some screen readers to announce an empty alert on page load.",
+          "severity": "minor",
+          "wcag": "4.1.3 Status Messages",
+          "recommendation": "Conditionally render the alert element only when there is content to display, or use aria-live on a persistent container instead."
+        },
+        {
+          "id": "aria-5",
+          "element": "button[data-testid=\"hamburger-menu\"] (mobile only)",
+          "issue": "Hamburger menu button missing aria-expanded",
+          "description": "The mobile hamburger menu button has aria-label=\"메뉴 열기\" but lacks aria-expanded to indicate whether the mobile menu is open or closed. The aria-label also does not dynamically change between open/close states. (Identified from source code review; button only visible on mobile viewport.)",
+          "severity": "moderate",
+          "wcag": "4.1.2 Name, Role, Value",
+          "recommendation": "Add aria-expanded={menuOpen} to the hamburger button and update aria-label dynamically."
+        }
+      ]
+    },
+    "semantics": {
+      "status": "pass",
+      "language": {
+        "lang": "ko",
+        "hasLang": true,
+        "correct": true
+      },
+      "headings": {
+        "structure": [
+          { "level": 1, "text": "TestApp" }
+        ],
+        "multipleH1": false,
+        "skippedLevels": false
+      },
+      "landmarks": {
+        "nav": 1,
+        "main": 1,
+        "hasProperStructure": true
+      },
+      "links": {
+        "total": 5,
+        "emptyLinks": 0
+      },
+      "issues": []
+    }
+  },
+  "overallAssessment": {
+    "grade": "B-",
+    "passedChecks": ["Color contrast (WCAG AA)", "Duplicate IDs", "Focus visibility", "Language attribute", "Heading hierarchy", "Landmark structure", "Link text"],
+    "failedChecks": ["Cookie banner focus trap", "Cookie banner ARIA dialog role", "Navigation aria-label", "Hamburger aria-expanded (mobile)"],
+    "topPriorityFixes": [
+      "1. Add focus trapping to cookie banner overlay to prevent keyboard users from reaching obscured content",
+      "2. Add role=\"dialog\" aria-modal=\"true\" aria-label=\"쿠키 사용 동의\" to cookie banner",
+      "3. Add aria-label to nav element",
+      "4. Add aria-expanded to hamburger menu button (mobile)",
+      "5. Conditionally render empty alert element"
+    ]
+  }
+}

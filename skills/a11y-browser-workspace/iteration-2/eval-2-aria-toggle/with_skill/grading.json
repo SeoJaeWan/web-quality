@@ -1,0 +1,34 @@
+{
+  "expectations": [
+    {
+      "text": "페이지 상태 확인 후 적절한 처리 (정상/auth redirect/에러 등)",
+      "passed": true,
+      "evidence": "모바일 뷰포트 설정, localStorage 인증 주입"
+    },
+    {
+      "text": "A-33: 클릭 전후 snapshot으로 ARIA 상태 변경 확인",
+      "passed": true,
+      "evidence": "A-33 ❌: aria-expanded 누락 감지"
+    },
+    {
+      "text": "검증 시 -i -c 플래그로 compact interactive snapshot 사용",
+      "passed": true,
+      "evidence": "snapshot -i -c 사용"
+    },
+    {
+      "text": "npx agent-browser 명령어로 검증 수행",
+      "passed": true,
+      "evidence": "agent-browser v0.20.0"
+    },
+    {
+      "text": "인증 리다이렉트 발생 시 적절히 처리 (판정불가 또는 공유 요소 검증)",
+      "passed": true,
+      "evidence": "localStorage 인증 주입으로 처리"
+    },
+    {
+      "text": "이슈 항목만 출력 (✅/➖ 생략)",
+      "passed": true,
+      "evidence": "2건 이슈만 출력"
+    }
+  ]
+}

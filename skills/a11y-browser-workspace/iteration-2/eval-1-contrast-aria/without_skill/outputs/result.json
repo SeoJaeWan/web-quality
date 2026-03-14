@@ -1,0 +1,203 @@
+{
+  "page": "/dashboard",
+  "url": "http://localhost:3088/dashboard",
+  "timestamp": "2026-03-14T01:56:56.385Z",
+  "summary": {
+    "totalTests": 6,
+    "passed": 1,
+    "failed": 5,
+    "issues": [
+      "Duplicate IDs: 3 elements share id=\"stat-card\" (WCAG 4.1.1)",
+      "StatsCard divs have onClick but no tabIndex, role, or onKeyDown (WCAG 2.1.1)",
+      "Icon buttons (btn-refresh, btn-settings) lack aria-label (WCAG 4.1.2)",
+      "Image /promo-banner.png missing alt attribute (WCAG 1.1.1)",
+      "Todo input field has focus:outline-none with no alternative focus indicator (WCAG 2.4.7)"
+    ]
+  },
+  "tests": [
+    {
+      "name": "duplicate-ids",
+      "description": "Check for duplicate ID attributes (WCAG 4.1.1 Parsing)",
+      "status": "fail",
+      "wcag": "4.1.1",
+      "severity": "serious",
+      "details": {
+        "stat-card": {
+          "count": 3,
+          "elements": ["DIV", "DIV", "DIV"],
+          "explanation": "StatsCard component hardcodes id=\"stat-card\" but is rendered 3 times (stat-total, stat-completed, stat-pending), creating 3 elements with the same ID"
+        }
+      }
+    },
+    {
+      "name": "keyboard-accessible-click-handlers",
+      "description": "Elements with click handlers must be keyboard accessible (WCAG 2.1.1 Keyboard)",
+      "status": "fail",
+      "wcag": "2.1.1",
+      "severity": "critical",
+      "details": [
+        {
+          "tag": "DIV",
+          "id": "stat-card",
+          "testId": "stat-total",
+          "hasTabIndex": false,
+          "hasRole": false,
+          "hasKeyDown": false,
+          "textContent": "0전체 할 일",
+          "source": "react-props",
+          "explanation": "div with onClick handler but no tabIndex, role='button', or onKeyDown. Keyboard users cannot activate this element."
+        },
+        {
+          "tag": "DIV",
+          "id": "stat-card",
+          "testId": "stat-completed",
+          "hasTabIndex": false,
+          "hasRole": false,
+          "hasKeyDown": false,
+          "textContent": "0완료",
+          "source": "react-props"
+        },
+        {
+          "tag": "DIV",
+          "id": "stat-card",
+          "testId": "stat-pending",
+          "hasTabIndex": false,
+          "hasRole": false,
+          "hasKeyDown": false,
+          "textContent": "0진행중",
+          "source": "react-props"
+        }
+      ]
+    },
+    {
+      "name": "button-accessible-names",
+      "description": "Icon buttons must have accessible names (WCAG 4.1.2 Name, Role, Value)",
+      "status": "fail",
+      "wcag": "4.1.2",
+      "severity": "critical",
+      "details": [
+        {
+          "testId": "btn-refresh",
+          "hasAriaLabel": false,
+          "textContent": "",
+          "explanation": "Button contains only an SVG icon with no aria-label, aria-labelledby, or visible text. Screen readers will announce it as an unnamed button."
+        },
+        {
+          "testId": "btn-settings",
+          "hasAriaLabel": false,
+          "textContent": "",
+          "explanation": "Button contains only an SVG icon with no aria-label, aria-labelledby, or visible text."
+        }
+      ]
+    },
+    {
+      "name": "image-alt-text",
+      "description": "Images must have alt text (WCAG 1.1.1 Non-text Content)",
+      "status": "fail",
+      "wcag": "1.1.1",
+      "severity": "critical",
+      "details": [
+        {
+          "src": "/promo-banner.png",
+          "hasAlt": false,
+          "explanation": "Image element lacks alt attribute entirely. Screen readers cannot describe this image."
+        }
+      ]
+    },
+    {
+      "name": "focus-visibility",
+      "description": "Focus indicators must be visible for all interactive elements (WCAG 2.4.7 Focus Visible)",
+      "status": "fail",
+      "wcag": "2.4.7",
+      "severity": "serious",
+      "details": {
+        "elementsWithoutFocusIndicator": [
+          {
+            "tag": "input",
+            "testId": "todo-input",
+            "type": "text",
+            "placeholder": "할 일을 입력하세요",
+            "focusStyles": {
+              "outlineStyle": "none",
+              "outlineWidth": "0px",
+              "boxShadow": "none",
+              "hasVisibleIndicator": false
+            },
+            "explanation": "The input has class 'focus:outline-none' which removes the default focus outline, and no alternative focus indicator (such as box-shadow or border-color change) is applied via CSS. The 'focus:border-blue-500' class may provide a subtle indicator via border color, but the outline suppression is still problematic."
+          }
+        ],
+        "elementsWithFocusIndicator": [
+          {"testId": "nav-logo", "tag": "a", "outlineStyle": "auto", "outlineWidth": "1px"},
+          {"testId": "nav-dashboard", "tag": "a", "outlineStyle": "auto", "outlineWidth": "1px"},
+          {"testId": "nav-todos", "tag": "a", "outlineStyle": "auto", "outlineWidth": "1px"},
+          {"testId": "nav-profile", "tag": "a", "outlineStyle": "auto", "outlineWidth": "1px"},
+          {"testId": "nav-logout", "tag": "button", "outlineStyle": "auto", "outlineWidth": "1px"},
+          {"testId": "btn-refresh", "tag": "button", "outlineStyle": "auto", "outlineWidth": "1px"},
+          {"testId": "btn-settings", "tag": "button", "outlineStyle": "auto", "outlineWidth": "1px"},
+          {"testId": "todo-add", "tag": "button", "outlineStyle": "auto", "outlineWidth": "1px"},
+          {"testId": "go-to-todos", "tag": "a", "outlineStyle": "auto", "outlineWidth": "1px"}
+        ]
+      }
+    },
+    {
+      "name": "tab-order",
+      "description": "Tab order should follow a logical reading sequence (WCAG 2.4.3 Focus Order)",
+      "status": "pass",
+      "wcag": "2.4.3",
+      "severity": "info",
+      "details": {
+        "tabSequence": [
+          {"tabStop": 1, "tag": "a", "testId": "nav-logo", "text": "TestApp"},
+          {"tabStop": 2, "tag": "a", "testId": "nav-dashboard", "text": "대시보드"},
+          {"tabStop": 3, "tag": "a", "testId": "nav-todos", "text": "할 일"},
+          {"tabStop": 4, "tag": "a", "testId": "nav-profile", "text": "프로필"},
+          {"tabStop": 5, "tag": "button", "testId": "nav-logout", "text": "로그아웃"},
+          {"tabStop": 6, "tag": "a", "text": "홈 (breadcrumb)"},
+          {"tabStop": 7, "tag": "button", "testId": "btn-refresh", "text": "(icon only, no label)"},
+          {"tabStop": 8, "tag": "button", "testId": "btn-settings", "text": "(icon only, no label)"},
+          {"tabStop": 9, "tag": "input", "testId": "todo-input", "text": "할 일을 입력하세요"},
+          {"tabStop": 10, "tag": "button", "testId": "todo-add", "text": "추가"},
+          {"tabStop": 11, "tag": "a", "testId": "go-to-todos", "text": "전체 할 일 목록 보기 →"}
+        ],
+        "totalTabStops": 11,
+        "logicalOrder": true,
+        "note": "Tab order follows DOM order (nav -> breadcrumb -> main content). StatsCard elements with onClick are NOT in the tab order because they lack tabIndex, which is the keyboard accessibility bug."
+      }
+    }
+  ],
+  "sourceFiles": {
+    "dashboardPage": "features/next-app/app/dashboard/page.tsx",
+    "statsCard": "features/next-app/components/StatsCard.tsx"
+  },
+  "recommendations": [
+    {
+      "issue": "StatsCard: duplicate id=\"stat-card\"",
+      "fix": "Use the testId prop or a unique identifier as the id, e.g., id={testId} instead of id=\"stat-card\"",
+      "file": "features/next-app/components/StatsCard.tsx",
+      "line": 12
+    },
+    {
+      "issue": "StatsCard: div with onClick not keyboard accessible",
+      "fix": "Add role=\"button\", tabIndex={0}, and an onKeyDown handler that triggers handleClick on Enter/Space",
+      "file": "features/next-app/components/StatsCard.tsx",
+      "line": 17
+    },
+    {
+      "issue": "Icon buttons without aria-label",
+      "fix": "Add aria-label to btn-refresh (e.g., aria-label=\"새로고침\") and btn-settings (e.g., aria-label=\"설정\")",
+      "file": "features/next-app/app/dashboard/page.tsx",
+      "lines": [59, 62]
+    },
+    {
+      "issue": "Image missing alt attribute",
+      "fix": "Add alt attribute to promo-banner.png image, e.g., alt=\"프로모션 배너\" or alt=\"\" if decorative",
+      "file": "features/next-app/app/dashboard/page.tsx",
+      "line": 83
+    },
+    {
+      "issue": "Todo input removes focus outline",
+      "fix": "Replace focus:outline-none with a visible focus indicator, e.g., focus:ring-2 focus:ring-blue-500",
+      "file": "features/next-app/components/TodoForm.tsx"
+    }
+  ]
+}

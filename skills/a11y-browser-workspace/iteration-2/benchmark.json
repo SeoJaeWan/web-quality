@@ -1,0 +1,331 @@
+{
+  "metadata": {
+    "skill_name": "a11y-browser",
+    "timestamp": "2026-03-14",
+    "evals_run": [
+      "contrast-aria",
+      "aria-toggle",
+      "full-homepage"
+    ],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "contrast-aria",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "total": 7,
+        "time_seconds": 832.7,
+        "tokens": 59291,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인",
+          "passed": true,
+          "evidence": "dev server 시작, 인증 후 dashboard 접근"
+        },
+        {
+          "text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인",
+          "passed": true,
+          "evidence": "snapshot 후 auth redirect 감지, 로그인 수행"
+        },
+        {
+          "text": "A-08: getComputedStyle로 텍스트 색상 대비를 확인하고 contrast ratio 계산",
+          "passed": true,
+          "evidence": "A-08 ❌: text-zinc-400 contrast 2.62:1 감지"
+        },
+        {
+          "text": "A-33: 인터랙티브 요소 클릭 전후 snapshot으로 ARIA state 변경 검증",
+          "passed": true,
+          "evidence": "A-33 ⚠️: aria-expanded 누락, aria-label 고정 감지"
+        },
+        {
+          "text": "npx agent-browser 명령어로 검증 수행",
+          "passed": true,
+          "evidence": "agent-browser v0.20.0 사용"
+        },
+        {
+          "text": "모든 검증 항목의 verdict_method가 '브라우저 검증'",
+          "passed": true,
+          "evidence": "verdict_method=브라우저 검증"
+        },
+        {
+          "text": "이슈 항목만 출력 (✅/➖ 생략)",
+          "passed": true,
+          "evidence": "2건 이슈만 출력"
+        }
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "contrast-aria",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.625,
+        "passed": 5,
+        "total": 8,
+        "time_seconds": 1720.3,
+        "tokens": 65132,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인",
+          "passed": true,
+          "evidence": "dev server 시작 및 대시보드 접근 성공"
+        },
+        {
+          "text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인",
+          "passed": false,
+          "evidence": "snapshot -c 명령어 미사용, Playwright MCP 도구로 직접 접근"
+        },
+        {
+          "text": "A-10: Tab 키로 인터랙티브 요소 접근 가능 여부 테스트",
+          "passed": true,
+          "evidence": "StatsCard div onClick 키보드 접근 불가 확인"
+        },
+        {
+          "text": "A-11: 포커스 시 outline/boxShadow/border 시각적 표시 확인",
+          "passed": true,
+          "evidence": "focus:outline-none 문제 감지, focus:border-blue-500 대체 스타일 확인"
+        },
+        {
+          "text": "A-32: DOM에서 중복 ID 검사 실행",
+          "passed": true,
+          "evidence": "id='stat-card' 3개 중복 ID 확인"
+        },
+        {
+          "text": "A-08: getComputedStyle로 텍스트 색상 대비 확인",
+          "passed": false,
+          "evidence": "색상 대비 검사 미수행"
+        },
+        {
+          "text": "모든 검증 항목의 verdict_method가 'Playwright'",
+          "passed": false,
+          "evidence": "verdict_method 필드 없음, 자체 형식 사용"
+        },
+        {
+          "text": "결과가 JSON 배열 형식으로 반환됨",
+          "passed": true,
+          "evidence": "result.json에 JSON 배열로 저장됨"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "aria-toggle",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "total": 6,
+        "time_seconds": 717.5,
+        "tokens": 35748,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "페이지 상태 확인 후 적절한 처리 (정상/auth redirect/에러 등)",
+          "passed": true,
+          "evidence": "모바일 뷰포트 설정, localStorage 인증 주입"
+        },
+        {
+          "text": "A-33: 클릭 전후 snapshot으로 ARIA 상태 변경 확인",
+          "passed": true,
+          "evidence": "A-33 ❌: aria-expanded 누락 감지"
+        },
+        {
+          "text": "검증 시 -i -c 플래그로 compact interactive snapshot 사용",
+          "passed": true,
+          "evidence": "snapshot -i -c 사용"
+        },
+        {
+          "text": "npx agent-browser 명령어로 검증 수행",
+          "passed": true,
+          "evidence": "agent-browser v0.20.0"
+        },
+        {
+          "text": "인증 리다이렉트 발생 시 적절히 처리 (판정불가 또는 공유 요소 검증)",
+          "passed": true,
+          "evidence": "localStorage 인증 주입으로 처리"
+        },
+        {
+          "text": "이슈 항목만 출력 (✅/➖ 생략)",
+          "passed": true,
+          "evidence": "2건 이슈만 출력"
+        }
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "aria-toggle",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6,
+        "passed": 3,
+        "total": 5,
+        "time_seconds": 1093.8,
+        "tokens": 46543,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "페이지 상태 확인 후 적절한 처리 (정상/auth redirect/에러 등)",
+          "passed": true,
+          "evidence": "인증 설정 후 /dashboard 접근, 모바일 뷰포트 설정"
+        },
+        {
+          "text": "A-33: 클릭 전후 snapshot으로 ARIA 상태 변경 확인",
+          "passed": true,
+          "evidence": "클릭 전후 aria-expanded 미설정 확인 → FAIL 판정"
+        },
+        {
+          "text": "검증 시 -i -c 플래그로 compact interactive snapshot 사용",
+          "passed": false,
+          "evidence": "agent-browser 미사용, Playwright MCP 도구로 직접 접근"
+        },
+        {
+          "text": "npx agent-browser 명령어로 검증 수행",
+          "passed": false,
+          "evidence": "Playwright MCP 사용, agent-browser 미사용"
+        },
+        {
+          "text": "인증 리다이렉트 발생 시 적절히 처리 (판정불가 또는 공유 요소 검증)",
+          "passed": true,
+          "evidence": "localStorage에 인증 토큰 주입하여 적절히 처리"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "full-homepage",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "total": 6,
+        "time_seconds": 580.0,
+        "tokens": 35108,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "A-08: getComputedStyle 기반 contrast ratio 계산이 수행됨",
+          "passed": true,
+          "evidence": "모든 텍스트 contrast 5.25:1 이상 PASS"
+        },
+        {
+          "text": "A-33: 인터랙티브 요소 클릭 전후 ARIA state 확인이 수행됨",
+          "passed": true,
+          "evidence": "토글 요소 없어 N/A"
+        },
+        {
+          "text": "package.json에서 dev script를 찾아 서버 자동 시작",
+          "passed": true,
+          "evidence": "dev server 자동 시작"
+        },
+        {
+          "text": "페이지 상태 감지 (정상/auth/loading/error/empty) 수행",
+          "passed": true,
+          "evidence": "정상 렌더링 확인"
+        },
+        {
+          "text": "A-12, A-26, A-28, A-31 중 해당 요소 존재 시 추가 검증 또는 N/A 처리",
+          "passed": true,
+          "evidence": "A-31 PASS(nav 일관성), 나머지 N/A"
+        },
+        {
+          "text": "이슈 항목만 출력 (✅/➖ 생략)",
+          "passed": true,
+          "evidence": "이슈 0건, 빈 findings"
+        }
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "full-homepage",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8,
+        "passed": 4,
+        "total": 5,
+        "time_seconds": 1732.5,
+        "tokens": 84836,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "A-08, A-10, A-11, A-32, A-33 항목이 모두 검증됨",
+          "passed": true,
+          "evidence": "색상 대비, 키보드 접근, 포커스 표시, 중복 ID, ARIA 상태 모두 검증됨"
+        },
+        {
+          "text": "package.json에서 dev script를 찾아 서버 자동 시작",
+          "passed": true,
+          "evidence": "pnpm install 후 dev server 시작 성공"
+        },
+        {
+          "text": "페이지 상태 감지 (정상/auth/loading/error/empty) 수행",
+          "passed": true,
+          "evidence": "홈페이지 정상 렌더링 확인, 쿠키 배너 감지"
+        },
+        {
+          "text": "A-12, A-26, A-28, A-31 중 해당 요소 존재 시 추가 검증",
+          "passed": true,
+          "evidence": "쿠키 배너 포커스 트랩 문제 등 추가 검증 수행"
+        },
+        {
+          "text": "검증 불가 항목에 구체적 사유 명시 (예: '인증 필요 페이지')",
+          "passed": false,
+          "evidence": "판정불가 항목이 없었으나, 표준화된 사유 형식도 미사용"
+        }
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0
+      },
+      "time_seconds": {
+        "mean": 710.067,
+        "stddev": 126.514
+      },
+      "tokens": {
+        "mean": 43382.333,
+        "stddev": 13781.025
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.675,
+        "stddev": 0.109
+      },
+      "time_seconds": {
+        "mean": 1515.533,
+        "stddev": 365.283
+      },
+      "tokens": {
+        "mean": 65503.667,
+        "stddev": 19149.205
+      }
+    },
+    "delta": {
+      "pass_rate": "+48.1%",
+      "time_seconds": "-53.1%",
+      "tokens": "-33.8%"
+    }
+  },
+  "notes": []
+}

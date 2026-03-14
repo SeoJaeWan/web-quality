@@ -1,0 +1,1 @@
+{"eval_id":1,"eval_name":"full-3files-analysis","prompt":"dashboard/page.tsx, StatsCard.tsx, Navbar.tsx의 접근성을 정적분석으로 검토해줘","assertions":[]}
