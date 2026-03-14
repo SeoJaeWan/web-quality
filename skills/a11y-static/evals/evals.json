@@ -43,6 +43,19 @@
         {"id": "a33-aria-issue", "text": "A-33: aria-expanded 또는 aria-pressed 누락 감지"},
         {"id": "no-browser-dependency", "text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료"}
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "login/page.tsx의 접근성을 정적분석으로 검토해줘",
+      "expected_output": "로그인 폼의 label 누락, autocomplete 미사용 등 폼 관련 이슈 탐지",
+      "files": ["../../features/next-app/app/login/page.tsx"],
+      "assertions": [
+        {"id": "scan-script-executed", "text": "scripts/scan.py 스크립트가 실행됨"},
+        {"id": "a29-input-label-missing", "text": "A-29: input 요소에 label/aria-label 누락 감지"},
+        {"id": "a31-autocomplete-missing", "text": "A-31: email input에 autocomplete 속성 누락 감지"},
+        {"id": "issues-only-output", "text": "출력에 ❌/⚠️ 항목만 포함됨"},
+        {"id": "fix-guides-included", "text": "❌/⚠️ 항목에 수정 가이드 포함"}
+      ]
     }
   ]
 }

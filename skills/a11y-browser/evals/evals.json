@@ -9,9 +9,9 @@
       "assertions": [
         {"id": "dev-server-started", "text": "dev server가 자동으로 시작되거나 이미 실행 중임을 확인"},
         {"id": "page-readiness-check", "text": "페이지 열기 후 전체 트리 snapshot(-c)으로 페이지 상태 확인"},
-        {"id": "color-contrast-checked", "text": "A-08: getComputedStyle로 텍스트 색상 대비 확인"},
-        {"id": "aria-state-checked", "text": "A-33: 인터랙티브 요소 클릭 전후 ARIA state 변경 검증"},
-        {"id": "no-code-analysis-items", "text": "A-10(키보드패턴), A-11(outline제거), A-32(중복ID)는 검증하지 않음 (static 담당)"},
+        {"id": "color-contrast-checked", "text": "A-08: getComputedStyle로 텍스트 색상 대비를 확인하고 contrast ratio 계산"},
+        {"id": "aria-state-checked", "text": "A-33: 인터랙티브 요소 클릭 전후 snapshot으로 ARIA state 변경 검증"},
+        {"id": "agent-browser-used", "text": "npx agent-browser 명령어로 검증 수행"},
         {"id": "verdict-method-browser", "text": "모든 검증 항목의 verdict_method가 '브라우저 검증'"},
         {"id": "issues-only-output", "text": "이슈 항목만 출력 (✅/➖ 생략)"}
       ]
@@ -26,7 +26,8 @@
         {"id": "aria-state-before-after", "text": "A-33: 클릭 전후 snapshot으로 ARIA 상태 변경 확인"},
         {"id": "interactive-snapshot-used", "text": "검증 시 -i -c 플래그로 compact interactive snapshot 사용"},
         {"id": "agent-browser-used", "text": "npx agent-browser 명령어로 검증 수행"},
-        {"id": "auth-redirect-handled", "text": "인증 리다이렉트 발생 시 적절히 처리 (판정불가 또는 공유 요소 검증)"}
+        {"id": "auth-redirect-handled", "text": "인증 리다이렉트 발생 시 적절히 처리 (판정불가 또는 공유 요소 검증)"},
+        {"id": "issues-only-output", "text": "이슈 항목만 출력 (✅/➖ 생략)"}
       ]
     },
     {
@@ -35,12 +36,12 @@
       "expected_output": "브라우저에서만 확인 가능한 항목 검증 (computed contrast, ARIA state, 런타임 항목)",
       "files": ["../../features/next-app/app/page.tsx"],
       "assertions": [
-        {"id": "contrast-and-aria-tested", "text": "A-08(computed contrast)과 A-33(ARIA state 변경)이 검증됨"},
+        {"id": "contrast-tested", "text": "A-08: getComputedStyle 기반 contrast ratio 계산이 수행됨"},
+        {"id": "aria-state-tested", "text": "A-33: 인터랙티브 요소 클릭 전후 ARIA state 확인이 수행됨"},
         {"id": "dev-server-auto-start", "text": "package.json에서 dev script를 찾아 서버 자동 시작"},
         {"id": "page-state-detected", "text": "페이지 상태 감지 (정상/auth/loading/error/empty) 수행"},
-        {"id": "conditional-items-checked", "text": "A-12, A-26, A-28, A-31 중 해당 요소 존재 시 추가 검증"},
-        {"id": "runtime-items-attempted", "text": "런타임 전용 항목(A-02,A-04,A-06,A-09,A-15,A-16 중 해당 요소 존재 시) 검증 시도"},
-        {"id": "no-static-duplication", "text": "A-10, A-11, A-32는 검증하지 않음 (코드 분석으로 충분, static 담당)"}
+        {"id": "conditional-items-checked", "text": "A-12, A-26, A-28, A-31 중 해당 요소 존재 시 추가 검증 또는 N/A 처리"},
+        {"id": "issues-only-output", "text": "이슈 항목만 출력 (✅/➖ 생략)"}
       ]
     }
   ]

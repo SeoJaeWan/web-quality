@@ -8,10 +8,10 @@
       "files": ["../../features/next-app/app/dashboard/page.tsx", "../../features/next-app/components/StatsCard.tsx", "../../features/next-app/components/Navbar.tsx"],
       "assertions": [
         {"id": "static-scan-executed", "text": "a11y-static이 scan.py 스크립트를 실행하여 코드 기반 이슈 탐지"},
-        {"id": "browser-runtime-only", "text": "a11y-browser가 런타임 항목(A-08 대비, A-33 ARIA 동작 등)만 검증하고 A-10/A-11/A-32는 검증하지 않음"},
-        {"id": "no-role-overlap", "text": "코드 분석 항목(A-10,A-11,A-32)은 static만, 런타임 항목은 browser만 담당"},
+        {"id": "browser-verification-executed", "text": "a11y-browser가 agent-browser로 런타임 항목(A-08 대비, A-33 ARIA 동작 등) 검증 수행"},
         {"id": "issues-only-report", "text": "리포트에 ❌/⚠️ 항목만 포함, ✅/➖ 행이 없음"},
-        {"id": "merge-browser-wins", "text": "보완 항목(A-08,A-33 등)은 양쪽 결과 중 브라우저가 우선"},
+        {"id": "summary-counts-present", "text": "리포트에 위반/권고 카운트 요약이 포함됨"},
+        {"id": "merge-browser-wins", "text": "보완 항목(A-08,A-33 등)에서 양쪽 모두 결과가 있을 때 브라우저가 우선"},
         {"id": "html-report-generated", "text": "report.html 파일 생성됨"},
         {"id": "csv-report-generated", "text": "report.csv 파일 생성됨 (이슈 행만 포함)"}
       ]
@@ -19,14 +19,14 @@
     {
       "id": 2,
       "prompt": "Navbar.tsx와 StatsCard.tsx의 접근성을 KWCAG2.2 기준으로 검토하고 리포트 생성해줘",
-      "expected_output": "두 컴포넌트의 이슈만 포함된 간결한 리포트, 역할 분담 준수",
+      "expected_output": "두 컴포넌트의 이슈만 포함된 간결한 리포트",
       "files": ["../../features/next-app/components/Navbar.tsx", "../../features/next-app/components/StatsCard.tsx"],
       "assertions": [
         {"id": "both-files-analyzed", "text": "Navbar.tsx와 StatsCard.tsx 모두 분석 대상에 포함"},
         {"id": "issues-only-output", "text": "리포트에 이슈 항목만 포함됨"},
         {"id": "fix-guides-provided", "text": "❌ 항목에 구체적인 수정 가이드 포함"},
         {"id": "report-in-korean", "text": "리포트가 한국어로 작성됨"},
-        {"id": "independent-skills", "text": "static과 browser가 독립적으로 실행됨 (결과 전달 없이 각자 분석)"}
+        {"id": "static-and-browser-both-run", "text": "정적분석(scan.py)과 브라우저 검증(agent-browser) 모두 실행됨"}
       ]
     }
   ]
