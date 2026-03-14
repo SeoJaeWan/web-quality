@@ -1,0 +1,15 @@
+{
+  "eval_id": 1,
+  "eval_name": "full-3files-analysis",
+  "prompt": "dashboard/page.tsx, StatsCard.tsx, Navbar.tsx의 접근성을 정적분석으로 검토해줘",
+  "assertions": [
+    {"id": "scan-script-executed", "text": "scripts/scan.py 스크립트가 실행되어 JSON 결과를 파싱함"},
+    {"id": "issues-only-output", "text": "출력에 ❌/⚠️ 항목만 포함되고, ✅/➖ 항목은 생략됨"},
+    {"id": "summary-included", "text": "summary 객체에 total_items_checked, violations, advisories 카운트 포함"},
+    {"id": "img-alt-missing-detected", "text": "A-01 ❌: page.tsx에서 img alt 누락 감지"},
+    {"id": "div-onclick-keyboard-issue", "text": "A-10 ❌: StatsCard.tsx에서 div onClick 키보드 접근성 문제 감지"},
+    {"id": "duplicate-id-detected", "text": "A-32 ❌: StatsCard.tsx에서 중복 id 패턴 감지"},
+    {"id": "fix-guides-included", "text": "❌/⚠️ 항목에 수정 가이드 포함"},
+    {"id": "no-passing-items-in-output", "text": "결과에 result=✅ 또는 result=➖ 항목이 없음"}
+  ]
+}

@@ -1,0 +1,200 @@
+[
+  {
+    "id": "A-01",
+    "name": "img-missing-alt",
+    "file": "dashboard/page.tsx",
+    "line": 83,
+    "element": "<img src=\"/promo-banner.png\" />",
+    "result": "fail",
+    "wcag": "1.1.1 Non-text Content (Level A)",
+    "issue": "The <img> element has no `alt` attribute. Screen readers cannot convey the purpose of this image to users.",
+    "suggestion": "Add a descriptive `alt` attribute (e.g., `alt=\"프로모션 배너\"`) or `alt=\"\"` if the image is purely decorative."
+  },
+  {
+    "id": "A-02",
+    "name": "button-missing-accessible-name",
+    "file": "dashboard/page.tsx",
+    "line": 59,
+    "element": "<button data-testid=\"btn-refresh\">",
+    "result": "fail",
+    "wcag": "4.1.2 Name, Role, Value (Level A) / 1.1.1 Non-text Content (Level A)",
+    "issue": "Icon-only button contains only an SVG with no text content and no `aria-label`. The button has no accessible name for assistive technologies.",
+    "suggestion": "Add `aria-label=\"새로고침\"` to the button, or include a visually-hidden text span inside it."
+  },
+  {
+    "id": "A-03",
+    "name": "button-missing-accessible-name",
+    "file": "dashboard/page.tsx",
+    "line": 62,
+    "element": "<button data-testid=\"btn-settings\">",
+    "result": "fail",
+    "wcag": "4.1.2 Name, Role, Value (Level A) / 1.1.1 Non-text Content (Level A)",
+    "issue": "Icon-only button contains only an SVG with no text content and no `aria-label`. The button has no accessible name for assistive technologies.",
+    "suggestion": "Add `aria-label=\"설정\"` to the button, or include a visually-hidden text span inside it."
+  },
+  {
+    "id": "A-04",
+    "name": "svg-missing-role-and-title",
+    "file": "dashboard/page.tsx",
+    "lines": [60, 63],
+    "element": "<svg> inside icon buttons",
+    "result": "fail",
+    "wcag": "1.1.1 Non-text Content (Level A)",
+    "issue": "SVG icons inside the icon-only buttons lack `role=\"img\"` and `<title>` elements. They are not hidden from the accessibility tree with `aria-hidden=\"true\"` either.",
+    "suggestion": "Add `aria-hidden=\"true\"` to each SVG (since the parent button should carry the accessible name), or add `role=\"img\"` and a `<title>` to each SVG."
+  },
+  {
+    "id": "A-05",
+    "name": "list-item-missing-key",
+    "file": "dashboard/page.tsx",
+    "line": 73,
+    "element": "<div className=\"border p-2 mt-2\">{item}</div>",
+    "result": "warning",
+    "wcag": "N/A (React best practice)",
+    "issue": "Items rendered via `.map()` do not have a `key` prop. While primarily a React concern, missing keys can cause unexpected DOM reconciliation that may disrupt assistive technology state.",
+    "suggestion": "Add a unique `key` prop to each rendered element, e.g., `<div key={item} ...>`."
+  },
+  {
+    "id": "A-06",
+    "name": "img-missing-dimensions",
+    "file": "dashboard/page.tsx",
+    "lines": [83, 85],
+    "element": "<img src=\"/promo-banner.png\" /> and <img src=\"/footer-ad.png\" />",
+    "result": "warning",
+    "wcag": "N/A (CLS / performance best practice)",
+    "issue": "Both images lack explicit `width` and `height` attributes, which causes layout shift (CLS) as images load. This can disorient users of assistive technologies when content moves unexpectedly.",
+    "suggestion": "Add `width` and `height` attributes to both images, or use CSS `aspect-ratio` to reserve space."
+  },
+  {
+    "id": "A-07",
+    "name": "div-click-handler-not-keyboard-accessible",
+    "file": "StatsCard.tsx",
+    "line": 17,
+    "element": "<div ... onClick={handleClick}>",
+    "result": "fail",
+    "wcag": "2.1.1 Keyboard (Level A) / 4.1.2 Name, Role, Value (Level A)",
+    "issue": "The <div> has an `onClick` handler but lacks `role=\"button\"`, `tabIndex={0}`, and an `onKeyDown`/`onKeyUp` handler. Keyboard users cannot activate this interactive element.",
+    "suggestion": "Either replace the <div> with a <button> element, or add `role=\"button\"`, `tabIndex={0}`, and an `onKeyDown` handler that triggers on Enter/Space."
+  },
+  {
+    "id": "A-08",
+    "name": "duplicate-id",
+    "file": "StatsCard.tsx",
+    "line": 13,
+    "element": "id=\"stat-card\"",
+    "result": "fail",
+    "wcag": "4.1.1 Parsing (Level A)",
+    "issue": "The component uses a hardcoded `id=\"stat-card\"`. Since StatsCard is rendered three times on the dashboard, this produces three elements with the same ID, violating the HTML uniqueness constraint. Duplicate IDs can confuse assistive technologies and break `aria-labelledby`/`aria-describedby` references.",
+    "suggestion": "Use a unique ID per instance, e.g., `id={testId}` or `id={`stat-card-${label}`}`, or remove the `id` attribute entirely if not needed."
+  },
+  {
+    "id": "A-09",
+    "name": "hamburger-missing-aria-expanded",
+    "file": "Navbar.tsx",
+    "line": 59,
+    "element": "<button data-testid=\"hamburger-menu\">",
+    "result": "fail",
+    "wcag": "4.1.2 Name, Role, Value (Level A)",
+    "issue": "The hamburger menu toggle button does not have `aria-expanded` to communicate whether the mobile menu is currently open or closed. Screen reader users have no way to know the menu state.",
+    "suggestion": "Add `aria-expanded={menuOpen}` to the hamburger button element."
+  },
+  {
+    "id": "A-10",
+    "name": "hamburger-label-not-dynamic",
+    "file": "Navbar.tsx",
+    "line": 63,
+    "element": "aria-label=\"메뉴 열기\"",
+    "result": "warning",
+    "wcag": "4.1.2 Name, Role, Value (Level A)",
+    "issue": "The `aria-label` is always \"메뉴 열기\" (open menu) regardless of whether the menu is open or closed. When the menu is open, the label should indicate it can be closed.",
+    "suggestion": "Make the label dynamic: `aria-label={menuOpen ? \"메뉴 닫기\" : \"메뉴 열기\"}`."
+  },
+  {
+    "id": "A-11",
+    "name": "mobile-menu-missing-role",
+    "file": "Navbar.tsx",
+    "line": 88,
+    "element": "<div data-testid=\"mobile-menu\">",
+    "result": "warning",
+    "wcag": "4.1.2 Name, Role, Value (Level A)",
+    "issue": "The mobile dropdown menu is a plain <div> without a navigation landmark role. Assistive technologies cannot identify this as a navigation region.",
+    "suggestion": "Change the element to `<nav aria-label=\"모바일 메뉴\">` or add `role=\"navigation\"` with an `aria-label`."
+  },
+  {
+    "id": "A-12",
+    "name": "hamburger-missing-aria-controls",
+    "file": "Navbar.tsx",
+    "line": 59,
+    "element": "<button data-testid=\"hamburger-menu\">",
+    "result": "warning",
+    "wcag": "4.1.2 Name, Role, Value (Level A)",
+    "issue": "The hamburger button does not specify `aria-controls` to programmatically link it to the menu it controls.",
+    "suggestion": "Add an `id` to the mobile menu div (e.g., `id=\"mobile-nav-menu\"`) and add `aria-controls=\"mobile-nav-menu\"` to the hamburger button."
+  },
+  {
+    "id": "A-13",
+    "name": "breadcrumbs-missing-nav-landmark",
+    "file": "Navbar.tsx",
+    "line": 132,
+    "element": "<div data-testid=\"breadcrumbs\">",
+    "result": "fail",
+    "wcag": "1.3.1 Info and Relationships (Level A)",
+    "issue": "Breadcrumbs are rendered in a plain <div> instead of a <nav> landmark with `aria-label=\"Breadcrumb\"`. Screen reader users cannot identify this as a breadcrumb navigation.",
+    "suggestion": "Wrap the breadcrumbs in `<nav aria-label=\"Breadcrumb\">` and use an `<ol>` list to convey the hierarchical structure."
+  },
+  {
+    "id": "A-14",
+    "name": "breadcrumbs-not-using-list-structure",
+    "file": "Navbar.tsx",
+    "lines": [132, 146],
+    "element": "Breadcrumbs component",
+    "result": "warning",
+    "wcag": "1.3.1 Info and Relationships (Level A)",
+    "issue": "Breadcrumb items are rendered as inline spans/links without an ordered list (<ol>/<li>) structure. Assistive technologies cannot convey the number of items or the sequential nature of the navigation.",
+    "suggestion": "Render breadcrumbs as `<ol><li>` items within a `<nav aria-label=\"Breadcrumb\">` element."
+  },
+  {
+    "id": "A-15",
+    "name": "breadcrumbs-missing-aria-current",
+    "file": "Navbar.tsx",
+    "line": 138,
+    "element": "<span className=\"text-zinc-900 ...\">{labels[seg] || seg}</span>",
+    "result": "warning",
+    "wcag": "1.3.1 Info and Relationships (Level A)",
+    "issue": "The current (last) breadcrumb segment does not have `aria-current=\"page\"` to indicate it represents the current page.",
+    "suggestion": "Add `aria-current=\"page\"` to the last breadcrumb span element."
+  },
+  {
+    "id": "A-16",
+    "name": "nav-link-missing-aria-current",
+    "file": "Navbar.tsx",
+    "lines": [34, 89],
+    "element": "Active navigation links",
+    "result": "warning",
+    "wcag": "1.3.1 Info and Relationships (Level A)",
+    "issue": "Active navigation links (where `pathname === link.href`) are styled differently but do not have `aria-current=\"page\"`. The active state is communicated only visually through color change.",
+    "suggestion": "Add `aria-current={pathname === link.href ? \"page\" : undefined}` to each navigation link."
+  },
+  {
+    "id": "A-17",
+    "name": "dashboard-page-missing-main-landmark",
+    "file": "dashboard/page.tsx",
+    "line": 42,
+    "element": "<div> (root element)",
+    "result": "warning",
+    "wcag": "1.3.1 Info and Relationships (Level A)",
+    "issue": "The dashboard page root element is a generic <div> rather than a <main> landmark. Screen reader users rely on landmarks to navigate page regions efficiently.",
+    "suggestion": "Replace the outermost `<div>` with `<main>` to create a proper main content landmark."
+  },
+  {
+    "id": "A-18",
+    "name": "dynamic-content-no-live-region",
+    "file": "dashboard/page.tsx",
+    "lines": [72, 74],
+    "element": "Dynamically inserted recentItems",
+    "result": "warning",
+    "wcag": "4.1.3 Status Messages (Level AA)",
+    "issue": "Content is dynamically inserted after a 500ms delay but the container does not use `aria-live` or `role=\"status\"`. Screen reader users will not be notified when new items appear.",
+    "suggestion": "Add `aria-live=\"polite\"` to the container of dynamically loaded items, or use `role=\"status\"` to announce updates."
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "expectations": [
+    {"text": "33개 KWCAG2.2 항목(A-01~A-33)이 모두 평가됨", "passed": false, "evidence": "18개 항목만 평가됨 (A-01~A-18), KWCAG 표준 코드 미사용 (커스텀 ID 사용)"},
+    {"text": "시맨틱 HTML 항목(S-01+)이 평가됨", "passed": false, "evidence": "시맨틱 HTML 별도 섹션 없음. A-17에서 main landmark 언급만"},
+    {"text": "모든 항목의 verdict_method가 '정적분석'임", "passed": false, "evidence": "verdict_method 필드 자체가 결과에 포함되지 않음"},
+    {"text": "dashboard/page.tsx에서 img alt 누락 감지", "passed": true, "evidence": "A-01: page.tsx:83 <img> missing alt attribute"},
+    {"text": "StatsCard.tsx에서 div onClick의 키보드 접근성 문제 감지", "passed": true, "evidence": "A-07: StatsCard.tsx:17 div onClick without keyboard support"},
+    {"text": "Navbar.tsx 햄버거 메뉴에서 aria-expanded 누락 감지", "passed": true, "evidence": "A-09: hamburger-missing-aria-expanded"},
+    {"text": "StatsCard.tsx에서 중복 id 패턴 감지", "passed": true, "evidence": "A-08: id='stat-card' duplicate ID issue"},
+    {"text": "발견된 이슈에 파일명:라인번호 참조 포함", "passed": true, "evidence": "각 항목에 file, line 필드로 라인번호 포함"},
+    {"text": "❌/⚠️ 항목에 수정 가이드 포함", "passed": true, "evidence": "각 항목에 suggestion 필드로 수정 가이드 포함"},
+    {"text": "kwcag22.md 참조 문서를 읽고 기준에 따라 평가", "passed": false, "evidence": "KWCAG 참조 문서 미사용, WCAG 기준으로 자체 판단"}
+  ]
+}

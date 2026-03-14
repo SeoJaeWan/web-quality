@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "aria-semantic",
+  "prompt": "Navbar.tsx와 SearchFilter.tsx의 ARIA 속성과 시맨틱 HTML을 정적분석해줘",
+  "assertions": [
+    {"id": "scan-script-executed", "text": "scripts/scan.py 스크립트가 실행됨"},
+    {"id": "issues-only-output", "text": "출력에 ❌/⚠️ 항목만 포함됨"},
+    {"id": "a29-label-issue", "text": "A-29: input search에 label/aria-label 누락 감지"},
+    {"id": "a33-aria-issue", "text": "A-33: aria-expanded 또는 aria-pressed 누락 감지"},
+    {"id": "no-browser-dependency", "text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료"}
+  ]
+}

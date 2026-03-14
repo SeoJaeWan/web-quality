@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "A-33: 햄버거 메뉴 버튼에 aria-expanded 누락 감지", "passed": true, "evidence": "ARIA-01: hamburger button missing aria-expanded"},
+    {"text": "A-33: 필터 토글 버튼에 aria-pressed 누락 감지", "passed": true, "evidence": "ARIA-06: filter toggle buttons missing aria-pressed"},
+    {"text": "시맨틱 HTML: nav 요소 사용 여부 평가", "passed": true, "evidence": "SEM-02: nav lacks aria-label, SEM-03: breadcrumbs using div"},
+    {"text": "A-23: 아이콘 버튼의 aria-label 누락 감지", "passed": false, "evidence": "aria-label 동적 변경 문제(ARIA-03)는 감지했으나 아이콘 버튼 aria-label 누락과는 다른 이슈"},
+    {"text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료", "passed": true, "evidence": "순수 코드 분석만으로 완료, 브라우저 미사용"}
+  ]
+}

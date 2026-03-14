@@ -1,0 +1,34 @@
+{
+  "summary": {
+    "files_reviewed": ["StatsCard.tsx"],
+    "total_items_checked": 33,
+    "violations": 2,
+    "advisories": 1
+  },
+  "findings": [
+    {
+      "id": "A-10",
+      "name": "키보드 사용 보장",
+      "result": "❌",
+      "verdict_method": "정적분석",
+      "issue": "StatsCard.tsx:10 — <div>에 onClick 핸들러가 있으나 role, tabIndex, onKeyDown이 없어 키보드로 접근 및 조작 불가",
+      "fix_guide": "클릭 가능 요소는 <button> 또는 <a> 사용. 커스텀 요소라면 role=\"button\" + tabIndex={0} + onKeyDown 추가. 권장: <div> 대신 <button>으로 교체"
+    },
+    {
+      "id": "A-32",
+      "name": "마크업 오류 방지",
+      "result": "❌",
+      "verdict_method": "정적분석",
+      "issue": "StatsCard.tsx:13 — id=\"stat-card\"가 하드코딩되어 있어 리스트 렌더링 시 동일 id가 중복됨 (id는 페이지 내 유일해야 함)",
+      "fix_guide": "id는 페이지 내 유일해야 함. 반복 컴포넌트에 동일 id 사용 금지. 예: id={`stat-card-${testId}`} 등 고유값 사용"
+    },
+    {
+      "id": "S-04",
+      "name": "대화형 요소",
+      "result": "⚠️",
+      "verdict_method": "정적분석",
+      "issue": "StatsCard.tsx:10 — 클릭 가능한 <div>가 시맨틱 요소 대신 사용됨. onClick 핸들러가 있으므로 <button>이 적절",
+      "fix_guide": "클릭 가능 <div>/<span> → <button> 또는 <a> 사용. <button className=\"rounded-xl ...\"> 으로 교체 권장"
+    }
+  ]
+}

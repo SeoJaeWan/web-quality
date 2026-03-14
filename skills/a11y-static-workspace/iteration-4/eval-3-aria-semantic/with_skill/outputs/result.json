@@ -1,0 +1,50 @@
+{
+  "summary": {
+    "files_reviewed": ["Navbar.tsx", "SearchFilter.tsx"],
+    "total_items_checked": 40,
+    "violations": 3,
+    "advisories": 2
+  },
+  "findings": [
+    {
+      "id": "A-29",
+      "name": "레이블 제공",
+      "result": "❌",
+      "verdict_method": "정적분석",
+      "issue": "SearchFilter.tsx:21 — <input type=\"search\">에 label, aria-label, title 속성이 없음. placeholder=\"할 일 검색...\"만 존재하며 placeholder는 레이블 대체 불가",
+      "fix_guide": "aria-label 추가: <input type=\"search\" aria-label=\"할 일 검색\" placeholder=\"할 일 검색...\"> 또는 시각적 <label> 요소를 연결"
+    },
+    {
+      "id": "A-33",
+      "name": "웹 애플리케이션 접근성",
+      "result": "❌",
+      "verdict_method": "정적분석",
+      "issue": "Navbar.tsx:59 — 햄버거 메뉴 토글 버튼에 aria-expanded 속성 누락. menuOpen 상태를 토글하지만 보조기술에 메뉴 열림/닫힘 상태를 전달하지 않음",
+      "fix_guide": "aria-expanded 추가: <button aria-label=\"메뉴 열기\" aria-expanded={menuOpen} aria-controls=\"mobile-menu\"> 및 모바일 메뉴 div에 id=\"mobile-menu\" 추가"
+    },
+    {
+      "id": "A-33",
+      "name": "웹 애플리케이션 접근성",
+      "result": "❌",
+      "verdict_method": "정적분석",
+      "issue": "SearchFilter.tsx:32 — 필터 토글 버튼들(전체/진행중/완료)에 aria-pressed 속성 누락. 시각적으로 선택 상태를 표시하지만 보조기술에 현재 선택 상태를 전달하지 않음",
+      "fix_guide": "aria-pressed 추가: <button aria-pressed={filter === f.value} onClick={() => onFilterChange(f.value)}>{f.label}</button>"
+    },
+    {
+      "id": "S-03",
+      "name": "랜드마크 요소",
+      "result": "⚠️",
+      "verdict_method": "정적분석",
+      "issue": "Navbar.tsx:132 — Breadcrumbs 컴포넌트가 일반 <div>로 구성됨. 탐색 영역(breadcrumb)은 <nav> 랜드마크를 사용해야 보조기술이 인식 가능",
+      "fix_guide": "<div> 대신 <nav aria-label=\"breadcrumb\"> 사용: <nav aria-label=\"breadcrumb\" className=\"mx-auto max-w-5xl px-4 py-2 text-sm text-zinc-500\">"
+    },
+    {
+      "id": "S-05",
+      "name": "목록 구조",
+      "result": "⚠️",
+      "verdict_method": "정적분석",
+      "issue": "SearchFilter.tsx:29 — 필터 버튼 그룹이 의미 없는 <div>로 감싸져 있음. 관련된 옵션 그룹임을 보조기술에 전달하지 않음",
+      "fix_guide": "그룹 컨테이너에 role=\"group\"과 aria-label 추가: <div role=\"group\" aria-label=\"할 일 필터\" className=\"flex gap-1 ...\">"
+    }
+  ]
+}

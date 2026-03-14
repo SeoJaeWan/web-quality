@@ -1,0 +1,10 @@
+{
+  "expectations": [
+    {"text": "scripts/scan.py 스크립트가 실행됨", "passed": true, "evidence": "scan.py 실행하여 A-10 candidate 감지 (JSX brace-aware 파싱 정상 동작)"},
+    {"text": "33개 KWCAG2.2 항목이 모두 평가됨 (해당 없는 항목은 ➖)", "passed": true, "evidence": "40개 항목 평가 (33 KWCAG + 7 시맨틱)"},
+    {"text": "A-10: div onClick 키보드 접근 불가 문제 감지", "passed": true, "evidence": "A-10 ❌: <div> onClick without role, tabIndex, onKeyDown"},
+    {"text": "A-32: 리스트 렌더링 시 중복 id 패턴 감지", "passed": true, "evidence": "A-32 ❌: id='stat-card' hardcoded, multiple instances produce duplicates"},
+    {"text": "시맨틱 HTML: 클릭 가능한 div → button 권장 감지", "passed": true, "evidence": "S-04 ⚠️: Clickable <div> should be <button>"},
+    {"text": "결과가 JSON 배열 형식으로 반환됨", "passed": true, "evidence": "result.json에 JSON 배열 저장됨"}
+  ]
+}

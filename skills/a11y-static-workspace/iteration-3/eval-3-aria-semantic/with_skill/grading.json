@@ -1,0 +1,9 @@
+{
+  "expectations": [
+    {"text": "scripts/scan.py 스크립트가 실행됨", "passed": true, "evidence": "scan.py 실행하여 4건 findings (A-23 ×3 candidates, A-29 ×1 error). 3/4 A-23을 LLM이 false positive로 정확히 dismiss"},
+    {"text": "A-23: 아이콘 버튼의 aria-label 누락이 스크립트 또는 LLM에 의해 감지", "passed": true, "evidence": "스크립트가 A-23 candidates 감지 → LLM이 텍스트 있는 버튼은 dismiss, 실제 아이콘 버튼만 판정"},
+    {"text": "스크립트의 candidate 결과에 대해 LLM이 맥락 판단을 수행", "passed": true, "evidence": "4건 candidates 중 3건 false positive dismiss, A-29 error 확인, A-33 두 건 추가 감지"},
+    {"text": "시맨틱 HTML: nav 요소 사용 여부 평가", "passed": true, "evidence": "S-03 ⚠️: 브레드크럼 <div> → <nav> 권장"},
+    {"text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료", "passed": true, "evidence": "브라우저/dev server 미사용, 코드 분석만으로 완료"}
+  ]
+}

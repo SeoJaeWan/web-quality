@@ -1,0 +1,362 @@
+[
+  {
+    "id": "A-01",
+    "name": "적절한 대체 텍스트",
+    "principle": "인식의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "이미지 요소 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-02",
+    "name": "자막 제공",
+    "principle": "인식의 용이성",
+    "result": "➖ N/A (브라우저 검증 대상)",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-03",
+    "name": "표의 구성",
+    "principle": "인식의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "테이블 요소 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-04",
+    "name": "콘텐츠의 선형 구조",
+    "principle": "인식의 용이성",
+    "result": "➖ N/A (브라우저 검증 대상)",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-05",
+    "name": "명확한 지시 사항",
+    "principle": "인식의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-06",
+    "name": "색에 무관한 인식",
+    "principle": "인식의 용이성",
+    "result": "➖ N/A (브라우저 검증 대상)",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-07",
+    "name": "자동 재생 금지",
+    "principle": "인식의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "미디어 요소 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-08",
+    "name": "명도 대비",
+    "principle": "인식의 용이성",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "StatsCard.tsx:20 — text-zinc-500 클래스 사용. Tailwind zinc-500(#71717a)은 흰 배경(#fff) 대비 약 4.7:1로 일반 텍스트 기준(4.5:1)은 통과하나, text-sm(14px)이므로 경계 수준임. dark 모드에서 zinc-500 대 zinc-900 배경은 대비 부족 가능성 있음",
+    "fix_guide": "일반 텍스트(18pt 미만): 4.5:1 이상. 흰 배경에 #767676 이상 사용. dark 모드에서도 대비 검증 필요"
+  },
+  {
+    "id": "A-09",
+    "name": "콘텐츠 구분",
+    "principle": "인식의 용이성",
+    "result": "➖ N/A (브라우저 검증 대상)",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-10",
+    "name": "키보드 사용 보장",
+    "principle": "운용의 용이성",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "StatsCard.tsx:10 — <div>에 onClick 핸들러가 있으나 role, tabIndex, onKeyDown이 없어 키보드로 접근 및 활성화 불가",
+    "fix_guide": "클릭 가능 요소는 <button> 또는 <a> 사용. 커스텀 요소: role=\"button\" + tabIndex={0} + onKeyDown 추가"
+  },
+  {
+    "id": "A-11",
+    "name": "초점 이동과 표시",
+    "principle": "운용의 용이성",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "StatsCard.tsx:10 — 클릭 가능한 <div>에 tabIndex가 없어 포커스를 받을 수 없음. 포커스 스타일도 정의되지 않음",
+    "fix_guide": "tabIndex={0} 추가 및 focus-visible 스타일 제공. outline: none 제거 또는 커스텀 포커스 스타일(outline: 2px solid #005FCC 등) 적용"
+  },
+  {
+    "id": "A-12",
+    "name": "조작 가능",
+    "principle": "운용의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-13",
+    "name": "문자 단축키",
+    "principle": "운용의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "키보드 단축키 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-14",
+    "name": "응답시간 조절",
+    "principle": "운용의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "타이머/세션 만료 로직 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-15",
+    "name": "정지 기능",
+    "principle": "운용의 용이성",
+    "result": "➖ N/A (브라우저 검증 대상)",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-16",
+    "name": "깜박임 제한",
+    "principle": "운용의 용이성",
+    "result": "➖ N/A (브라우저 검증 대상)",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-17",
+    "name": "반복 영역 건너뛰기",
+    "principle": "운용의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "단일 컴포넌트이므로 해당 없음 (페이지/레이아웃 수준 항목)",
+    "fix_guide": null
+  },
+  {
+    "id": "A-18",
+    "name": "제목 제공",
+    "principle": "운용의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "단일 카드 컴포넌트로 헤딩 요소 불필요",
+    "fix_guide": null
+  },
+  {
+    "id": "A-19",
+    "name": "적절한 링크 텍스트",
+    "principle": "운용의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "링크 요소 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-20",
+    "name": "고정된 참조 위치",
+    "principle": "운용의 용이성",
+    "result": "➖ N/A (브라우저 검증 대상)",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-21",
+    "name": "단일 포인터 입력 지원",
+    "principle": "운용의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "터치 제스처 핸들러 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-22",
+    "name": "포인터 입력 취소",
+    "principle": "운용의 용이성",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-23",
+    "name": "레이블과 네임",
+    "principle": "운용의 용이성",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "StatsCard.tsx:10 — 클릭 가능한 <div>에 aria-label 또는 role이 없어 보조기술이 이 요소의 용도를 인식할 수 없음",
+    "fix_guide": "아이콘 버튼: <button aria-label=\"검색\"> 형태 사용. 시각적 레이블과 동일하거나 포함하는 aria-label 사용"
+  },
+  {
+    "id": "A-24",
+    "name": "동작 기반 작동",
+    "principle": "운용의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "DeviceMotion/Orientation 핸들러 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-25",
+    "name": "기본 언어 표시",
+    "principle": "이해의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "단일 컴포넌트이므로 해당 없음 (html 루트 수준 항목)",
+    "fix_guide": null
+  },
+  {
+    "id": "A-26",
+    "name": "사용자 요구에 따른 실행",
+    "principle": "이해의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "select 또는 자동 페이지 이동 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-27",
+    "name": "찾기 쉬운 도움 정보",
+    "principle": "이해의 용이성",
+    "result": "➖ N/A (브라우저 검증 대상)",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "A-28",
+    "name": "오류 정정",
+    "principle": "이해의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "폼 입력 요소 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-29",
+    "name": "레이블 제공",
+    "principle": "이해의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "폼 입력 요소 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-30",
+    "name": "접근 가능한 인증",
+    "principle": "이해의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "CAPTCHA/인증 요소 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-31",
+    "name": "반복 입력 정보",
+    "principle": "이해의 용이성",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "폼 입력 요소 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "A-32",
+    "name": "마크업 오류 방지",
+    "principle": "견고성",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "StatsCard.tsx:12 — id=\"stat-card\"가 하드코딩됨. 이 컴포넌트가 리스트에서 복수 렌더링되면 동일 id가 중복되어 HTML 유효성 위반",
+    "fix_guide": "id는 페이지 내 유일해야 함. 반복 컴포넌트에 동일 id 사용 금지. id={`stat-card-${testId}`} 등 고유값 사용"
+  },
+  {
+    "id": "A-33",
+    "name": "웹 애플리케이션 접근성",
+    "principle": "견고성",
+    "result": "❌",
+    "verdict_method": "정적분석",
+    "issue": "StatsCard.tsx:10 — 클릭 가능한 커스텀 요소에 role 속성이 없어 보조기술이 상호작용 가능 여부를 인식할 수 없음",
+    "fix_guide": "커스텀 요소에 적절한 role 부여. 예: role=\"button\" + aria-pressed, role=\"link\" 등"
+  },
+  {
+    "id": "S-01",
+    "name": "표현용 태그",
+    "principle": "시맨틱 HTML",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "S-02",
+    "name": "줄바꿈 남용",
+    "principle": "시맨틱 HTML",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  },
+  {
+    "id": "S-03",
+    "name": "랜드마크 요소",
+    "principle": "시맨틱 HTML",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "단일 카드 컴포넌트이므로 랜드마크 불필요",
+    "fix_guide": null
+  },
+  {
+    "id": "S-04",
+    "name": "대화형 요소",
+    "principle": "시맨틱 HTML",
+    "result": "⚠️",
+    "verdict_method": "정적분석",
+    "issue": "StatsCard.tsx:10 — 클릭 가능한 <div>를 <button> 요소로 변경하면 키보드 접근성, 포커스, role이 자동으로 보장됨",
+    "fix_guide": "클릭 가능 <div>/<span> 대신 <button> 또는 <a> 사용"
+  },
+  {
+    "id": "S-05",
+    "name": "목록 구조",
+    "principle": "시맨틱 HTML",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "반복 항목 구조 없음 (단일 카드)",
+    "fix_guide": null
+  },
+  {
+    "id": "S-06",
+    "name": "폼 그룹",
+    "principle": "시맨틱 HTML",
+    "result": "➖",
+    "verdict_method": "정적분석",
+    "issue": "폼 요소 없음",
+    "fix_guide": null
+  },
+  {
+    "id": "S-07",
+    "name": "기타 시맨틱 요소",
+    "principle": "시맨틱 HTML",
+    "result": "✅",
+    "verdict_method": "정적분석",
+    "issue": null,
+    "fix_guide": null
+  }
+]

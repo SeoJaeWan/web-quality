@@ -1,0 +1,12 @@
+{
+  "eval_id": 3,
+  "eval_name": "aria-semantic",
+  "prompt": "Navbar.tsx와 SearchFilter.tsx의 ARIA 속성과 시맨틱 HTML을 정적분석해줘",
+  "assertions": [
+    {"id": "scan-script-executed", "text": "scripts/scan.py 스크립트가 실행됨"},
+    {"id": "icon-button-label", "text": "A-23: 아이콘 버튼의 aria-label 누락이 스크립트 또는 LLM에 의해 감지"},
+    {"id": "candidate-contextual-review", "text": "스크립트의 candidate 결과에 대해 LLM이 맥락 판단을 수행"},
+    {"id": "nav-landmark-check", "text": "시맨틱 HTML: nav 요소 사용 여부 평가"},
+    {"id": "no-browser-dependency", "text": "dev server나 브라우저 없이 순수 코드 분석만으로 완료"}
+  ]
+}
