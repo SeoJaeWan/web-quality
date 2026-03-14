@@ -13,7 +13,7 @@
         {"id": "focus-visible-tested", "text": "A-11: 포커스 시 outline/boxShadow/border 시각적 표시 확인"},
         {"id": "duplicate-id-checked", "text": "A-32: DOM에서 중복 ID 검사 실행"},
         {"id": "color-contrast-checked", "text": "A-08: getComputedStyle로 텍스트 색상 대비 확인"},
-        {"id": "verdict-method-playwright", "text": "모든 검증 항목의 verdict_method가 'Playwright'"},
+        {"id": "verdict-method-browser", "text": "모든 검증 항목의 verdict_method가 '브라우저 검증'"},
         {"id": "json-array-format", "text": "결과가 JSON 배열 형식으로 반환됨"}
       ]
     },

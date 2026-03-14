@@ -26,7 +26,7 @@ HTML + CSV report templates for accessibility review results.
   .result-partial { background: #fff3cd; color: #856404; font-weight: bold; text-align: center; }
   .result-na      { background: #e2e3e5; color: #383d41; text-align: center; }
   .result-unknown { background: #dce8f8; color: #1a4a8a; text-align: center; font-size: 0.85em; }
-  .method-playwright { color: #0066cc; font-size: 0.8em; font-weight: bold; }
+  .method-browser { color: #0066cc; font-size: 0.8em; font-weight: bold; }
   .method-static     { color: #666; font-size: 0.8em; }
   .method-unknown    { color: #999; font-size: 0.8em; }
   .summary-pass { color: #155724; font-weight: bold; }
@@ -37,7 +37,7 @@ HTML + CSV report templates for accessibility review results.
   .meta { background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 16px; margin-bottom: 24px; }
   .meta ul { list-style: none; margin: 0; padding: 0; }
   .meta li { margin: 4px 0; }
-  .playwright-badge { display: inline-block; background: #0066cc; color: white; font-size: 0.75em; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+  .browser-badge { display: inline-block; background: #0066cc; color: white; font-size: 0.75em; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
 </style>
 </head>
 <body>
@@ -49,7 +49,7 @@ HTML + CSV report templates for accessibility review results.
   <li><strong>날짜:</strong> {YYYY-MM-DD}</li>
   <li><strong>검토 파일:</strong> {변경된 파일 목록}</li>
   <li><strong>기준:</strong> KWCAG2.2 (한국지능정보사회진흥원, 2024.10) + 시맨틱 HTML (HTML Living Standard)</li>
-  <li><strong>Playwright:</strong> {사용됨 <span class="playwright-badge">자동검사</span> / 미사용 — playwright.config.ts 없음}</li>
+  <li><strong>브라우저 검증:</strong> {사용됨 <span class="browser-badge">자동검사</span> / 미사용 — agent-browser 없음}</li>
 </ul>
 </div>
 
@@ -78,20 +78,20 @@ HTML + CSV report templates for accessibility review results.
     <td><span class="method-static">정적분석</span></td>
     <td></td><td></td>
   </tr>
-  <!-- 항목 8 — Playwright 사용 시 -->
+  <!-- 항목 8 — 브라우저 검증 사용 시 -->
   <tr>
     <td>8</td><td>명도 대비</td>
     <td class="result-pass">✅</td>
-    <td><span class="method-playwright">Playwright</span></td>
+    <td><span class="method-browser">브라우저 검증</span></td>
     <td></td><td></td>
   </tr>
-  <!-- 항목 8 — playwright.config.ts 없을 때 -->
+  <!-- 항목 8 — agent-browser 없을 때 -->
   <!--
   <tr>
     <td>8</td><td>명도 대비</td>
     <td class="result-unknown">🔵 판정불가</td>
     <td><span class="method-unknown">판정불가</span></td>
-    <td>playwright.config.ts 없음</td><td>Playwright 설치 후 재검토</td>
+    <td>agent-browser 사용 불가</td><td>agent-browser 설치 후 재검토</td>
   </tr>
   -->
 </table>
@@ -99,11 +99,11 @@ HTML + CSV report templates for accessibility review results.
 <h3>원칙 2. 운용의 용이성</h3>
 <table>
   <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>
-  <!-- 항목 10: 키보드 접근성 (Playwright) -->
+  <!-- 항목 10: 키보드 접근성 (브라우저 검증) -->
   <tr>
     <td>10</td><td>키보드 사용</td>
     <td class="result-fail">❌</td>
-    <td><span class="method-playwright">Playwright</span></td>
+    <td><span class="method-browser">브라우저 검증</span></td>
     <td>Tab 포커스 이동 시 일부 요소 미접근</td>
     <td>인터랙티브 요소에 tabindex=0 및 :focus 스타일 추가</td>
   </tr>
@@ -117,11 +117,11 @@ HTML + CSV report templates for accessibility review results.
 <h3>원칙 4. 견고성</h3>
 <table>
   <tr><th>#</th><th>항목명</th><th>결과</th><th>판정방식</th><th>발견된 문제</th><th>수정 가이드</th></tr>
-  <!-- 항목 33: 웹앱 접근성 (Playwright) -->
+  <!-- 항목 33: 웹앱 접근성 (브라우저 검증) -->
   <tr>
     <td>33</td><td>웹 애플리케이션 접근성</td>
     <td class="result-partial">⚠️</td>
-    <td><span class="method-playwright">Playwright</span></td>
+    <td><span class="method-browser">브라우저 검증</span></td>
     <td>클릭 후 aria-expanded 상태 미변경</td>
     <td>동적 컴포넌트에 aria-expanded 상태 관리 추가</td>
   </tr>
@@ -173,9 +173,9 @@ HTML + CSV report templates for accessibility review results.
 5,음성 정보 제공,인식의 용이성,➖,정적분석,,
 6,색 구분,인식의 용이성,➖,정적분석,,
 7,자동 재생,인식의 용이성,✅,정적분석,,
-8,명도 대비,인식의 용이성,✅,Playwright,,
+8,명도 대비,인식의 용이성,✅,브라우저 검증,,
 9,콘텐츠 구분,인식의 용이성,➖,정적분석,,
-10,키보드 사용,운용의 용이성,❌,Playwright,"Tab 포커스 이동 시 일부 요소 미접근","인터랙티브 요소에 tabindex=0 및 :focus 스타일 추가"
+10,키보드 사용,운용의 용이성,❌,브라우저 검증,"Tab 포커스 이동 시 일부 요소 미접근","인터랙티브 요소에 tabindex=0 및 :focus 스타일 추가"
 11,초점 이동,운용의 용이성,✅,정적분석,,
 12,조작 가능,운용의 용이성,➖,정적분석,,
 13,문자 단축키,운용의 용이성,➖,정적분석,,
@@ -198,7 +198,7 @@ HTML + CSV report templates for accessibility review results.
 30,오류 방지,이해의 용이성,➖,정적분석,,
 31,일관된 내비게이션,이해의 용이성,➖,정적분석,,
 32,마크업 오류,견고성,✅,정적분석,,
-33,웹 애플리케이션 접근성,견고성,⚠️,Playwright,"클릭 후 aria-expanded 미변경","동적 컴포넌트에 aria-expanded 상태 관리 추가"
+33,웹 애플리케이션 접근성,견고성,⚠️,브라우저 검증,"클릭 후 aria-expanded 미변경","동적 컴포넌트에 aria-expanded 상태 관리 추가"
 시맨틱-1,랜드마크 요소,시맨틱 HTML,✅,정적분석,,
 시맨틱-2,섹션 구조,시맨틱 HTML,✅,정적분석,,
 시맨틱-3,대화형 요소,시맨틱 HTML,✅,정적분석,,

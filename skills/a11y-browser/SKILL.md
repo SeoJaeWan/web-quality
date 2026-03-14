@@ -165,7 +165,7 @@ Only test these if relevant elements exist on the page:
 ## Step 6. Cross-Validation
 
 When browser results differ from static analysis → **browser result takes precedence**.
-Verdict method: `Playwright` (keep this label for report consistency)
+Verdict method: `브라우저 검증`
 
 ---
 
@@ -178,7 +178,7 @@ Return results as a JSON array. Each verified item:
   "id": "A-10",
   "name": "키보드 사용 보장",
   "result": "❌",
-  "verdict_method": "Playwright",
+  "verdict_method": "브라우저 검증",
   "issue": "StatsCard.tsx — div onClick not reachable via Tab, no focus received after 5 Tab presses",
   "fix_guide": "Replace <div onClick> with <button> or add tabIndex={0}, role=\"button\", onKeyDown"
 }

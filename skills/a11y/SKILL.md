@@ -57,12 +57,12 @@ Both sub-skills return results keyed by KWCAG item ID (A-01 through A-33, plus S
 
 ### Merge Rules
 
-1. **Browser-verified items** (verdict_method = `Playwright`): browser result takes precedence
+1. **Browser-verified items** (verdict_method = `브라우저 검증`): browser result takes precedence
    over static analysis, regardless of whether they agree.
 
 2. **Static-only items**: use as-is with verdict_method = `정적분석`.
 
-3. **Conflict resolution**: if browser says `✅` but static says `❌` → use `✅` (Playwright).
+3. **Conflict resolution**: if browser says `✅` but static says `❌` → use `✅` (브라우저 검증).
    The rendered DOM is the source of truth over source code patterns.
 
 4. **판정불가 items**: if browser returned `🔵 판정불가` for an item, fall back to the
@@ -112,7 +112,7 @@ Read `references/output-format.md` for the full template.
 - Result colors: `✅` (#28a745), `❌` (#dc3545), `⚠️` (#ffc107), `➖` (#6c757d), `🔵 판정불가` (#6c8ebf)
 - Structure: summary table → detailed results by principle → semantic HTML → fix guide
 - Language: Korean / Style: inline CSS only
-- Verdict method column: `정적분석` / `Playwright` / `판정불가`
+- Verdict method column: `정적분석` / `브라우저 검증` / `판정불가`
 
 ### CSV Report
 
@@ -142,7 +142,7 @@ Key requirements:
 - Result colors: `✅` (#28a745), `❌` (#dc3545), `⚠️` (#ffc107), `➖` (#6c757d), `🔵 판정불가` (#6c8ebf)
 - Structure: summary → detailed by principle → semantic HTML → fix guide
 - Language: Korean / Style: inline CSS only
-- Verdict method: `정적분석` / `Playwright` / `판정불가`
+- Verdict method: `정적분석` / `브라우저 검증` / `판정불가`
 - CSV header: `번호,항목명,원칙,결과,판정방식,발견된 문제,수정 가이드`
 
 </Output_Format>
